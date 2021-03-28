@@ -20,28 +20,38 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Jinxi Blog">
-<meta property="og:url" content="http://example.com/index.html">
+  <meta name="description" content="Lec02 渐进符号、递归及解法对应书的章节：Chapters 3-4, excluding section 4.6 1. 渐进符号（Asymptotic Notation）1.1 $O$-notation （upper bounds）$f(n)&#x3D;O(g(n))$ 如果存在常量$c&gt;0,n_0&gt;0$对所有的$n\geq n_0$都有$0\leq f(n)\leq cg(n)$。 比">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Lec02 渐进符号、递归及解法">
+<meta property="og:url" content="http://example.com/2021/03/28/Lec02%E6%B8%90%E8%BF%9B%E7%AC%A6%E5%8F%B7%E5%92%8C%E9%80%92%E5%BD%92%E5%8F%8A%E8%A7%A3%E6%B3%95/index.html">
 <meta property="og:site_name" content="Jinxi Blog">
+<meta property="og:description" content="Lec02 渐进符号、递归及解法对应书的章节：Chapters 3-4, excluding section 4.6 1. 渐进符号（Asymptotic Notation）1.1 $O$-notation （upper bounds）$f(n)&#x3D;O(g(n))$ 如果存在常量$c&gt;0,n_0&gt;0$对所有的$n\geq n_0$都有$0\leq f(n)\leq cg(n)$。 比">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://ftp.bmp.ovh/imgs/2021/01/33bc3bf17a284dc8.png">
+<meta property="og:image" content="https://ftp.bmp.ovh/imgs/2021/01/d96bb64eef94c195.png">
+<meta property="og:image" content="https://ftp.bmp.ovh/imgs/2021/01/48ae662c70a10496.png">
+<meta property="og:image" content="https://ftp.bmp.ovh/imgs/2021/01/d9e63987e5069e08.png">
+<meta property="article:published_time" content="2021-03-28T16:00:00.000Z">
+<meta property="article:modified_time" content="2021-03-28T16:52:10.892Z">
 <meta property="article:author" content="Jinxi">
+<meta property="article:tag" content="学习笔记">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://ftp.bmp.ovh/imgs/2021/01/33bc3bf17a284dc8.png">
 
-<link rel="canonical" href="http://example.com/">
+<link rel="canonical" href="http://example.com/2021/03/28/Lec02%E6%B8%90%E8%BF%9B%E7%AC%A6%E5%8F%B7%E5%92%8C%E9%80%92%E5%BD%92%E5%8F%8A%E8%A7%A3%E6%B3%95/">
 
 
 <script id="page-configurations">
   // https://hexo.io/docs/variables.html
   CONFIG.page = {
     sidebar: "",
-    isHome : true,
-    isPost : false,
+    isHome : false,
+    isPost : true,
     lang   : 'zh-CN'
   };
 </script>
 
-  <title>Jinxi Blog</title>
+  <title>Lec02 渐进符号、递归及解法 | Jinxi Blog</title>
   
 
 
@@ -169,9 +179,10 @@
         <div class="content-wrap">
           
 
-          <div class="content index posts-expand">
+          <div class="content post posts-expand">
             
-      
+
+    
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
@@ -187,10 +198,9 @@
       <meta itemprop="name" content="Jinxi Blog">
     </span>
       <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/03/28/Lec02%E6%B8%90%E8%BF%9B%E7%AC%A6%E5%8F%B7%E5%92%8C%E9%80%92%E5%BD%92%E5%8F%8A%E8%A7%A3%E6%B3%95/" class="post-title-link" itemprop="url">Lec02 渐进符号、递归及解法</a>
-        </h2>
+        <h1 class="post-title" itemprop="name headline">
+          Lec02 渐进符号、递归及解法
+        </h1>
 
         <div class="post-meta">
             <span class="post-meta-item">
@@ -223,116 +233,105 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <span id="more"></span>
+        <span id="more"></span>
 
 <h1 id="Lec02-渐进符号、递归及解法"><a href="#Lec02-渐进符号、递归及解法" class="headerlink" title="Lec02 渐进符号、递归及解法"></a>Lec02 渐进符号、递归及解法</h1><p>对应书的章节：Chapters 3-4, excluding section 4.6</p>
 <h2 id="1-渐进符号（Asymptotic-Notation）"><a href="#1-渐进符号（Asymptotic-Notation）" class="headerlink" title="1. 渐进符号（Asymptotic Notation）"></a>1. 渐进符号（Asymptotic Notation）</h2><h3 id="1-1-O-notation-（upper-bounds）"><a href="#1-1-O-notation-（upper-bounds）" class="headerlink" title="1.1 $O$-notation （upper bounds）"></a>1.1 $O$-notation （upper bounds）</h3><p>$f(n)=O(g(n))$ 如果存在常量$c&gt;0,n_0&gt;0$对所有的$n\geq n_0$都有$0\leq f(n)\leq cg(n)$。</p>
 <p>比如 $2n^2=O(n^3)$，这个符号可以用$\leq$理解，表示$g(n)$是$f(n)$的上界。</p>
 <h3 id="1-2-Omega-notation（lower-bounds）"><a href="#1-2-Omega-notation（lower-bounds）" class="headerlink" title="1.2 $\Omega$-notation（lower bounds）"></a>1.2 $\Omega$-notation（lower bounds）</h3><p>$f(n)=\Omega(g(n))$ 如果存在常量$c&gt;0,n_0&gt;0$对所有的$n\geq n_0$都有$0\leq cg(n) \leq f(n) $。</p>
 <p>比如 $\sqrt n=\Omega(\lg n)$，这个符号可以用$\geq$理解，表示下界。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/03/28/Lec02%E6%B8%90%E8%BF%9B%E7%AC%A6%E5%8F%B7%E5%92%8C%E9%80%92%E5%BD%92%E5%8F%8A%E8%A7%A3%E6%B3%95/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
+<h3 id="1-3-Theta-notation（tight-bounds）"><a href="#1-3-Theta-notation（tight-bounds）" class="headerlink" title="1.3 $\Theta$-notation（tight bounds）"></a>1.3 $\Theta$-notation（tight bounds）</h3><p>$\Theta(g(n))=O(g(n))\cap \Omega(g(n))$</p>
+<p>比如$\frac{1}{2}n^2-2n=\Omega(n^2)$，可以用$=$理解。</p>
+<h3 id="1-4-o-notation"><a href="#1-4-o-notation" class="headerlink" title="1.4 $o$-notation"></a>1.4 $o$-notation</h3><p>$f(n)=o(g(n))$ 如果存在常量$c&gt;0,n_0&gt;0$对所有的$n\geq n_0$都有$0\leq f(n)&lt; cg(n)$。</p>
+<p>比如$2n^2=o(n^3)$，可以用&lt;理解。</p>
+<h3 id="1-5-omega-notation"><a href="#1-5-omega-notation" class="headerlink" title="1.5 $\omega$-notation"></a>1.5 $\omega$-notation</h3><p>$f(n)=\omega(g(n))$ 如果存在常量$c&gt;0,n_0&gt;0$对所有的$n\geq n_0$都有$0\leq cg(n) &lt; f(n) $。</p>
+<p>比如$\sqrt n=\omega(\lg n)$，可以用&gt;理解。</p>
+<h2 id="2-递归（Recurrences）"><a href="#2-递归（Recurrences）" class="headerlink" title="2. 递归（Recurrences）"></a>2. 递归（Recurrences）</h2><h3 id="2-1-代换法（Substitution-method）"><a href="#2-1-代换法（Substitution-method）" class="headerlink" title="2.1 代换法（Substitution method）"></a>2.1 代换法（Substitution method）</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1. Guess 猜测结果。</span><br><span class="line">2. verify 归纳验证。</span><br><span class="line">3. solve 求系数。</span><br></pre></td></tr></table></figure>
+
+<p>例子：$T(n)=4T(n/2)+n;T(1)=\Theta(1)$</p>
+<p>（一）假设$T(n)=O(n^3)$</p>
+<ol>
+<li><p>假设$T(n)=O(n^3)$ 则$T(k)\leq ck^3$ for $k&lt;n$ </p>
+</li>
+<li><p>$T(n)=4T(n/2)+n\leq4c(n/2)^3+n=cn^3-((cn^3)/2-n)$ 构造成 desired-residual，就是假设的减去剩下的。</p>
+</li>
+<li><p>要使得假设成立，则$cn^3/2-n\geq0$，所以$c\geq2，n\geq1$不等式成立。</p>
+</li>
+<li><p>我们还必须处理初始条件，$T(1)=\Theta(1)\leq c*1^3$，当c取足够大的数时不等式成立。（This bound is not tight!）</p>
+</li>
+</ol>
+<p>（二）假设$T(n)=O(n^2)$</p>
+<ol>
+<li>假设$T(n)=O(n^2)$ 则$T(k)\leq ck^2$ for $k&lt;n$</li>
+<li>$T(n)=4T(n/2)+n\leq4c(n/2)^2+n=c*n^2-(-n)$</li>
+<li>要使假设成立需要$-n&gt;0$，不能成立</li>
+</ol>
+<p>（三）加强归纳假设</p>
+<ol>
+<li>假设$T(n)=O(n^2)$ 则$T(k)\leq c_1k^2-c_2k$ for $k&lt;n$</li>
+<li>$T(n)=4T(n/2)+n\leq c_1n^2-c_2n$</li>
+<li>要使假设成立，$c_2\geq 1$</li>
+<li>验证初始条件$T(1)=\Theta(1)\leq c_1<em>1^2-c_2</em>1$，$c_1$足够大不等式成立。</li>
+</ol>
+<p>求$T(n)$的下界用类似的方法。</p>
+<h3 id="2-2-递归树方法（Recursion-tree-method）"><a href="#2-2-递归树方法（Recursion-tree-method）" class="headerlink" title="2.2 递归树方法（Recursion-tree method）"></a>2.2 递归树方法（Recursion-tree method）</h3><p>这个方法不够严谨，比较好的解题过程应该是用递归树法求出结果后再用代换法验证。</p>
+<img src="https://ftp.bmp.ovh/imgs/2021/01/33bc3bf17a284dc8.png" style="zoom: 50%;" />
+
+
+
+<h3 id="2-3-主方法（The-master-method）"><a href="#2-3-主方法（The-master-method）" class="headerlink" title="2.3 主方法（The master method）"></a>2.3 主方法（The master method）</h3><p>主方法解决形如$T(n)=aT(n/b)+f(n)$的式子，并且$a\geq1,b\geq1$，$f(n)$是趋近为正的。</p>
+<ol>
+<li><strong>case1：</strong>$f(n)=O(n^{\log_ba-\epsilon}),\epsilon&gt;0$，$f(n)$ 比$n^{\log_ba}$的增长慢$n^\epsilon$多项式级，<strong>Solution：</strong> $T(n)=\Theta(n^{log_ba})$</li>
+<li><strong>case2：</strong> $f(n)=\Theta(n^{\log_ba}\lg^kn),k\geq 0$ $f(n)$和$n^{log_ba}$有一样的增长速度，<strong>Solution:</strong>$T(n)=\Theta(n^{\log_ba}\lg^{k+1}n)$</li>
+<li><strong>case3：</strong> $f(n)=\Omega(n^{\log_ba+\epsilon}),\epsilon&gt;0$，并且存在$c&lt;1,af(n/b)\leq cf(n)$ $f(n)$ 比$n^{\log_ba}$的增长快$n^\epsilon$多项式级，<strong>solution：</strong> $T(n)=\Theta(f(n))$</li>
+</ol>
+<p><strong>用递归树来理解主方法</strong></p>
+<p><strong>case1:</strong></p>
+<img src="https://ftp.bmp.ovh/imgs/2021/01/d96bb64eef94c195.png" style="zoom:50%;" />
+
+
+
+<p><strong>case2：</strong></p>
+<img src="https://ftp.bmp.ovh/imgs/2021/01/48ae662c70a10496.png" style="zoom:50%;" />
+
+
+
+<p><strong>case3：</strong></p>
+<img src="https://ftp.bmp.ovh/imgs/2021/01/d9e63987e5069e08.png" style="zoom:50%;" />
+
+
+
+
+
+<h2 id="Appendix-geometric-series"><a href="#Appendix-geometric-series" class="headerlink" title="Appendix: geometric series"></a>Appendix: geometric series</h2><p>$$<br>\begin{array}{c}<br>1+x+x^{2}+\cdots+x^{n}=\frac{1-x^{n+1}}{1-x} \text { for } x \neq 1 \<br>1+x+x^{2}+\cdots=\frac{1}{1-x} \quad \text { for }|x|&lt;1<br>\end{array}<br>$$</p>
+
     </div>
 
     
     
     
+
       <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
+          <div class="post-tags">
+              <a href="/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" rel="tag"># 学习笔记</a>
+          </div>
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/03/28/Lec01%E8%AF%BE%E7%A8%8B%E7%AE%80%E4%BB%8B%E5%8F%8A%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Jinxi">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Jinxi Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/03/28/Lec01%E8%AF%BE%E7%A8%8B%E7%AE%80%E4%BB%8B%E5%8F%8A%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90/" class="post-title-link" itemprop="url">Lec01 课程简介及算法分析</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2021-03-29 00:00:00 / 修改时间：00:43:05" itemprop="dateCreated datePublished" datetime="2021-03-29T00:00:00+08:00">2021-03-29</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E7%AE%97%E6%B3%95%E5%AF%BC%E8%AE%BAMIT/" itemprop="url" rel="index"><span itemprop="name">算法导论MIT</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <span id="more"></span>
-
-<h1 id="Lec01-课程简介及算法分析"><a href="#Lec01-课程简介及算法分析" class="headerlink" title="Lec01 课程简介及算法分析"></a>Lec01 课程简介及算法分析</h1><p>对应书上的章节：Chapters 1-2</p>
-<h2 id="1-介绍"><a href="#1-介绍" class="headerlink" title="1.介绍"></a>1.介绍</h2><h3 id="1-1-先修课程"><a href="#1-1-先修课程" class="headerlink" title="1.1 先修课程"></a>1.1 先修课程</h3><p>离散数学、概率论、编程课程</p>
-<h3 id="1-2-算法分析"><a href="#1-2-算法分析" class="headerlink" title="1.2 算法分析"></a>1.2 算法分析</h3><p>计算机程序性能和资源使用的理论研究（尤其关注性能）。</p>
-<h3 id="1-3-比性能更重要的因素"><a href="#1-3-比性能更重要的因素" class="headerlink" title="1.3 比性能更重要的因素"></a>1.3 比性能更重要的因素</h3><p>比如有正确性、简洁性、可维护性、编程成本、稳定性、功能性、模块化、安全性、可扩展性、用户友好度等。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/03/28/Lec01%E8%AF%BE%E7%A8%8B%E7%AE%80%E4%BB%8B%E5%8F%8A%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
         
-      
-    </div>
 
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/03/28/Lec01%E8%AF%BE%E7%A8%8B%E7%AE%80%E4%BB%8B%E5%8F%8A%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90/" rel="prev" title="Lec01 课程简介及算法分析">
+      <i class="fa fa-chevron-left"></i> Lec01 课程简介及算法分析
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
       </footer>
+    
   </article>
   
   
-  
-
-
   
 
 
@@ -385,6 +384,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Lec02-%E6%B8%90%E8%BF%9B%E7%AC%A6%E5%8F%B7%E3%80%81%E9%80%92%E5%BD%92%E5%8F%8A%E8%A7%A3%E6%B3%95"><span class="nav-number">1.</span> <span class="nav-text">Lec02 渐进符号、递归及解法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E6%B8%90%E8%BF%9B%E7%AC%A6%E5%8F%B7%EF%BC%88Asymptotic-Notation%EF%BC%89"><span class="nav-number">1.1.</span> <span class="nav-text">1. 渐进符号（Asymptotic Notation）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-O-notation-%EF%BC%88upper-bounds%EF%BC%89"><span class="nav-number">1.1.1.</span> <span class="nav-text">1.1 $O$-notation （upper bounds）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-Omega-notation%EF%BC%88lower-bounds%EF%BC%89"><span class="nav-number">1.1.2.</span> <span class="nav-text">1.2 $\Omega$-notation（lower bounds）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-Theta-notation%EF%BC%88tight-bounds%EF%BC%89"><span class="nav-number">1.1.3.</span> <span class="nav-text">1.3 $\Theta$-notation（tight bounds）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-4-o-notation"><span class="nav-number">1.1.4.</span> <span class="nav-text">1.4 $o$-notation</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-5-omega-notation"><span class="nav-number">1.1.5.</span> <span class="nav-text">1.5 $\omega$-notation</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E9%80%92%E5%BD%92%EF%BC%88Recurrences%EF%BC%89"><span class="nav-number">1.2.</span> <span class="nav-text">2. 递归（Recurrences）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-%E4%BB%A3%E6%8D%A2%E6%B3%95%EF%BC%88Substitution-method%EF%BC%89"><span class="nav-number">1.2.1.</span> <span class="nav-text">2.1 代换法（Substitution method）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-%E9%80%92%E5%BD%92%E6%A0%91%E6%96%B9%E6%B3%95%EF%BC%88Recursion-tree-method%EF%BC%89"><span class="nav-number">1.2.2.</span> <span class="nav-text">2.2 递归树方法（Recursion-tree method）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-%E4%B8%BB%E6%96%B9%E6%B3%95%EF%BC%88The-master-method%EF%BC%89"><span class="nav-number">1.2.3.</span> <span class="nav-text">2.3 主方法（The master method）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Appendix-geometric-series"><span class="nav-number">1.3.</span> <span class="nav-text">Appendix: geometric series</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
