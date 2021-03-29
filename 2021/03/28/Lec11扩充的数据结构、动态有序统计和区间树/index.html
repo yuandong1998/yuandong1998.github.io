@@ -20,25 +20,26 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="MIT算法导论课程：Lec02 渐进符号、递归及解法，对应书的章节：Chapters 3-4, excluding section 4.6。">
+  <meta name="description" content="MIT算法导论课程：Lec11 扩充的数据结构、动态有序统计和区间树，对应书上的章节：Chapter 14">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Lec02 渐进符号、递归及解法">
-<meta property="og:url" content="http://example.com/2021/03/28/Lec02%E6%B8%90%E8%BF%9B%E7%AC%A6%E5%8F%B7%E5%92%8C%E9%80%92%E5%BD%92%E5%8F%8A%E8%A7%A3%E6%B3%95/index.html">
+<meta property="og:title" content="Lec11 扩充的数据结构、动态有序统计和区间树">
+<meta property="og:url" content="http://example.com/2021/03/28/Lec11%E6%89%A9%E5%85%85%E7%9A%84%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E3%80%81%E5%8A%A8%E6%80%81%E6%9C%89%E5%BA%8F%E7%BB%9F%E8%AE%A1%E5%92%8C%E5%8C%BA%E9%97%B4%E6%A0%91/index.html">
 <meta property="og:site_name" content="Jinxi Blog">
-<meta property="og:description" content="MIT算法导论课程：Lec02 渐进符号、递归及解法，对应书的章节：Chapters 3-4, excluding section 4.6。">
+<meta property="og:description" content="MIT算法导论课程：Lec11 扩充的数据结构、动态有序统计和区间树，对应书上的章节：Chapter 14">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://ftp.bmp.ovh/imgs/2021/01/33bc3bf17a284dc8.png">
-<meta property="og:image" content="https://ftp.bmp.ovh/imgs/2021/01/d96bb64eef94c195.png">
-<meta property="og:image" content="https://ftp.bmp.ovh/imgs/2021/01/48ae662c70a10496.png">
-<meta property="og:image" content="https://ftp.bmp.ovh/imgs/2021/01/d9e63987e5069e08.png">
-<meta property="article:published_time" content="2021-03-28T16:00:00.000Z">
-<meta property="article:modified_time" content="2021-03-28T18:23:47.893Z">
+<meta property="og:image" content="https://i.bmp.ovh/imgs/2021/03/3dff42f57651aaf9.png">
+<meta property="og:image" content="https://i.bmp.ovh/imgs/2021/03/d8e5f8156ad9ba3a.png">
+<meta property="og:image" content="https://i.bmp.ovh/imgs/2021/03/c0f5d6775e8f7f43.png">
+<meta property="og:image" content="https://i.bmp.ovh/imgs/2021/03/b0ee510dd13b5e0f.png">
+<meta property="og:image" content="https://i.bmp.ovh/imgs/2021/03/c8ab820678489f8c.png">
+<meta property="article:published_time" content="2021-03-28T08:14:57.000Z">
+<meta property="article:modified_time" content="2021-03-29T00:38:55.336Z">
 <meta property="article:author" content="Jinxi">
 <meta property="article:tag" content="学习笔记">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://ftp.bmp.ovh/imgs/2021/01/33bc3bf17a284dc8.png">
+<meta name="twitter:image" content="https://i.bmp.ovh/imgs/2021/03/3dff42f57651aaf9.png">
 
-<link rel="canonical" href="http://example.com/2021/03/28/Lec02%E6%B8%90%E8%BF%9B%E7%AC%A6%E5%8F%B7%E5%92%8C%E9%80%92%E5%BD%92%E5%8F%8A%E8%A7%A3%E6%B3%95/">
+<link rel="canonical" href="http://example.com/2021/03/28/Lec11%E6%89%A9%E5%85%85%E7%9A%84%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E3%80%81%E5%8A%A8%E6%80%81%E6%9C%89%E5%BA%8F%E7%BB%9F%E8%AE%A1%E5%92%8C%E5%8C%BA%E9%97%B4%E6%A0%91/">
 
 
 <script id="page-configurations">
@@ -51,7 +52,7 @@
   };
 </script>
 
-  <title>Lec02 渐进符号、递归及解法 | Jinxi Blog</title>
+  <title>Lec11 扩充的数据结构、动态有序统计和区间树 | Jinxi Blog</title>
   
 
 
@@ -187,7 +188,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/03/28/Lec02%E6%B8%90%E8%BF%9B%E7%AC%A6%E5%8F%B7%E5%92%8C%E9%80%92%E5%BD%92%E5%8F%8A%E8%A7%A3%E6%B3%95/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/03/28/Lec11%E6%89%A9%E5%85%85%E7%9A%84%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E3%80%81%E5%8A%A8%E6%80%81%E6%9C%89%E5%BA%8F%E7%BB%9F%E8%AE%A1%E5%92%8C%E5%8C%BA%E9%97%B4%E6%A0%91/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.JPG">
@@ -200,7 +201,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Lec02 渐进符号、递归及解法
+          Lec11 扩充的数据结构、动态有序统计和区间树
         </h1>
 
         <div class="post-meta">
@@ -209,10 +210,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2021-03-29 00:00:00 / 修改时间：02:23:47" itemprop="dateCreated datePublished" datetime="2021-03-29T00:00:00+08:00">2021-03-29</time>
+              <time title="创建时间：2021-03-28 16:14:57" itemprop="dateCreated datePublished" datetime="2021-03-28T16:14:57+08:00">2021-03-28</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-03-29 08:38:55" itemprop="dateModified" datetime="2021-03-29T08:38:55+08:00">2021-03-29</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -239,8 +246,8 @@
       </span>
       <span class="post-meta-item-text">Valine：</span>
     
-    <a title="valine" href="/2021/03/28/Lec02%E6%B8%90%E8%BF%9B%E7%AC%A6%E5%8F%B7%E5%92%8C%E9%80%92%E5%BD%92%E5%8F%8A%E8%A7%A3%E6%B3%95/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2021/03/28/Lec02%E6%B8%90%E8%BF%9B%E7%AC%A6%E5%8F%B7%E5%92%8C%E9%80%92%E5%BD%92%E5%8F%8A%E8%A7%A3%E6%B3%95/" itemprop="commentCount"></span>
+    <a title="valine" href="/2021/03/28/Lec11%E6%89%A9%E5%85%85%E7%9A%84%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E3%80%81%E5%8A%A8%E6%80%81%E6%9C%89%E5%BA%8F%E7%BB%9F%E8%AE%A1%E5%92%8C%E5%8C%BA%E9%97%B4%E6%A0%91/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2021/03/28/Lec11%E6%89%A9%E5%85%85%E7%9A%84%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E3%80%81%E5%8A%A8%E6%80%81%E6%9C%89%E5%BA%8F%E7%BB%9F%E8%AE%A1%E5%92%8C%E5%8C%BA%E9%97%B4%E6%A0%91/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -250,14 +257,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>2.3k</span>
+              <span>1.2k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>2 分钟</span>
+              <span>1 分钟</span>
             </span>
 
         </div>
@@ -269,73 +276,53 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>MIT算法导论课程：Lec02 渐进符号、递归及解法，对应书的章节：Chapters 3-4, excluding section 4.6。</p>
+        <p>MIT算法导论课程：Lec11 扩充的数据结构、动态有序统计和区间树，对应书上的章节：Chapter 14</p>
 <span id="more"></span>
-<h2 id="渐进符号asymptotic-notation">1. 渐进符号（Asymptotic Notation）</h2>
-<h3 id="o-notation-upper-bounds">1.1 <span class="math inline">\(O\)</span>-notation （upper bounds）</h3>
-<p><span class="math inline">\(f(n)=O(g(n))\)</span> 如果存在常量<span class="math inline">\(c&gt;0,n_0&gt;0\)</span>对所有的<span class="math inline">\(n\geq n_0\)</span>都有<span class="math inline">\(0\leq f(n)\leq cg(n)\)</span>。</p>
-<p>比如 <span class="math inline">\(2n^2=O(n^3)\)</span>，这个符号可以用<span class="math inline">\(\leq\)</span>理解，表示<span class="math inline">\(g(n)\)</span>是<span class="math inline">\(f(n)\)</span>的上界。</p>
-<h3 id="omega-notationlower-bounds">1.2 <span class="math inline">\(\Omega\)</span>-notation（lower bounds）</h3>
-<p><span class="math inline">\(f(n)=\Omega(g(n))\)</span> 如果存在常量<span class="math inline">\(c&gt;0,n_0&gt;0\)</span>对所有的<span class="math inline">\(n\geq n_0\)</span>都有$0cg(n) f(n) $。</p>
-<p>比如 <span class="math inline">\(\sqrt n=\Omega(\lg n)\)</span>，这个符号可以用<span class="math inline">\(\geq\)</span>理解，表示下界。</p>
-<h3 id="theta-notationtight-bounds">1.3 <span class="math inline">\(\Theta\)</span>-notation（tight bounds）</h3>
-<p><span class="math inline">\(\Theta(g(n))=O(g(n))\cap \Omega(g(n))\)</span></p>
-<p>比如<span class="math inline">\(\frac{1}{2}n^2-2n=\Omega(n^2)\)</span>，可以用<span class="math inline">\(=\)</span>理解。</p>
-<h3 id="o-notation">1.4 <span class="math inline">\(o\)</span>-notation</h3>
-<p><span class="math inline">\(f(n)=o(g(n))\)</span> 如果存在常量<span class="math inline">\(c&gt;0,n_0&gt;0\)</span>对所有的<span class="math inline">\(n\geq n_0\)</span>都有<span class="math inline">\(0\leq f(n)&lt; cg(n)\)</span>。</p>
-<p>比如<span class="math inline">\(2n^2=o(n^3)\)</span>，可以用&lt;理解。</p>
-<h3 id="omega-notation">1.5 <span class="math inline">\(\omega\)</span>-notation</h3>
-<p><span class="math inline">\(f(n)=\omega(g(n))\)</span> 如果存在常量<span class="math inline">\(c&gt;0,n_0&gt;0\)</span>对所有的<span class="math inline">\(n\geq n_0\)</span>都有$0cg(n) &lt; f(n) $。</p>
-<p>比如<span class="math inline">\(\sqrt n=\omega(\lg n)\)</span>，可以用&gt;理解。</p>
-<h2 id="递归recurrences">2. 递归（Recurrences）</h2>
-<h3 id="代换法substitution-method">2.1 代换法（Substitution method）</h3>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1. Guess 猜测结果。</span><br><span class="line">2. verify 归纳验证。</span><br><span class="line">3. solve 求系数。</span><br></pre></td></tr></table></figure>
-<p>例子：<span class="math inline">\(T(n)=4T(n/2)+n;T(1)=\Theta(1)\)</span></p>
-<p>（一）假设<span class="math inline">\(T(n)=O(n^3)\)</span></p>
+<h2 id="dynamic-order-statistics">1. Dynamic order statistics</h2>
+<p>Augmenting Data Structures(扩充的数据结构)</p>
+<p><strong>实现功能</strong></p>
+<p><code>OS-SELECT(i, S)</code>: returns the <code>ith</code> smallest element in the dynamic set S</p>
+<p><code>OS-RANK(x, S)</code>: returns the rank of x ∈ S in the sorted order of S’s elements.</p>
+<p><strong>IDEA</strong>: 对set S采用红黑树，但是在节点里保存子树的大小。<code>size[x] = size[left[x]] + size[right[x]] + 1</code>.</p>
+<p>实现的一个技巧：对NIL采用sentinel(dummy record)，<code>size[NIL]=0</code>.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">OS-SELECT(x,i) &#x2F;&#x2F;ith smallest element in the subtree rooted at x </span><br><span class="line"></span><br><span class="line">k&#x3D;size[left[x]]+1 &#x2F;&#x2F;k&#x3D;rank(x)</span><br><span class="line">if i&#x3D;k then return x</span><br><span class="line">if i&lt;k</span><br><span class="line">	then return OS-SELECT(left[x],i)</span><br><span class="line">	else return OS-SELECT(right[x],i-k)</span><br></pre></td></tr></table></figure>
+<p>运行时间为<span class="math inline">\(O(h)=O(\lg n)\)</span>.</p>
+<p>为什么保存树的大小而不是直接是值得rank，因为Insert和DELETE，当修改红黑树时，很难维护它们。插入或删除时更新子树大小。</p>
+<p>插入时修改树的大小值，然后需要重新平衡。</p>
+<ul>
+<li><p>Recolorings: 对树的大小没有影响</p></li>
+<li><p>Rotations: <span class="math inline">\(O(1)\)</span>的时间修复树</p>
+<p><img src="https://i.bmp.ovh/imgs/2021/03/3dff42f57651aaf9.png" style="zoom:50%;" /></p></li>
+</ul>
+<h2 id="methodology">2. Methodology</h2>
 <ol type="1">
-<li><p>假设<span class="math inline">\(T(n)=O(n^3)\)</span> 则<span class="math inline">\(T(k)\leq ck^3\)</span> for <span class="math inline">\(k&lt;n\)</span></p></li>
-<li><span class="math inline">\(T(n)=4T(n/2)+n\leq4c(n/2)^3+n=cn^3-((cn^3)/2-n)\)</span> 构造成 desired-residual，就是假设的减去剩下的。</li>
-<li>要使得假设成立，则<span class="math inline">\(cn^3/2-n\geq0\)</span>，所以<span class="math inline">\(c\geq2，n\geq1\)</span>不等式成立。</li>
-<li><p>我们还必须处理初始条件，<span class="math inline">\(T(1)=\Theta(1)\leq c*1^3\)</span>，当c取足够大的数时不等式成立。（This bound is not tight!）</p></li>
+<li>选择基础数据结构（红黑树）。</li>
+<li>确定要存储在数据结构中的其他信息（子树大小）</li>
+<li>确认可以保留此信息以进行修改操作（RBINSERT，RB-DELETE-不要忘记轮换）。</li>
+<li>开发使用该信息的新动态集操作（OS-SELECT和OS-RANK）。</li>
 </ol>
-<p>（二）假设<span class="math inline">\(T(n)=O(n^2)\)</span></p>
+<p>这些步骤是指导性的，而不是严格的规则。</p>
+<h2 id="interval-trees">3. Interval trees</h2>
+<p>目标：维护动态间隔集，例如时间间隔</p>
+<p>Query：对于给定的查询间隔<code>i</code>，在集合中找到一个与<code>i</code>重叠的间隔。</p>
+<p><strong>Following the methodology</strong></p>
 <ol type="1">
-<li>假设<span class="math inline">\(T(n)=O(n^2)\)</span> 则<span class="math inline">\(T(k)\leq ck^2\)</span> for <span class="math inline">\(k&lt;n\)</span></li>
-<li><span class="math inline">\(T(n)=4T(n/2)+n\leq4c(n/2)^2+n=c*n^2-(-n)\)</span></li>
-<li>要使假设成立需要<span class="math inline">\(-n&gt;0\)</span>，不能成立</li>
-</ol>
-<p>（三）加强归纳假设</p>
+<li><p>选择基础数据结构：红黑树key设为低端点。</p></li>
+<li><p>确定要存储在数据结构中的其他信息。在每个节点x中存储以<code>x</code>为根的子树中的最大值<code>m[x]</code>以及与该键对应的间隔<code>int[x]</code>。</p>
+<p><img src="https://i.bmp.ovh/imgs/2021/03/d8e5f8156ad9ba3a.png" style="zoom:50%;" /></p></li>
+<li><p>验证可以保留此信息以用于修改操作。</p>
 <ol type="1">
-<li>假设<span class="math inline">\(T(n)=O(n^2)\)</span> 则<span class="math inline">\(T(k)\leq c_1k^2-c_2k\)</span> for <span class="math inline">\(k&lt;n\)</span></li>
-<li><span class="math inline">\(T(n)=4T(n/2)+n\leq c_1n^2-c_2n\)</span></li>
-<li>要使假设成立，<span class="math inline">\(c_2\geq 1\)</span></li>
-<li>验证初始条件<span class="math inline">\(T(1)=\Theta(1)\leq c_1*1^2-c_2*1\)</span>，<span class="math inline">\(c_1\)</span>足够大不等式成立。</li>
+<li><p>Insert：沿着树插下来。</p></li>
+<li><p>Rotations：修复需要<span class="math inline">\(O(1)\)</span>时间。</p>
+<p><img src="https://i.bmp.ovh/imgs/2021/03/c0f5d6775e8f7f43.png" style="zoom:50%;" /></p></li>
+</ol></li>
+<li><p>开发使用该信息的新动态集操作。</p>
+<p><img src="https://i.bmp.ovh/imgs/2021/03/b0ee510dd13b5e0f.png" style="zoom:50%;" /></p></li>
 </ol>
-<p>求<span class="math inline">\(T(n)\)</span>的下界用类似的方法。</p>
-<h3 id="递归树方法recursion-tree-method">2.2 递归树方法（Recursion-tree method）</h3>
-<p>这个方法不够严谨，比较好的解题过程应该是用递归树法求出结果后再用代换法验证。</p>
-<p><img src="https://ftp.bmp.ovh/imgs/2021/01/33bc3bf17a284dc8.png" style="zoom: 50%;" /></p>
-<h3 id="主方法the-master-method">2.3 主方法（The master method）</h3>
-<p>主方法解决形如<span class="math inline">\(T(n)=aT(n/b)+f(n)\)</span>的式子，并且<span class="math inline">\(a\geq1,b\geq1\)</span>，<span class="math inline">\(f(n)\)</span>是趋近为正的。</p>
-<ol type="1">
-<li><strong>case1：</strong><span class="math inline">\(f(n)=O(n^{\log_ba-\epsilon}),\epsilon&gt;0\)</span>，<span class="math inline">\(f(n)\)</span> 比<span class="math inline">\(n^{\log_ba}\)</span>的增长慢<span class="math inline">\(n^\epsilon\)</span>多项式级，<strong>Solution：</strong> <span class="math inline">\(T(n)=\Theta(n^{log_ba})\)</span></li>
-<li><strong>case2：</strong> <span class="math inline">\(f(n)=\Theta(n^{\log_ba}\lg^kn),k\geq 0\)</span> <span class="math inline">\(f(n)\)</span>和<span class="math inline">\(n^{log_ba}\)</span>有一样的增长速度，<strong>Solution:</strong><span class="math inline">\(T(n)=\Theta(n^{\log_ba}\lg^{k+1}n)\)</span></li>
-<li><strong>case3：</strong> <span class="math inline">\(f(n)=\Omega(n^{\log_ba+\epsilon}),\epsilon&gt;0\)</span>，并且存在<span class="math inline">\(c&lt;1,af(n/b)\leq cf(n)\)</span> <span class="math inline">\(f(n)\)</span> 比<span class="math inline">\(n^{\log_ba}\)</span>的增长快<span class="math inline">\(n^\epsilon\)</span>多项式级，<strong>solution：</strong> <span class="math inline">\(T(n)=\Theta(f(n))\)</span></li>
-</ol>
-<p><strong>用递归树来理解主方法</strong></p>
-<p><strong>case1:</strong></p>
-<p><img src="https://ftp.bmp.ovh/imgs/2021/01/d96bb64eef94c195.png" style="zoom:50%;" /></p>
-<p><strong>case2：</strong></p>
-<p><img src="https://ftp.bmp.ovh/imgs/2021/01/48ae662c70a10496.png" style="zoom:50%;" /></p>
-<p><strong>case3：</strong></p>
-<p><img src="https://ftp.bmp.ovh/imgs/2021/01/d9e63987e5069e08.png" style="zoom:50%;" /></p>
-<h2 id="appendix-geometric-series">Appendix: geometric series</h2>
-<p><span class="math display">\[
-\begin{array}{c}
-1+x+x^{2}+\cdots+x^{n}=\frac{1-x^{n+1}}{1-x} \text { for } x \neq 1 \\
-1+x+x^{2}+\cdots=\frac{1}{1-x} \quad \text { for }|x|&lt;1
-\end{array}
-\]</span></p>
+<p><strong>Analysis</strong></p>
+<p>查询一次需要<span class="math inline">\(O(\lg n)\)</span>，查询所有：搜索，列出，删除，重复。需要<span class="math inline">\(O(k\lg n)\)</span>，最好的算法为<span class="math inline">\(O(k+\lg n)\)</span>.</p>
+<p><strong>Correctness</strong></p>
+<p><img src="https://i.bmp.ovh/imgs/2021/03/c8ab820678489f8c.png" style="zoom:50%;" /></p>
 
     </div>
 
@@ -392,13 +379,10 @@
 
         
     <div class="post-nav">
+      <div class="post-nav-item"></div>
       <div class="post-nav-item">
-    <a href="/2021/03/28/Lec13%E5%B9%B3%E6%91%8A%E5%88%86%E6%9E%90%E3%80%81%E8%A1%A8%E7%9A%84%E6%89%A9%E5%A2%9E%E3%80%81%E5%8A%BF%E8%83%BD%E6%96%B9%E6%B3%95/" rel="prev" title="Lec13 平摊分析，表的扩增，势能方法">
-      <i class="fa fa-chevron-left"></i> Lec13 平摊分析，表的扩增，势能方法
-    </a></div>
-      <div class="post-nav-item">
-    <a href="/2021/03/28/Lec01%E8%AF%BE%E7%A8%8B%E7%AE%80%E4%BB%8B%E5%8F%8A%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90/" rel="next" title="Lec01 课程简介及算法分析">
-      Lec01 课程简介及算法分析 <i class="fa fa-chevron-right"></i>
+    <a href="/2021/03/28/Lec10%E5%B9%B3%E8%A1%A1%E6%90%9C%E7%B4%A2%E6%A0%91/" rel="next" title="Lec10 平衡搜索树">
+      Lec10 平衡搜索树 <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -459,7 +443,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B8%90%E8%BF%9B%E7%AC%A6%E5%8F%B7asymptotic-notation"><span class="nav-number">1.</span> <span class="nav-text">1. 渐进符号（Asymptotic Notation）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#o-notation-upper-bounds"><span class="nav-number">1.1.</span> <span class="nav-text">1.1 \(O\)-notation （upper bounds）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#omega-notationlower-bounds"><span class="nav-number">1.2.</span> <span class="nav-text">1.2 \(\Omega\)-notation（lower bounds）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#theta-notationtight-bounds"><span class="nav-number">1.3.</span> <span class="nav-text">1.3 \(\Theta\)-notation（tight bounds）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#o-notation"><span class="nav-number">1.4.</span> <span class="nav-text">1.4 \(o\)-notation</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#omega-notation"><span class="nav-number">1.5.</span> <span class="nav-text">1.5 \(\omega\)-notation</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%92%E5%BD%92recurrences"><span class="nav-number">2.</span> <span class="nav-text">2. 递归（Recurrences）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A3%E6%8D%A2%E6%B3%95substitution-method"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 代换法（Substitution method）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%92%E5%BD%92%E6%A0%91%E6%96%B9%E6%B3%95recursion-tree-method"><span class="nav-number">2.2.</span> <span class="nav-text">2.2 递归树方法（Recursion-tree method）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BB%E6%96%B9%E6%B3%95the-master-method"><span class="nav-number">2.3.</span> <span class="nav-text">2.3 主方法（The master method）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#appendix-geometric-series"><span class="nav-number">3.</span> <span class="nav-text">Appendix: geometric series</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#dynamic-order-statistics"><span class="nav-number">1.</span> <span class="nav-text">1. Dynamic order statistics</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#methodology"><span class="nav-number">2.</span> <span class="nav-text">2. Methodology</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#interval-trees"><span class="nav-number">3.</span> <span class="nav-text">3. Interval trees</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 

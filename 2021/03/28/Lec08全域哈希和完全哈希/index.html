@@ -20,25 +20,25 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="MIT算法导论课程：Lec02 渐进符号、递归及解法，对应书的章节：Chapters 3-4, excluding section 4.6。">
+  <meta name="description" content="MIT算法导论课程：Lec08 全域哈希和完全哈希，对应书上的章节：Section 11.5">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Lec02 渐进符号、递归及解法">
-<meta property="og:url" content="http://example.com/2021/03/28/Lec02%E6%B8%90%E8%BF%9B%E7%AC%A6%E5%8F%B7%E5%92%8C%E9%80%92%E5%BD%92%E5%8F%8A%E8%A7%A3%E6%B3%95/index.html">
+<meta property="og:title" content="Lec08 全域哈希和完全哈希">
+<meta property="og:url" content="http://example.com/2021/03/28/Lec08%E5%85%A8%E5%9F%9F%E5%93%88%E5%B8%8C%E5%92%8C%E5%AE%8C%E5%85%A8%E5%93%88%E5%B8%8C/index.html">
 <meta property="og:site_name" content="Jinxi Blog">
-<meta property="og:description" content="MIT算法导论课程：Lec02 渐进符号、递归及解法，对应书的章节：Chapters 3-4, excluding section 4.6。">
+<meta property="og:description" content="MIT算法导论课程：Lec08 全域哈希和完全哈希，对应书上的章节：Section 11.5">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://ftp.bmp.ovh/imgs/2021/01/33bc3bf17a284dc8.png">
-<meta property="og:image" content="https://ftp.bmp.ovh/imgs/2021/01/d96bb64eef94c195.png">
-<meta property="og:image" content="https://ftp.bmp.ovh/imgs/2021/01/48ae662c70a10496.png">
-<meta property="og:image" content="https://ftp.bmp.ovh/imgs/2021/01/d9e63987e5069e08.png">
-<meta property="article:published_time" content="2021-03-28T16:00:00.000Z">
-<meta property="article:modified_time" content="2021-03-28T18:23:47.893Z">
+<meta property="og:image" content="https://i.bmp.ovh/imgs/2021/03/c0d884026a0bece0.png">
+<meta property="og:image" content="https://i.bmp.ovh/imgs/2021/03/5a9f5a1ed1076a16.png">
+<meta property="og:image" content="https://i.bmp.ovh/imgs/2021/03/205afe16921034e7.png">
+<meta property="og:image" content="https://i.bmp.ovh/imgs/2021/03/6905c87427f2ea37.png">
+<meta property="article:published_time" content="2021-03-28T08:14:57.000Z">
+<meta property="article:modified_time" content="2021-03-29T00:45:36.792Z">
 <meta property="article:author" content="Jinxi">
 <meta property="article:tag" content="学习笔记">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://ftp.bmp.ovh/imgs/2021/01/33bc3bf17a284dc8.png">
+<meta name="twitter:image" content="https://i.bmp.ovh/imgs/2021/03/c0d884026a0bece0.png">
 
-<link rel="canonical" href="http://example.com/2021/03/28/Lec02%E6%B8%90%E8%BF%9B%E7%AC%A6%E5%8F%B7%E5%92%8C%E9%80%92%E5%BD%92%E5%8F%8A%E8%A7%A3%E6%B3%95/">
+<link rel="canonical" href="http://example.com/2021/03/28/Lec08%E5%85%A8%E5%9F%9F%E5%93%88%E5%B8%8C%E5%92%8C%E5%AE%8C%E5%85%A8%E5%93%88%E5%B8%8C/">
 
 
 <script id="page-configurations">
@@ -51,7 +51,7 @@
   };
 </script>
 
-  <title>Lec02 渐进符号、递归及解法 | Jinxi Blog</title>
+  <title>Lec08 全域哈希和完全哈希 | Jinxi Blog</title>
   
 
 
@@ -187,7 +187,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/03/28/Lec02%E6%B8%90%E8%BF%9B%E7%AC%A6%E5%8F%B7%E5%92%8C%E9%80%92%E5%BD%92%E5%8F%8A%E8%A7%A3%E6%B3%95/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/03/28/Lec08%E5%85%A8%E5%9F%9F%E5%93%88%E5%B8%8C%E5%92%8C%E5%AE%8C%E5%85%A8%E5%93%88%E5%B8%8C/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.JPG">
@@ -200,7 +200,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Lec02 渐进符号、递归及解法
+          Lec08 全域哈希和完全哈希
         </h1>
 
         <div class="post-meta">
@@ -209,10 +209,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2021-03-29 00:00:00 / 修改时间：02:23:47" itemprop="dateCreated datePublished" datetime="2021-03-29T00:00:00+08:00">2021-03-29</time>
+              <time title="创建时间：2021-03-28 16:14:57" itemprop="dateCreated datePublished" datetime="2021-03-28T16:14:57+08:00">2021-03-28</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-03-29 08:45:36" itemprop="dateModified" datetime="2021-03-29T08:45:36+08:00">2021-03-29</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -239,8 +245,8 @@
       </span>
       <span class="post-meta-item-text">Valine：</span>
     
-    <a title="valine" href="/2021/03/28/Lec02%E6%B8%90%E8%BF%9B%E7%AC%A6%E5%8F%B7%E5%92%8C%E9%80%92%E5%BD%92%E5%8F%8A%E8%A7%A3%E6%B3%95/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2021/03/28/Lec02%E6%B8%90%E8%BF%9B%E7%AC%A6%E5%8F%B7%E5%92%8C%E9%80%92%E5%BD%92%E5%8F%8A%E8%A7%A3%E6%B3%95/" itemprop="commentCount"></span>
+    <a title="valine" href="/2021/03/28/Lec08%E5%85%A8%E5%9F%9F%E5%93%88%E5%B8%8C%E5%92%8C%E5%AE%8C%E5%85%A8%E5%93%88%E5%B8%8C/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2021/03/28/Lec08%E5%85%A8%E5%9F%9F%E5%93%88%E5%B8%8C%E5%92%8C%E5%AE%8C%E5%85%A8%E5%93%88%E5%B8%8C/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -250,14 +256,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>2.3k</span>
+              <span>3.7k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>2 分钟</span>
+              <span>3 分钟</span>
             </span>
 
         </div>
@@ -269,73 +275,71 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>MIT算法导论课程：Lec02 渐进符号、递归及解法，对应书的章节：Chapters 3-4, excluding section 4.6。</p>
+        <p>MIT算法导论课程：Lec08 全域哈希和完全哈希，对应书上的章节：Section 11.5</p>
 <span id="more"></span>
-<h2 id="渐进符号asymptotic-notation">1. 渐进符号（Asymptotic Notation）</h2>
-<h3 id="o-notation-upper-bounds">1.1 <span class="math inline">\(O\)</span>-notation （upper bounds）</h3>
-<p><span class="math inline">\(f(n)=O(g(n))\)</span> 如果存在常量<span class="math inline">\(c&gt;0,n_0&gt;0\)</span>对所有的<span class="math inline">\(n\geq n_0\)</span>都有<span class="math inline">\(0\leq f(n)\leq cg(n)\)</span>。</p>
-<p>比如 <span class="math inline">\(2n^2=O(n^3)\)</span>，这个符号可以用<span class="math inline">\(\leq\)</span>理解，表示<span class="math inline">\(g(n)\)</span>是<span class="math inline">\(f(n)\)</span>的上界。</p>
-<h3 id="omega-notationlower-bounds">1.2 <span class="math inline">\(\Omega\)</span>-notation（lower bounds）</h3>
-<p><span class="math inline">\(f(n)=\Omega(g(n))\)</span> 如果存在常量<span class="math inline">\(c&gt;0,n_0&gt;0\)</span>对所有的<span class="math inline">\(n\geq n_0\)</span>都有$0cg(n) f(n) $。</p>
-<p>比如 <span class="math inline">\(\sqrt n=\Omega(\lg n)\)</span>，这个符号可以用<span class="math inline">\(\geq\)</span>理解，表示下界。</p>
-<h3 id="theta-notationtight-bounds">1.3 <span class="math inline">\(\Theta\)</span>-notation（tight bounds）</h3>
-<p><span class="math inline">\(\Theta(g(n))=O(g(n))\cap \Omega(g(n))\)</span></p>
-<p>比如<span class="math inline">\(\frac{1}{2}n^2-2n=\Omega(n^2)\)</span>，可以用<span class="math inline">\(=\)</span>理解。</p>
-<h3 id="o-notation">1.4 <span class="math inline">\(o\)</span>-notation</h3>
-<p><span class="math inline">\(f(n)=o(g(n))\)</span> 如果存在常量<span class="math inline">\(c&gt;0,n_0&gt;0\)</span>对所有的<span class="math inline">\(n\geq n_0\)</span>都有<span class="math inline">\(0\leq f(n)&lt; cg(n)\)</span>。</p>
-<p>比如<span class="math inline">\(2n^2=o(n^3)\)</span>，可以用&lt;理解。</p>
-<h3 id="omega-notation">1.5 <span class="math inline">\(\omega\)</span>-notation</h3>
-<p><span class="math inline">\(f(n)=\omega(g(n))\)</span> 如果存在常量<span class="math inline">\(c&gt;0,n_0&gt;0\)</span>对所有的<span class="math inline">\(n\geq n_0\)</span>都有$0cg(n) &lt; f(n) $。</p>
-<p>比如<span class="math inline">\(\sqrt n=\omega(\lg n)\)</span>，可以用&gt;理解。</p>
-<h2 id="递归recurrences">2. 递归（Recurrences）</h2>
-<h3 id="代换法substitution-method">2.1 代换法（Substitution method）</h3>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1. Guess 猜测结果。</span><br><span class="line">2. verify 归纳验证。</span><br><span class="line">3. solve 求系数。</span><br></pre></td></tr></table></figure>
-<p>例子：<span class="math inline">\(T(n)=4T(n/2)+n;T(1)=\Theta(1)\)</span></p>
-<p>（一）假设<span class="math inline">\(T(n)=O(n^3)\)</span></p>
-<ol type="1">
-<li><p>假设<span class="math inline">\(T(n)=O(n^3)\)</span> 则<span class="math inline">\(T(k)\leq ck^3\)</span> for <span class="math inline">\(k&lt;n\)</span></p></li>
-<li><span class="math inline">\(T(n)=4T(n/2)+n\leq4c(n/2)^3+n=cn^3-((cn^3)/2-n)\)</span> 构造成 desired-residual，就是假设的减去剩下的。</li>
-<li>要使得假设成立，则<span class="math inline">\(cn^3/2-n\geq0\)</span>，所以<span class="math inline">\(c\geq2，n\geq1\)</span>不等式成立。</li>
-<li><p>我们还必须处理初始条件，<span class="math inline">\(T(1)=\Theta(1)\leq c*1^3\)</span>，当c取足够大的数时不等式成立。（This bound is not tight!）</p></li>
-</ol>
-<p>（二）假设<span class="math inline">\(T(n)=O(n^2)\)</span></p>
-<ol type="1">
-<li>假设<span class="math inline">\(T(n)=O(n^2)\)</span> 则<span class="math inline">\(T(k)\leq ck^2\)</span> for <span class="math inline">\(k&lt;n\)</span></li>
-<li><span class="math inline">\(T(n)=4T(n/2)+n\leq4c(n/2)^2+n=c*n^2-(-n)\)</span></li>
-<li>要使假设成立需要<span class="math inline">\(-n&gt;0\)</span>，不能成立</li>
-</ol>
-<p>（三）加强归纳假设</p>
-<ol type="1">
-<li>假设<span class="math inline">\(T(n)=O(n^2)\)</span> 则<span class="math inline">\(T(k)\leq c_1k^2-c_2k\)</span> for <span class="math inline">\(k&lt;n\)</span></li>
-<li><span class="math inline">\(T(n)=4T(n/2)+n\leq c_1n^2-c_2n\)</span></li>
-<li>要使假设成立，<span class="math inline">\(c_2\geq 1\)</span></li>
-<li>验证初始条件<span class="math inline">\(T(1)=\Theta(1)\leq c_1*1^2-c_2*1\)</span>，<span class="math inline">\(c_1\)</span>足够大不等式成立。</li>
-</ol>
-<p>求<span class="math inline">\(T(n)\)</span>的下界用类似的方法。</p>
-<h3 id="递归树方法recursion-tree-method">2.2 递归树方法（Recursion-tree method）</h3>
-<p>这个方法不够严谨，比较好的解题过程应该是用递归树法求出结果后再用代换法验证。</p>
-<p><img src="https://ftp.bmp.ovh/imgs/2021/01/33bc3bf17a284dc8.png" style="zoom: 50%;" /></p>
-<h3 id="主方法the-master-method">2.3 主方法（The master method）</h3>
-<p>主方法解决形如<span class="math inline">\(T(n)=aT(n/b)+f(n)\)</span>的式子，并且<span class="math inline">\(a\geq1,b\geq1\)</span>，<span class="math inline">\(f(n)\)</span>是趋近为正的。</p>
-<ol type="1">
-<li><strong>case1：</strong><span class="math inline">\(f(n)=O(n^{\log_ba-\epsilon}),\epsilon&gt;0\)</span>，<span class="math inline">\(f(n)\)</span> 比<span class="math inline">\(n^{\log_ba}\)</span>的增长慢<span class="math inline">\(n^\epsilon\)</span>多项式级，<strong>Solution：</strong> <span class="math inline">\(T(n)=\Theta(n^{log_ba})\)</span></li>
-<li><strong>case2：</strong> <span class="math inline">\(f(n)=\Theta(n^{\log_ba}\lg^kn),k\geq 0\)</span> <span class="math inline">\(f(n)\)</span>和<span class="math inline">\(n^{log_ba}\)</span>有一样的增长速度，<strong>Solution:</strong><span class="math inline">\(T(n)=\Theta(n^{\log_ba}\lg^{k+1}n)\)</span></li>
-<li><strong>case3：</strong> <span class="math inline">\(f(n)=\Omega(n^{\log_ba+\epsilon}),\epsilon&gt;0\)</span>，并且存在<span class="math inline">\(c&lt;1,af(n/b)\leq cf(n)\)</span> <span class="math inline">\(f(n)\)</span> 比<span class="math inline">\(n^{\log_ba}\)</span>的增长快<span class="math inline">\(n^\epsilon\)</span>多项式级，<strong>solution：</strong> <span class="math inline">\(T(n)=\Theta(f(n))\)</span></li>
-</ol>
-<p><strong>用递归树来理解主方法</strong></p>
-<p><strong>case1:</strong></p>
-<p><img src="https://ftp.bmp.ovh/imgs/2021/01/d96bb64eef94c195.png" style="zoom:50%;" /></p>
-<p><strong>case2：</strong></p>
-<p><img src="https://ftp.bmp.ovh/imgs/2021/01/48ae662c70a10496.png" style="zoom:50%;" /></p>
-<p><strong>case3：</strong></p>
-<p><img src="https://ftp.bmp.ovh/imgs/2021/01/d9e63987e5069e08.png" style="zoom:50%;" /></p>
-<h2 id="appendix-geometric-series">Appendix: geometric series</h2>
-<p><span class="math display">\[
-\begin{array}{c}
-1+x+x^{2}+\cdots+x^{n}=\frac{1-x^{n+1}}{1-x} \text { for } x \neq 1 \\
-1+x+x^{2}+\cdots=\frac{1}{1-x} \quad \text { for }|x|&lt;1
-\end{array}
+<h2 id="a-weakness-of-hashing">1. A weakness of hashing</h2>
+<p>Problem: For any hash function h, a set of keys exists that can cause the average access time of a hash table to skyrocket.存在一组keys插入同一个slot，影响速度。</p>
+<p>IDEA：random</p>
+<h2 id="universal-hashing-全域哈希">2. Universal hashing 全域哈希</h2>
+<p><strong>定义：</strong> Let <span class="math inline">\(U\)</span> be a universe of keys, and let <span class="math inline">\(H\)</span> be a finite collection of hash functions, each mapping <span class="math inline">\(U\)</span> to <span class="math inline">\(\{0, 1, …, m–1\}\)</span>. We say H is universal if for all <span class="math inline">\(x, y ∈ U\)</span>, where <span class="math inline">\(x ≠ y\)</span>, we have <span class="math inline">\(|{h\in H:h(x)=h(y)}|=|H|/m\)</span> .</p>
+<p>随机的从H中选取h，x和y发生collision的概率是1/m.</p>
+<h2 id="universality-theorem">3. Universality theorem</h2>
+<p><strong>Theorem:</strong> Let h be a hash function chosen (uniformly) at random from a universal set H of hash functions. Suppose h is used to hash <code>n</code> arbitrary keys into the <code>m</code> slots of a table T. Then, for a given key x, we have<span class="math inline">\(E[collisions\  with x]&lt;n/m\)</span>. 其中 <span class="math inline">\(n/m\)</span>：load factor.</p>
+<p>为什么是小于？</p>
+<p><strong>Proof</strong></p>
+<p>Let <span class="math inline">\(C_x\)</span> be the random variable denoting the <strong>total number</strong> of collisions of keys in T with x and let <span class="math inline">\(c_{x y}=\left\{\begin{array}{ll} 1 &amp; \text { if } h(x)=h(y) \\ 0 &amp; \text { otherwise. } \end{array}\right.\)</span> ，<span class="math inline">\(C_x\)</span>表示和<span class="math inline">\(x\)</span>碰撞的key的总数。</p>
+<p>可知：<span class="math inline">\(E[c_xy]=1/m\)</span>，<span class="math inline">\(C_{x}=\sum_{y \in T-\{x\}} c_{x y}\)</span></p>
+<p>可证： <span class="math display">\[
+\begin{aligned}
+E\left[C_{x}\right] &amp;=E\left[\sum_{y \in T-\{x\}} c_{x y}\right] \\
+&amp;=\sum_{y \in T-\{x\}} E\left[c_{x y}\right] \\
+&amp;=\sum_{y \in T-\{x\}} 1 / m \\
+&amp;=\frac{n-1}{m} . 
+\end{aligned}
 \]</span></p>
+<h2 id="constructing-a-set-of-universal-hash-functions">4. Constructing a set of universal hash functions</h2>
+<p>Let <code>m</code> be prime.Decompose key <code>k</code> into <code>r + 1</code> digits, each with value in the set <code>&#123;0, 1, …, m–1&#125;</code>. That is, let <span class="math inline">\(k = 〈 k_0, k_1, …, k_r 〉\)</span>, where <span class="math inline">\(0 ≤ ki &lt; m\)</span>.将k进行“m进制表示”。</p>
+<p><strong>Randomized strategy</strong></p>
+<p>Pick <span class="math inline">\(a = 〈 a_0, a_1, …, a_r 〉\)</span> where each <span class="math inline">\(a_i\)</span> is chosen <strong>randomly</strong> from {0, 1, …, m–1}.</p>
+<p>Define <span class="math inline">\(h_{a}(k)=\sum_{i=0}^{r} a_{i} k_{i} \bmod m\)</span> 对k和a做点积再对m取余。</p>
+<p>How big is <span class="math inline">\(H=\{h_a\}\)</span>, <span class="math inline">\(|H|=m^{r+1}\)</span></p>
+<p><strong>Theorem.</strong> The set <span class="math inline">\(H = {h_a}\)</span> is universal.</p>
+<p><strong>Proof.</strong> Suppose that <span class="math inline">\(x = 〈x_0, x_1, …, x_r 〉\)</span> and$ y = 〈y_0, y_1, …, y_r 〉$ be distinct keys. Thus, they differ in at least one digit position, wlog position 0.（假设为0位置）For how many <span class="math inline">\(h_a ∈ H\)</span> do x and y collide. We must have<span class="math inline">\(h_a(x)=h_a(y)\)</span>. which implies that:<span class="math inline">\(\sum_{i=0}^{r} a_{i} x_{i} \equiv \sum_{i=0}^{r} a_{i} y_{i} \quad(\bmod m)\)</span>, <span class="math display">\[
+\sum_{i=0}^{r} a_{i}\left(x_{i}-y_{i}\right) \equiv 0 \quad(\bmod m)
+\]</span></p>
+<p><span class="math display">\[
+a_{0}\left(x_{0}-y_{0}\right)+\sum_{i=1}^{r} a_{i}\left(x_{i}-y_{i}\right) \equiv 0 \quad(\bmod m)
+\]</span></p>
+<p><span class="math display">\[
+a_{0}\left(x_{0}-y_{0}\right) \equiv-\sum_{i=1}^{r} a_{i}\left(x_{i}-y_{i}\right) \quad(\bmod m)
+\]</span></p>
+<p>因为假设了<span class="math inline">\(x_0\neq y_0\)</span>，所以存在<span class="math inline">\((x_0-y_0)^{-1}\)</span>，所以： <span class="math display">\[
+a_{0} \equiv\left(-\sum_{i=1}^{r} a_{i}\left(x_{i}-y_{i}\right)\right) \cdot\left(x_{0}-y_{0}\right)^{-1} \quad(\bmod m)
+\]</span> 可以看出<span class="math inline">\(a_0\)</span>是由其他<span class="math inline">\(a_i\)</span>决定的，其他<span class="math inline">\(a_i\)</span>确定使得collide的<span class="math inline">\(a_0\)</span>就确定了。</p>
+<p>如果发生碰撞，the number of h为<span class="math inline">\(m^r*1=|H|/m\)</span>.证明为全域哈希。</p>
+<p><strong>Fact from number theory</strong></p>
+<p><strong>Theorem.</strong> Let m be prime. For any <span class="math inline">\(z ∈ Z_m\)</span> such that <span class="math inline">\(z ≠ 0\)</span>, there exists a unique <span class="math inline">\(z^{–1} ∈ Z_m\)</span> such that:<span class="math inline">\(z \cdot z^{-1} \equiv 1 \quad(\bmod m)\)</span></p>
+<p><img src="https://i.bmp.ovh/imgs/2021/03/c0d884026a0bece0.png" style="zoom:67%;" /></p>
+<p>如果不是质数就不成立。</p>
+<h2 id="perfect-hashing">5. Perfect hashing</h2>
+<p>Given a set of n keys, construct a static hash table of size <span class="math inline">\(m = O(n)\)</span> such that <code>SEARCH</code> takes <span class="math inline">\(\Theta(1)\)</span> time in the worst case.固定keys静态表<span class="math inline">\(O(1)\)</span>时间查找。</p>
+<p><strong>IDEA:</strong> Two level scheme with universal hashing at both levels.No collisions at level 2.</p>
+<p><img src="https://i.bmp.ovh/imgs/2021/03/5a9f5a1ed1076a16.png" style="zoom:67%;" /></p>
+<p>如果有<span class="math inline">\(n_i\)</span>个项被同时哈希到一级表的槽i，那么我们将有<span class="math inline">\(m_i=n_i^2\)</span>个槽在二级表。</p>
+<p><strong>Theorem.</strong> Let H be a class of universal hash functions for a table of size <span class="math inline">\(m = n^2\)</span>. Then, if we use a random <span class="math inline">\(h ∈ H\)</span> to hash n keys into the table, the expected number of collisions is at most 1/2. 如果使用全域哈希<span class="math inline">\(m = n^2\)</span>，如果随机采样<span class="math inline">\(h ∈ H\)</span> 期望碰撞数为1/2.</p>
+<p><strong>Proof</strong></p>
+<p><img src="https://i.bmp.ovh/imgs/2021/03/205afe16921034e7.png" style="zoom:67%;" /></p>
+<p><strong>马尔可夫不等式（Markov’s inequality）</strong></p>
+<p>for any nonnegative random variable X, we have <span class="math inline">\(Pr\{X&gt;=t\}&lt;=E[X]/t\)</span></p>
+<p><img src="https://i.bmp.ovh/imgs/2021/03/6905c87427f2ea37.png" style="zoom:50%;" /></p>
+<p><strong>Corollary</strong>. The probability of no collisions is at least 1/2.</p>
+<p>应用马尔可夫不等式，设置t=1， the probability of 1 or more collisions is at most 1/2。</p>
+<p>Thus, just by testing random hash functions in H, we’ll quickly find one that works.</p>
+<p>目标是创建静态表，所以这样证明很容易找到合适的哈希函数。</p>
+<p><strong>Analysis of storage</strong></p>
+<p>For the level-1 hash table T, choose m = n, and let ni be random variable for the number of keys that hash to slot i in T.By using <span class="math inline">\(n_i^2\)</span> slots for the level-2 hash table Si, the expected total storage required for the two-level scheme is therefore <span class="math display">\[
+E\left[\sum_{i=0}^{m-1} \Theta\left(n_{i}^{2}\right)\right]=\Theta(n)
+\]</span> since the analysis is identical to the analysis from recitation of the expected running time of <strong>bucket sort</strong>.</p>
 
     </div>
 
@@ -393,12 +397,12 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2021/03/28/Lec13%E5%B9%B3%E6%91%8A%E5%88%86%E6%9E%90%E3%80%81%E8%A1%A8%E7%9A%84%E6%89%A9%E5%A2%9E%E3%80%81%E5%8A%BF%E8%83%BD%E6%96%B9%E6%B3%95/" rel="prev" title="Lec13 平摊分析，表的扩增，势能方法">
-      <i class="fa fa-chevron-left"></i> Lec13 平摊分析，表的扩增，势能方法
+    <a href="/2021/03/28/Lec10%E5%B9%B3%E8%A1%A1%E6%90%9C%E7%B4%A2%E6%A0%91/" rel="prev" title="Lec10 平衡搜索树">
+      <i class="fa fa-chevron-left"></i> Lec10 平衡搜索树
     </a></div>
       <div class="post-nav-item">
-    <a href="/2021/03/28/Lec01%E8%AF%BE%E7%A8%8B%E7%AE%80%E4%BB%8B%E5%8F%8A%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90/" rel="next" title="Lec01 课程简介及算法分析">
-      Lec01 课程简介及算法分析 <i class="fa fa-chevron-right"></i>
+    <a href="/2021/03/28/Lec09%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91/" rel="next" title="Lec09 二叉搜索树">
+      Lec09 二叉搜索树 <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -459,7 +463,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B8%90%E8%BF%9B%E7%AC%A6%E5%8F%B7asymptotic-notation"><span class="nav-number">1.</span> <span class="nav-text">1. 渐进符号（Asymptotic Notation）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#o-notation-upper-bounds"><span class="nav-number">1.1.</span> <span class="nav-text">1.1 \(O\)-notation （upper bounds）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#omega-notationlower-bounds"><span class="nav-number">1.2.</span> <span class="nav-text">1.2 \(\Omega\)-notation（lower bounds）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#theta-notationtight-bounds"><span class="nav-number">1.3.</span> <span class="nav-text">1.3 \(\Theta\)-notation（tight bounds）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#o-notation"><span class="nav-number">1.4.</span> <span class="nav-text">1.4 \(o\)-notation</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#omega-notation"><span class="nav-number">1.5.</span> <span class="nav-text">1.5 \(\omega\)-notation</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%92%E5%BD%92recurrences"><span class="nav-number">2.</span> <span class="nav-text">2. 递归（Recurrences）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A3%E6%8D%A2%E6%B3%95substitution-method"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 代换法（Substitution method）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%92%E5%BD%92%E6%A0%91%E6%96%B9%E6%B3%95recursion-tree-method"><span class="nav-number">2.2.</span> <span class="nav-text">2.2 递归树方法（Recursion-tree method）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BB%E6%96%B9%E6%B3%95the-master-method"><span class="nav-number">2.3.</span> <span class="nav-text">2.3 主方法（The master method）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#appendix-geometric-series"><span class="nav-number">3.</span> <span class="nav-text">Appendix: geometric series</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#a-weakness-of-hashing"><span class="nav-number">1.</span> <span class="nav-text">1. A weakness of hashing</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#universal-hashing-%E5%85%A8%E5%9F%9F%E5%93%88%E5%B8%8C"><span class="nav-number">2.</span> <span class="nav-text">2. Universal hashing 全域哈希</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#universality-theorem"><span class="nav-number">3.</span> <span class="nav-text">3. Universality theorem</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#constructing-a-set-of-universal-hash-functions"><span class="nav-number">4.</span> <span class="nav-text">4. Constructing a set of universal hash functions</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#perfect-hashing"><span class="nav-number">5.</span> <span class="nav-text">5. Perfect hashing</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 

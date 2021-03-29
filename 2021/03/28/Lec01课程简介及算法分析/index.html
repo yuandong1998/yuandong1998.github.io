@@ -79,6 +79,7 @@
   </style>
 </noscript>
 
+<link rel="alternate" href="/atom.xml" title="Jinxi Blog" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -186,7 +187,7 @@
     <link itemprop="mainEntityOfPage" href="http://example.com/2021/03/28/Lec01%E8%AF%BE%E7%A8%8B%E7%AE%80%E4%BB%8B%E5%8F%8A%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="image" content="/images/avatar.JPG">
       <meta itemprop="name" content="Jinxi">
       <meta itemprop="description" content="">
     </span>
@@ -220,6 +221,41 @@
             </span>
 
           
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2021/03/28/Lec01%E8%AF%BE%E7%A8%8B%E7%AE%80%E4%BB%8B%E5%8F%8A%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2021/03/28/Lec01%E8%AF%BE%E7%A8%8B%E7%AE%80%E4%BB%8B%E5%8F%8A%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>792</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
 
         </div>
       </header>
@@ -232,19 +268,22 @@
       
         <p>MIT算法导论课程：Lec01 简介及算法分析，对应书上的章节：Chapters 1-2。</p>
 <span id="more"></span>
-
-
-
-<h2 id="1-介绍"><a href="#1-介绍" class="headerlink" title="1.介绍"></a>1.介绍</h2><h3 id="1-1-先修课程"><a href="#1-1-先修课程" class="headerlink" title="1.1 先修课程"></a>1.1 先修课程</h3><p>离散数学、概率论、编程课程</p>
-<h3 id="1-2-算法分析"><a href="#1-2-算法分析" class="headerlink" title="1.2 算法分析"></a>1.2 算法分析</h3><p>计算机程序性能和资源使用的理论研究（尤其关注性能）。</p>
-<h3 id="1-3-比性能更重要的因素"><a href="#1-3-比性能更重要的因素" class="headerlink" title="1.3 比性能更重要的因素"></a>1.3 比性能更重要的因素</h3><p>比如有正确性、简洁性、可维护性、编程成本、稳定性、功能性、模块化、安全性、可扩展性、用户友好度等。</p>
-<h3 id="1-4-算法的重要性"><a href="#1-4-算法的重要性" class="headerlink" title="1.4 算法的重要性"></a>1.4 算法的重要性</h3><ul>
+<h2 id="介绍">1.介绍</h2>
+<h3 id="先修课程">1.1 先修课程</h3>
+<p>离散数学、概率论、编程课程</p>
+<h3 id="算法分析">1.2 算法分析</h3>
+<p>计算机程序性能和资源使用的理论研究（尤其关注性能）。</p>
+<h3 id="比性能更重要的因素">1.3 比性能更重要的因素</h3>
+<p>比如有正确性、简洁性、可维护性、编程成本、稳定性、功能性、模块化、安全性、可扩展性、用户友好度等。</p>
+<h3 id="算法的重要性">1.4 算法的重要性</h3>
+<ul>
 <li>算法将不可行变为可行。</li>
 <li>算法是一种描述程序行为的语言。</li>
 </ul>
-<h2 id="2-排序问题"><a href="#2-排序问题" class="headerlink" title="2. 排序问题"></a>2. 排序问题</h2><h3 id="2-1-Insertion-sort"><a href="#2-1-Insertion-sort" class="headerlink" title="2.1 Insertion sort"></a>2.1 Insertion sort</h3><p><strong>伪代码（pseudocode）</strong></p>
+<h2 id="排序问题">2. 排序问题</h2>
+<h3 id="insertion-sort">2.1 Insertion sort</h3>
+<p><strong>伪代码（pseudocode）</strong></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">for j ← 2 to n</span><br><span class="line">    do key ← A[j]</span><br><span class="line">    i ← j-1</span><br><span class="line">    while i &gt; 0 and A[i] &gt;key</span><br><span class="line">        do A[i+1] ← A[i]</span><br><span class="line">        i ← i-1</span><br><span class="line">    A[i+1] ← key</span><br></pre></td></tr></table></figure>
-
 <p><strong>运行时间（Running time）</strong></p>
 <ul>
 <li>取决于数据，有序的数据速度更快。</li>
@@ -256,25 +295,65 @@
 <li>最坏情况：取决于计算机性能，通常描述不使用绝对速度，关注相对速度。</li>
 <li>平均情况：需要假设数据分布</li>
 <li>最好情况：有迷惑性</li>
-<li>渐近分析（Asymptotic Analysis）<ul>
-<li>$\Theta(g(n))={f(n):存在正的常数c_1,c_2已经n_0使得对于所有的n&gt;=n_0都有0\leq c_1g(n)\leq f(n)\leq c_2g(n)}$，也就是去掉函数的低阶项和最高阶项系数。</li>
+<li>渐近分析（Asymptotic Analysis）
+<ul>
+<li><span class="math inline">\(\Theta(g(n))={f(n):存在正的常数c_1,c_2已经n_0使得对于所有的n&gt;=n_0都有0\leq c_1g(n)\leq f(n)\leq c_2g(n)}\)</span>，也就是去掉函数的低阶项和最高阶项系数。</li>
 <li>关注随模型增长的增长情况</li>
+</ul></li>
 </ul>
-</li>
-</ul>
-<h3 id="2-2-Merge-Sort"><a href="#2-2-Merge-Sort" class="headerlink" title="2.2 Merge Sort"></a>2.2 Merge Sort</h3><p><strong>伪代码</strong></p>
+<h3 id="merge-sort">2.2 Merge Sort</h3>
+<p><strong>伪代码</strong></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">MERGE-SORT A[1...n]</span><br><span class="line">1.if n&#x3D;1,done</span><br><span class="line">2.recursively sort A[1..[n&#x2F;2]] and A[[n&#x2F;2]+1,...,n]</span><br><span class="line">3.merge 2 sorted lists</span><br></pre></td></tr></table></figure>
-
 <p><strong>算法分析</strong></p>
-<p>$T(n)=2(T/2)+\Theta(n)$</p>
-<p>$T(n)=2(T/2)+c n$</p>
+<p><span class="math inline">\(T(n)=2(T/2)+\Theta(n)\)</span></p>
+<p><span class="math inline">\(T(n)=2(T/2)+c n\)</span></p>
 <p><strong>递归树 Recursion tree</strong></p>
-<img src="https://ftp.bmp.ovh/imgs/2021/03/20e766da834288c8.png" style="zoom:67%;" />
+<p><img src="https://ftp.bmp.ovh/imgs/2021/03/20e766da834288c8.png" style="zoom:67%;" /></p>
+
     </div>
 
     
     
     
+        <div class="reward-container">
+  <div>如果觉得我的文章对您有用，请随意打赏。您的支持将鼓励我继续创作！</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.png" alt="Jinxi 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/ailpay.jpg" alt="Jinxi 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
 
       <footer class="post-footer">
           <div class="post-tags">
@@ -303,6 +382,7 @@
 
           </div>
           
+    <div class="comments" id="valine-comments"></div>
 
 <script>
   window.addEventListener('tabs:register', () => {
@@ -349,12 +429,14 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E4%BB%8B%E7%BB%8D"><span class="nav-number">1.</span> <span class="nav-text">1.介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-%E5%85%88%E4%BF%AE%E8%AF%BE%E7%A8%8B"><span class="nav-number">1.1.</span> <span class="nav-text">1.1 先修课程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90"><span class="nav-number">1.2.</span> <span class="nav-text">1.2 算法分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-%E6%AF%94%E6%80%A7%E8%83%BD%E6%9B%B4%E9%87%8D%E8%A6%81%E7%9A%84%E5%9B%A0%E7%B4%A0"><span class="nav-number">1.3.</span> <span class="nav-text">1.3 比性能更重要的因素</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-4-%E7%AE%97%E6%B3%95%E7%9A%84%E9%87%8D%E8%A6%81%E6%80%A7"><span class="nav-number">1.4.</span> <span class="nav-text">1.4 算法的重要性</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E6%8E%92%E5%BA%8F%E9%97%AE%E9%A2%98"><span class="nav-number">2.</span> <span class="nav-text">2. 排序问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-Insertion-sort"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 Insertion sort</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-Merge-Sort"><span class="nav-number">2.2.</span> <span class="nav-text">2.2 Merge Sort</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%8B%E7%BB%8D"><span class="nav-number">1.</span> <span class="nav-text">1.介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%88%E4%BF%AE%E8%AF%BE%E7%A8%8B"><span class="nav-number">1.1.</span> <span class="nav-text">1.1 先修课程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90"><span class="nav-number">1.2.</span> <span class="nav-text">1.2 算法分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AF%94%E6%80%A7%E8%83%BD%E6%9B%B4%E9%87%8D%E8%A6%81%E7%9A%84%E5%9B%A0%E7%B4%A0"><span class="nav-number">1.3.</span> <span class="nav-text">1.3 比性能更重要的因素</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E7%9A%84%E9%87%8D%E8%A6%81%E6%80%A7"><span class="nav-number">1.4.</span> <span class="nav-text">1.4 算法的重要性</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8E%92%E5%BA%8F%E9%97%AE%E9%A2%98"><span class="nav-number">2.</span> <span class="nav-text">2. 排序问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#insertion-sort"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 Insertion sort</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#merge-sort"><span class="nav-number">2.2.</span> <span class="nav-text">2.2 Merge Sort</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
       <div class="site-overview-wrap sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Jinxi"
+      src="/images/avatar.JPG">
   <p class="site-author-name" itemprop="name">Jinxi</p>
   <div class="site-description" itemprop="description"></div>
 </div>
@@ -363,7 +445,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">2</span>
+          <span class="site-state-item-count">17</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -379,6 +461,14 @@
       </div>
   </nav>
 </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/yuandong1998" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;yuandong1998" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/1377526365@qq.com" title="E-Mail → 1377526365@qq.com"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
 
 
 
@@ -409,8 +499,27 @@
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
   </div>
-
         
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
 
 
 
@@ -515,6 +624,35 @@
     
 
   
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'Itq4lnx4qasas8q1mY3XpizW-gzGzoHsz',
+      appKey     : 'iVzadklVByQVhP8VBTe76nVz',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
 
 </body>
 </html>

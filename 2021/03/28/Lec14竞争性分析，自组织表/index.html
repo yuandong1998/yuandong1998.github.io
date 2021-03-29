@@ -20,25 +20,24 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="MIT算法导论课程：Lec02 渐进符号、递归及解法，对应书的章节：Chapters 3-4, excluding section 4.6。">
+  <meta name="description" content="MIT算法导论课程：Lec14 竞争性分析，自组织表，对应Sleator, Daniel D., and Robert E. Tarjan. &quot;Amortized efficiency of list update and paging rules.&quot; Communications of the ACM 28, no. 2 (February 1985): 202-208.">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Lec02 渐进符号、递归及解法">
-<meta property="og:url" content="http://example.com/2021/03/28/Lec02%E6%B8%90%E8%BF%9B%E7%AC%A6%E5%8F%B7%E5%92%8C%E9%80%92%E5%BD%92%E5%8F%8A%E8%A7%A3%E6%B3%95/index.html">
+<meta property="og:title" content="Lec14 竞争性分析，自组织表">
+<meta property="og:url" content="http://example.com/2021/03/28/Lec14%E7%AB%9E%E4%BA%89%E6%80%A7%E5%88%86%E6%9E%90%EF%BC%8C%E8%87%AA%E7%BB%84%E7%BB%87%E8%A1%A8/index.html">
 <meta property="og:site_name" content="Jinxi Blog">
-<meta property="og:description" content="MIT算法导论课程：Lec02 渐进符号、递归及解法，对应书的章节：Chapters 3-4, excluding section 4.6。">
+<meta property="og:description" content="MIT算法导论课程：Lec14 竞争性分析，自组织表，对应Sleator, Daniel D., and Robert E. Tarjan. &quot;Amortized efficiency of list update and paging rules.&quot; Communications of the ACM 28, no. 2 (February 1985): 202-208.">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://ftp.bmp.ovh/imgs/2021/01/33bc3bf17a284dc8.png">
-<meta property="og:image" content="https://ftp.bmp.ovh/imgs/2021/01/d96bb64eef94c195.png">
-<meta property="og:image" content="https://ftp.bmp.ovh/imgs/2021/01/48ae662c70a10496.png">
-<meta property="og:image" content="https://ftp.bmp.ovh/imgs/2021/01/d9e63987e5069e08.png">
-<meta property="article:published_time" content="2021-03-28T16:00:00.000Z">
-<meta property="article:modified_time" content="2021-03-28T18:23:47.893Z">
+<meta property="og:image" content="https://i.bmp.ovh/imgs/2021/03/8d09cdd9f9cd4ce6.png">
+<meta property="og:image" content="https://i.bmp.ovh/imgs/2021/03/6b13e6ead2c33c68.png">
+<meta property="og:image" content="https://i.bmp.ovh/imgs/2021/03/3de2caa7c0a77734.png">
+<meta property="article:published_time" content="2021-03-28T08:14:58.000Z">
+<meta property="article:modified_time" content="2021-03-29T00:40:29.468Z">
 <meta property="article:author" content="Jinxi">
 <meta property="article:tag" content="学习笔记">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://ftp.bmp.ovh/imgs/2021/01/33bc3bf17a284dc8.png">
+<meta name="twitter:image" content="https://i.bmp.ovh/imgs/2021/03/8d09cdd9f9cd4ce6.png">
 
-<link rel="canonical" href="http://example.com/2021/03/28/Lec02%E6%B8%90%E8%BF%9B%E7%AC%A6%E5%8F%B7%E5%92%8C%E9%80%92%E5%BD%92%E5%8F%8A%E8%A7%A3%E6%B3%95/">
+<link rel="canonical" href="http://example.com/2021/03/28/Lec14%E7%AB%9E%E4%BA%89%E6%80%A7%E5%88%86%E6%9E%90%EF%BC%8C%E8%87%AA%E7%BB%84%E7%BB%87%E8%A1%A8/">
 
 
 <script id="page-configurations">
@@ -51,7 +50,7 @@
   };
 </script>
 
-  <title>Lec02 渐进符号、递归及解法 | Jinxi Blog</title>
+  <title>Lec14 竞争性分析，自组织表 | Jinxi Blog</title>
   
 
 
@@ -187,7 +186,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/03/28/Lec02%E6%B8%90%E8%BF%9B%E7%AC%A6%E5%8F%B7%E5%92%8C%E9%80%92%E5%BD%92%E5%8F%8A%E8%A7%A3%E6%B3%95/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/03/28/Lec14%E7%AB%9E%E4%BA%89%E6%80%A7%E5%88%86%E6%9E%90%EF%BC%8C%E8%87%AA%E7%BB%84%E7%BB%87%E8%A1%A8/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.JPG">
@@ -200,7 +199,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Lec02 渐进符号、递归及解法
+          Lec14 竞争性分析，自组织表
         </h1>
 
         <div class="post-meta">
@@ -209,10 +208,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2021-03-29 00:00:00 / 修改时间：02:23:47" itemprop="dateCreated datePublished" datetime="2021-03-29T00:00:00+08:00">2021-03-29</time>
+              <time title="创建时间：2021-03-28 16:14:58" itemprop="dateCreated datePublished" datetime="2021-03-28T16:14:58+08:00">2021-03-28</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-03-29 08:40:29" itemprop="dateModified" datetime="2021-03-29T08:40:29+08:00">2021-03-29</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -239,8 +244,8 @@
       </span>
       <span class="post-meta-item-text">Valine：</span>
     
-    <a title="valine" href="/2021/03/28/Lec02%E6%B8%90%E8%BF%9B%E7%AC%A6%E5%8F%B7%E5%92%8C%E9%80%92%E5%BD%92%E5%8F%8A%E8%A7%A3%E6%B3%95/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2021/03/28/Lec02%E6%B8%90%E8%BF%9B%E7%AC%A6%E5%8F%B7%E5%92%8C%E9%80%92%E5%BD%92%E5%8F%8A%E8%A7%A3%E6%B3%95/" itemprop="commentCount"></span>
+    <a title="valine" href="/2021/03/28/Lec14%E7%AB%9E%E4%BA%89%E6%80%A7%E5%88%86%E6%9E%90%EF%BC%8C%E8%87%AA%E7%BB%84%E7%BB%87%E8%A1%A8/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2021/03/28/Lec14%E7%AB%9E%E4%BA%89%E6%80%A7%E5%88%86%E6%9E%90%EF%BC%8C%E8%87%AA%E7%BB%84%E7%BB%87%E8%A1%A8/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -269,73 +274,71 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>MIT算法导论课程：Lec02 渐进符号、递归及解法，对应书的章节：Chapters 3-4, excluding section 4.6。</p>
+        <p>MIT算法导论课程：Lec14 竞争性分析，自组织表，对应Sleator, Daniel D., and Robert E. Tarjan. &quot;Amortized efficiency of list update and paging rules.&quot; Communications of the ACM 28, no. 2 (February 1985): 202-208.</p>
 <span id="more"></span>
-<h2 id="渐进符号asymptotic-notation">1. 渐进符号（Asymptotic Notation）</h2>
-<h3 id="o-notation-upper-bounds">1.1 <span class="math inline">\(O\)</span>-notation （upper bounds）</h3>
-<p><span class="math inline">\(f(n)=O(g(n))\)</span> 如果存在常量<span class="math inline">\(c&gt;0,n_0&gt;0\)</span>对所有的<span class="math inline">\(n\geq n_0\)</span>都有<span class="math inline">\(0\leq f(n)\leq cg(n)\)</span>。</p>
-<p>比如 <span class="math inline">\(2n^2=O(n^3)\)</span>，这个符号可以用<span class="math inline">\(\leq\)</span>理解，表示<span class="math inline">\(g(n)\)</span>是<span class="math inline">\(f(n)\)</span>的上界。</p>
-<h3 id="omega-notationlower-bounds">1.2 <span class="math inline">\(\Omega\)</span>-notation（lower bounds）</h3>
-<p><span class="math inline">\(f(n)=\Omega(g(n))\)</span> 如果存在常量<span class="math inline">\(c&gt;0,n_0&gt;0\)</span>对所有的<span class="math inline">\(n\geq n_0\)</span>都有$0cg(n) f(n) $。</p>
-<p>比如 <span class="math inline">\(\sqrt n=\Omega(\lg n)\)</span>，这个符号可以用<span class="math inline">\(\geq\)</span>理解，表示下界。</p>
-<h3 id="theta-notationtight-bounds">1.3 <span class="math inline">\(\Theta\)</span>-notation（tight bounds）</h3>
-<p><span class="math inline">\(\Theta(g(n))=O(g(n))\cap \Omega(g(n))\)</span></p>
-<p>比如<span class="math inline">\(\frac{1}{2}n^2-2n=\Omega(n^2)\)</span>，可以用<span class="math inline">\(=\)</span>理解。</p>
-<h3 id="o-notation">1.4 <span class="math inline">\(o\)</span>-notation</h3>
-<p><span class="math inline">\(f(n)=o(g(n))\)</span> 如果存在常量<span class="math inline">\(c&gt;0,n_0&gt;0\)</span>对所有的<span class="math inline">\(n\geq n_0\)</span>都有<span class="math inline">\(0\leq f(n)&lt; cg(n)\)</span>。</p>
-<p>比如<span class="math inline">\(2n^2=o(n^3)\)</span>，可以用&lt;理解。</p>
-<h3 id="omega-notation">1.5 <span class="math inline">\(\omega\)</span>-notation</h3>
-<p><span class="math inline">\(f(n)=\omega(g(n))\)</span> 如果存在常量<span class="math inline">\(c&gt;0,n_0&gt;0\)</span>对所有的<span class="math inline">\(n\geq n_0\)</span>都有$0cg(n) &lt; f(n) $。</p>
-<p>比如<span class="math inline">\(\sqrt n=\omega(\lg n)\)</span>，可以用&gt;理解。</p>
-<h2 id="递归recurrences">2. 递归（Recurrences）</h2>
-<h3 id="代换法substitution-method">2.1 代换法（Substitution method）</h3>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1. Guess 猜测结果。</span><br><span class="line">2. verify 归纳验证。</span><br><span class="line">3. solve 求系数。</span><br></pre></td></tr></table></figure>
-<p>例子：<span class="math inline">\(T(n)=4T(n/2)+n;T(1)=\Theta(1)\)</span></p>
-<p>（一）假设<span class="math inline">\(T(n)=O(n^3)\)</span></p>
-<ol type="1">
-<li><p>假设<span class="math inline">\(T(n)=O(n^3)\)</span> 则<span class="math inline">\(T(k)\leq ck^3\)</span> for <span class="math inline">\(k&lt;n\)</span></p></li>
-<li><span class="math inline">\(T(n)=4T(n/2)+n\leq4c(n/2)^3+n=cn^3-((cn^3)/2-n)\)</span> 构造成 desired-residual，就是假设的减去剩下的。</li>
-<li>要使得假设成立，则<span class="math inline">\(cn^3/2-n\geq0\)</span>，所以<span class="math inline">\(c\geq2，n\geq1\)</span>不等式成立。</li>
-<li><p>我们还必须处理初始条件，<span class="math inline">\(T(1)=\Theta(1)\leq c*1^3\)</span>，当c取足够大的数时不等式成立。（This bound is not tight!）</p></li>
-</ol>
-<p>（二）假设<span class="math inline">\(T(n)=O(n^2)\)</span></p>
-<ol type="1">
-<li>假设<span class="math inline">\(T(n)=O(n^2)\)</span> 则<span class="math inline">\(T(k)\leq ck^2\)</span> for <span class="math inline">\(k&lt;n\)</span></li>
-<li><span class="math inline">\(T(n)=4T(n/2)+n\leq4c(n/2)^2+n=c*n^2-(-n)\)</span></li>
-<li>要使假设成立需要<span class="math inline">\(-n&gt;0\)</span>，不能成立</li>
-</ol>
-<p>（三）加强归纳假设</p>
-<ol type="1">
-<li>假设<span class="math inline">\(T(n)=O(n^2)\)</span> 则<span class="math inline">\(T(k)\leq c_1k^2-c_2k\)</span> for <span class="math inline">\(k&lt;n\)</span></li>
-<li><span class="math inline">\(T(n)=4T(n/2)+n\leq c_1n^2-c_2n\)</span></li>
-<li>要使假设成立，<span class="math inline">\(c_2\geq 1\)</span></li>
-<li>验证初始条件<span class="math inline">\(T(1)=\Theta(1)\leq c_1*1^2-c_2*1\)</span>，<span class="math inline">\(c_1\)</span>足够大不等式成立。</li>
-</ol>
-<p>求<span class="math inline">\(T(n)\)</span>的下界用类似的方法。</p>
-<h3 id="递归树方法recursion-tree-method">2.2 递归树方法（Recursion-tree method）</h3>
-<p>这个方法不够严谨，比较好的解题过程应该是用递归树法求出结果后再用代换法验证。</p>
-<p><img src="https://ftp.bmp.ovh/imgs/2021/01/33bc3bf17a284dc8.png" style="zoom: 50%;" /></p>
-<h3 id="主方法the-master-method">2.3 主方法（The master method）</h3>
-<p>主方法解决形如<span class="math inline">\(T(n)=aT(n/b)+f(n)\)</span>的式子，并且<span class="math inline">\(a\geq1,b\geq1\)</span>，<span class="math inline">\(f(n)\)</span>是趋近为正的。</p>
-<ol type="1">
-<li><strong>case1：</strong><span class="math inline">\(f(n)=O(n^{\log_ba-\epsilon}),\epsilon&gt;0\)</span>，<span class="math inline">\(f(n)\)</span> 比<span class="math inline">\(n^{\log_ba}\)</span>的增长慢<span class="math inline">\(n^\epsilon\)</span>多项式级，<strong>Solution：</strong> <span class="math inline">\(T(n)=\Theta(n^{log_ba})\)</span></li>
-<li><strong>case2：</strong> <span class="math inline">\(f(n)=\Theta(n^{\log_ba}\lg^kn),k\geq 0\)</span> <span class="math inline">\(f(n)\)</span>和<span class="math inline">\(n^{log_ba}\)</span>有一样的增长速度，<strong>Solution:</strong><span class="math inline">\(T(n)=\Theta(n^{\log_ba}\lg^{k+1}n)\)</span></li>
-<li><strong>case3：</strong> <span class="math inline">\(f(n)=\Omega(n^{\log_ba+\epsilon}),\epsilon&gt;0\)</span>，并且存在<span class="math inline">\(c&lt;1,af(n/b)\leq cf(n)\)</span> <span class="math inline">\(f(n)\)</span> 比<span class="math inline">\(n^{\log_ba}\)</span>的增长快<span class="math inline">\(n^\epsilon\)</span>多项式级，<strong>solution：</strong> <span class="math inline">\(T(n)=\Theta(f(n))\)</span></li>
-</ol>
-<p><strong>用递归树来理解主方法</strong></p>
-<p><strong>case1:</strong></p>
-<p><img src="https://ftp.bmp.ovh/imgs/2021/01/d96bb64eef94c195.png" style="zoom:50%;" /></p>
-<p><strong>case2：</strong></p>
-<p><img src="https://ftp.bmp.ovh/imgs/2021/01/48ae662c70a10496.png" style="zoom:50%;" /></p>
-<p><strong>case3：</strong></p>
-<p><img src="https://ftp.bmp.ovh/imgs/2021/01/d9e63987e5069e08.png" style="zoom:50%;" /></p>
-<h2 id="appendix-geometric-series">Appendix: geometric series</h2>
-<p><span class="math display">\[
-\begin{array}{c}
-1+x+x^{2}+\cdots+x^{n}=\frac{1-x^{n+1}}{1-x} \text { for } x \neq 1 \\
-1+x+x^{2}+\cdots=\frac{1}{1-x} \quad \text { for }|x|&lt;1
-\end{array}
+<h2 id="self-organizing-lists">1. Self-organizing lists</h2>
+<p><strong>Self-organizing lists</strong></p>
+<p>表<code>L</code>有<code>n</code>个元素，操作<code>ACCESS(x)</code>的成本为<span class="math inline">\(rank_L(x)\)</span>，也就是x到头节点的长度。L可以相邻元素的交换，cost为1.</p>
+<p><strong>On-line and off-line problems</strong></p>
+<p>on-line：序列操作<code>S</code>,必须立刻执行操作，不知道未来的操作。</p>
+<p>off-line：可以提前看到之后所有的操作。</p>
+<p>Goal：最小化总成本<span class="math inline">\(C_A(S)\)</span>。</p>
+<p><strong>Worst-case analysis of self organizing lists</strong></p>
+<p>worst case：总是访问L中的尾元素，<span class="math inline">\(C_A(S)=\Omega(|S|*n)\)</span>。</p>
+<p><strong>Average-case analysis of self organizing lists</strong></p>
+<p>假设元素<code>x</code>以概率<code>p(x)</code>被访问，<span class="math inline">\(E[C_A(S)]=\sum_{x\in L}p(x)*rank_L(x)\)</span>。其中当<code>L</code>以概率<code>P</code>降序进行排序时期望成本最小。</p>
+<p>Heuristic:对访问的元素进行计数，然后保存<code>L</code>以计数降序排序。</p>
+<h2 id="move-to-front-heuristic">2. Move-to-front heuristic</h2>
+<p>在实践中发现move-to-front(MTF)启发式的方法有较好的结果。具体做法是在访问<code>x</code>后，将<code>x</code>移动到表头，<span class="math inline">\(cost=2*rank_L(x)\)</span>。MTF方法对于局部性方法有较好的解。</p>
+<h2 id="competitive-analysis-of-mtf">3. Competitive analysis of MTF</h2>
+<p><strong>定义：</strong> 一个on-line算法A是<span class="math inline">\(\alpha-competitive\)</span> 如果存在常数<code>k</code>对于任何操作序列<code>S</code>有<span class="math inline">\(C_A(S)\leq \alpha*C_{OPT}(S)+k\)</span>，其中<span class="math inline">\(OPT\)</span>是off-line的最优算法。</p>
+<p><strong>Theorem：</strong> MTF对于self-organizing lists是一个4-competitive。</p>
+<p><strong>proof：</strong></p>
+<p>首先定义一些变量：</p>
+<p><img src="https://i.bmp.ovh/imgs/2021/03/8d09cdd9f9cd4ce6.png" style="zoom:67%;" /></p>
+<p>定义势能函数<span class="math inline">\(\Phi:{L_i}-&gt;R\)</span> <span class="math display">\[
+\begin{aligned}
+&amp;\Phi\left(L_{i}\right)=2 \cdot \mid\left\{(x, y): x \prec_{L_{i}} y \text { and } y \prec_{L_{i} *} x\right\}\\
+&amp;=2 \cdot \# \text { inversions }
+\end{aligned}
+\]</span> <img src="https://i.bmp.ovh/imgs/2021/03/6b13e6ead2c33c68.png" style="zoom:67%;" /></p>
+<p>可以看出：</p>
+<ul>
+<li><span class="math inline">\(\Phi(L_i)\geq 0\)</span> for all i&gt;=0</li>
+<li><span class="math inline">\(\Phi(L_0)=0\)</span> 如果MTF和OPT开始时一样</li>
+</ul>
+<p>一次transpose，<span class="math inline">\(\Delta\Phi=\pm2\)</span>，因为一次transpose会产生或者消除一个逆序对。</p>
+<p>下面看当访问一个元素会发生什么，进行如下的定义：</p>
+<p><img src="https://i.bmp.ovh/imgs/2021/03/3de2caa7c0a77734.png" style="zoom:67%;" /></p>
+<p><span class="math inline">\(r=rank_{i-1}(x)=|A|+|B|+1\)</span>，<span class="math inline">\(r^*=|A|+|C|+1\)</span>.</p>
+<p>MTF将x移动到表头，产生|A|的逆序对，消除了|B|的逆序。对OPT的每次transpose产生小于1的逆序对，因此<span class="math inline">\(\Phi(L_i)-\Phi(L_{i-1}\leq2(|A|-|B|+t_i))\)</span>.</p>
+<p><strong>Amortized cost</strong></p>
+<p>MTF第<code>i</code>次操作的平摊代价为： <span class="math display">\[
+\begin{aligned}
+\hat{c}_{i} &amp;=c_{i}+\Phi\left(L_{i}\right)-\Phi\left(L_{i-1}\right) \\
+&amp; \leq 2 r+2\left(|A|-|B|+t_{i}\right) \\
+&amp;=2 r+2\left(|A|-(r-1-|A|)+t_{i}\right) \\
+&amp;=2 r+4|A|-2 r+2+2 t_{i} \\
+&amp;=4|A|+2+2 t_{i} \\
+&amp; \leq 4\left(r^{*}+t_{i}\right) \\
+&amp;=4 c_{i}^{*}
+\end{aligned}
 \]</span></p>
+<p>因此我们可以得出：</p>
+<p><span class="math display">\[
+\begin{aligned}
+C_{\mathrm{MTF}}(S) &amp;=\sum_{i=1}^{|S|} c_{i} \\
+&amp;=\sum_{i=1}^{|S|}\left(\hat{c}_{i}+\Phi\left(L_{i-1}\right)-\Phi\left(L_{i}\right)\right) \\
+&amp; \leq\left(\sum_{i=1}^{|S|} 4 c_{i}^{*}\right)+\Phi\left(L_{0}\right)-\Phi\left(L_{|S|}\right) \\
+&amp; \leq 4 \cdot C_{\mathrm{OPT}}(S)
+\end{aligned}
+\]</span> <strong>Addendum</strong></p>
+<p>如果将把<code>x</code>转移到表头的代价看作0（x从表中拆除在插在表头，时间是常量），则MTF是2-competitive。</p>
+<p>如果<span class="math inline">\(L_0\neq L_0^*\)</span></p>
+<ul>
+<li><span class="math inline">\(\Phi(L_0)\)</span>最差情况为<span class="math inline">\(\Theta(n^2)\)</span>。</li>
+<li>因此：<span class="math inline">\(C_{MTF}\leq 4*C_{OPT}(S)+\Theta(n^2)\)</span>，也是4-competitive，因为<span class="math inline">\(|S|-&gt;+\infty\)</span>，<span class="math inline">\(n^2\)</span>也是常量，n不受到|S|的影响。</li>
+</ul>
 
     </div>
 
@@ -393,12 +396,12 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2021/03/28/Lec13%E5%B9%B3%E6%91%8A%E5%88%86%E6%9E%90%E3%80%81%E8%A1%A8%E7%9A%84%E6%89%A9%E5%A2%9E%E3%80%81%E5%8A%BF%E8%83%BD%E6%96%B9%E6%B3%95/" rel="prev" title="Lec13 平摊分析，表的扩增，势能方法">
-      <i class="fa fa-chevron-left"></i> Lec13 平摊分析，表的扩增，势能方法
+    <a href="/2021/03/28/Lec15%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92%EF%BC%8C%E6%9C%80%E9%95%BF%E5%85%AC%E5%85%B1%E5%AD%90%E5%BA%8F%E5%88%97/" rel="prev" title="Lec15 动态规划，最长公共子序列">
+      <i class="fa fa-chevron-left"></i> Lec15 动态规划，最长公共子序列
     </a></div>
       <div class="post-nav-item">
-    <a href="/2021/03/28/Lec01%E8%AF%BE%E7%A8%8B%E7%AE%80%E4%BB%8B%E5%8F%8A%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90/" rel="next" title="Lec01 课程简介及算法分析">
-      Lec01 课程简介及算法分析 <i class="fa fa-chevron-right"></i>
+    <a href="/2021/03/28/Lec12%E8%B7%B3%E8%B7%83%E8%A1%A8/" rel="next" title="Lec12跳跃表">
+      Lec12跳跃表 <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -459,7 +462,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B8%90%E8%BF%9B%E7%AC%A6%E5%8F%B7asymptotic-notation"><span class="nav-number">1.</span> <span class="nav-text">1. 渐进符号（Asymptotic Notation）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#o-notation-upper-bounds"><span class="nav-number">1.1.</span> <span class="nav-text">1.1 \(O\)-notation （upper bounds）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#omega-notationlower-bounds"><span class="nav-number">1.2.</span> <span class="nav-text">1.2 \(\Omega\)-notation（lower bounds）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#theta-notationtight-bounds"><span class="nav-number">1.3.</span> <span class="nav-text">1.3 \(\Theta\)-notation（tight bounds）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#o-notation"><span class="nav-number">1.4.</span> <span class="nav-text">1.4 \(o\)-notation</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#omega-notation"><span class="nav-number">1.5.</span> <span class="nav-text">1.5 \(\omega\)-notation</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%92%E5%BD%92recurrences"><span class="nav-number">2.</span> <span class="nav-text">2. 递归（Recurrences）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A3%E6%8D%A2%E6%B3%95substitution-method"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 代换法（Substitution method）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%92%E5%BD%92%E6%A0%91%E6%96%B9%E6%B3%95recursion-tree-method"><span class="nav-number">2.2.</span> <span class="nav-text">2.2 递归树方法（Recursion-tree method）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BB%E6%96%B9%E6%B3%95the-master-method"><span class="nav-number">2.3.</span> <span class="nav-text">2.3 主方法（The master method）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#appendix-geometric-series"><span class="nav-number">3.</span> <span class="nav-text">Appendix: geometric series</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#self-organizing-lists"><span class="nav-number">1.</span> <span class="nav-text">1. Self-organizing lists</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#move-to-front-heuristic"><span class="nav-number">2.</span> <span class="nav-text">2. Move-to-front heuristic</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#competitive-analysis-of-mtf"><span class="nav-number">3.</span> <span class="nav-text">3. Competitive analysis of MTF</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
