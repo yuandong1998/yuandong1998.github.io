@@ -20,26 +20,20 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="MIT算法导论课程：Lec13 平摊分析，表的扩增，势能方法，对应书上的章节：Chapter 17 平摊分析（Amortized Analysis）">
+  <meta name="description" content="本地测试：hexo s 发布到GitHub：hexo clean &amp;&amp; hexo g &amp;&amp; hexo d">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Lec13 平摊分析，表的扩增，势能方法">
-<meta property="og:url" content="http://example.com/2021/03/28/Lec13%E5%B9%B3%E6%91%8A%E5%88%86%E6%9E%90%E3%80%81%E8%A1%A8%E7%9A%84%E6%89%A9%E5%A2%9E%E3%80%81%E5%8A%BF%E8%83%BD%E6%96%B9%E6%B3%95/index.html">
+<meta property="og:title" content="Hexo 使用笔记">
+<meta property="og:url" content="http://example.com/2021/08/26/hexo%E4%BD%BF%E7%94%A8%E7%AC%94%E8%AE%B0/index.html">
 <meta property="og:site_name" content="Jinxi Blog">
-<meta property="og:description" content="MIT算法导论课程：Lec13 平摊分析，表的扩增，势能方法，对应书上的章节：Chapter 17 平摊分析（Amortized Analysis）">
+<meta property="og:description" content="本地测试：hexo s 发布到GitHub：hexo clean &amp;&amp; hexo g &amp;&amp; hexo d">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://i.bmp.ovh/imgs/2021/03/b6357b14e88b4ae0.png">
-<meta property="og:image" content="https://i.bmp.ovh/imgs/2021/03/7c5c42c3c849922d.png">
-<meta property="og:image" content="https://i.bmp.ovh/imgs/2021/03/0be4cc3450eebf77.png">
-<meta property="og:image" content="https://i.bmp.ovh/imgs/2021/03/6168d499c3f1b09f.png">
-<meta property="og:image" content="https://i.bmp.ovh/imgs/2021/03/1c09e78db4040c56.png">
-<meta property="article:published_time" content="2021-03-28T08:14:58.000Z">
-<meta property="article:modified_time" content="2021-03-29T00:33:03.197Z">
+<meta property="article:published_time" content="2021-08-26T16:00:00.000Z">
+<meta property="article:modified_time" content="2021-08-26T16:14:26.963Z">
 <meta property="article:author" content="Jinxi">
 <meta property="article:tag" content="学习笔记">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://i.bmp.ovh/imgs/2021/03/b6357b14e88b4ae0.png">
 
-<link rel="canonical" href="http://example.com/2021/03/28/Lec13%E5%B9%B3%E6%91%8A%E5%88%86%E6%9E%90%E3%80%81%E8%A1%A8%E7%9A%84%E6%89%A9%E5%A2%9E%E3%80%81%E5%8A%BF%E8%83%BD%E6%96%B9%E6%B3%95/">
+<link rel="canonical" href="http://example.com/2021/08/26/hexo%E4%BD%BF%E7%94%A8%E7%AC%94%E8%AE%B0/">
 
 
 <script id="page-configurations">
@@ -52,7 +46,7 @@
   };
 </script>
 
-  <title>Lec13 平摊分析，表的扩增，势能方法 | Jinxi Blog</title>
+  <title>Hexo 使用笔记 | Jinxi Blog</title>
   
 
 
@@ -188,7 +182,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/03/28/Lec13%E5%B9%B3%E6%91%8A%E5%88%86%E6%9E%90%E3%80%81%E8%A1%A8%E7%9A%84%E6%89%A9%E5%A2%9E%E3%80%81%E5%8A%BF%E8%83%BD%E6%96%B9%E6%B3%95/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/08/26/hexo%E4%BD%BF%E7%94%A8%E7%AC%94%E8%AE%B0/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.JPG">
@@ -201,7 +195,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Lec13 平摊分析，表的扩增，势能方法
+          Hexo 使用笔记
         </h1>
 
         <div class="post-meta">
@@ -210,23 +204,17 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
+              
 
-              <time title="创建时间：2021-03-28 16:14:58" itemprop="dateCreated datePublished" datetime="2021-03-28T16:14:58+08:00">2021-03-28</time>
+              <time title="创建时间：2021-08-27 00:00:00 / 修改时间：00:14:26" itemprop="dateCreated datePublished" datetime="2021-08-27T00:00:00+08:00">2021-08-27</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-03-29 08:33:03" itemprop="dateModified" datetime="2021-03-29T08:33:03+08:00">2021-03-29</time>
-              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E7%AE%97%E6%B3%95%E5%AF%BC%E8%AE%BAMIT/" itemprop="url" rel="index"><span itemprop="name">算法导论MIT</span></a>
+                  <a href="/categories/Hexo/" itemprop="url" rel="index"><span itemprop="name">Hexo</span></a>
                 </span>
             </span>
 
@@ -246,8 +234,8 @@
       </span>
       <span class="post-meta-item-text">Valine：</span>
     
-    <a title="valine" href="/2021/03/28/Lec13%E5%B9%B3%E6%91%8A%E5%88%86%E6%9E%90%E3%80%81%E8%A1%A8%E7%9A%84%E6%89%A9%E5%A2%9E%E3%80%81%E5%8A%BF%E8%83%BD%E6%96%B9%E6%B3%95/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2021/03/28/Lec13%E5%B9%B3%E6%91%8A%E5%88%86%E6%9E%90%E3%80%81%E8%A1%A8%E7%9A%84%E6%89%A9%E5%A2%9E%E3%80%81%E5%8A%BF%E8%83%BD%E6%96%B9%E6%B3%95/" itemprop="commentCount"></span>
+    <a title="valine" href="/2021/08/26/hexo%E4%BD%BF%E7%94%A8%E7%AC%94%E8%AE%B0/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2021/08/26/hexo%E4%BD%BF%E7%94%A8%E7%AC%94%E8%AE%B0/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -257,14 +245,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>1.9k</span>
+              <span>59</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>2 分钟</span>
+              <span>1 分钟</span>
             </span>
 
         </div>
@@ -276,61 +264,9 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>MIT算法导论课程：Lec13 平摊分析，表的扩增，势能方法，对应书上的章节：Chapter 17</p>
-<p>平摊分析（Amortized Analysis）</p>
+        <p>本地测试：<code>hexo s</code></p>
+<p>发布到GitHub：<code>hexo clean &amp;&amp; hexo g &amp;&amp; hexo d</code></p>
 <span id="more"></span>
-<h2 id="dynamic-tables">1. Dynamic tables</h2>
-<p>一个哈希表多大合适？我们知道越大搜索时间越小，但越大浪费空间越多。比较好的大小为<span class="math inline">\(\Theta(n)\)</span>。但如果n是未知的呢？这时可以用动态表解决，动态表的思想是当表溢出时，增大表的大小，就像malloc或new申请一个新的表，然后将旧表的项移动到新表。</p>
-<p><strong>Worst-case analysis</strong></p>
-<p>考虑一个有n个插入操作的序列，在最坏情况下的时间为<span class="math inline">\(n*\Theta(n)=\Theta(n^2)\)</span>，<strong>WRONG!</strong>，因为不是所有操作都是最坏情况。</p>
-<p>定义一个<span class="math inline">\(c_i\)</span>代表第<code>i</code>次插入的代价，<span class="math inline">\(=\left\{\begin{array}{ll} i &amp; \text { if } i-1 \text { is an exact power of } 2 \\ 1 &amp; \text { otherwise } \end{array}\right.\)</span>，表每次扩2倍大。在2的power时进行扩大，代价为<code>i</code>。其他情况下cost为<code>1</code>。 <span class="math display">\[
-\begin{aligned}
-\text { Cost of } n \text { insertions } &amp;=\sum_{i=1}^{n} c_{i} \\
-&amp; \leq n+\sum_{j=0}^{\lfloor\lg (n-1)\rfloor} 2^{j} \\
-&amp; \leq 3 n \\
-&amp;=\Theta(n)
-\end{aligned}
-\]</span> 因此，dynamic-table操作的平均时间为<span class="math inline">\(\Theta(n)/n=\Theta(1)\)</span>.</p>
-<p><strong>Amortized analysis</strong></p>
-<p>这种分析方法即为平摊分析（Amortized Analysis），用于分析序列操作，然后分摊到每个操作去。没有用的概率，平摊分析可确保在最坏的情况下每个操作的平均性能。</p>
-<p><strong>Types of amortized analyses</strong></p>
-<p>有三种方法：</p>
-<ul>
-<li><p>the aggregate method，</p></li>
-<li>the accounting method,</li>
-<li><p>the potential method</p></li>
-</ul>
-<h2 id="aggregate-method">2. Aggregate method</h2>
-<p>刚刚介绍的是the aggregate method，比较简单。但是其他两种方法允许将特定的摊销成本分配给每个操作。</p>
-<h2 id="accounting-method">3. Accounting method</h2>
-<p>对第<code>i</code>个操作收取一个费用<span class="math inline">\(\hat c_i\)</span>，一个元操作收取一元，执行此操作将消耗此费用。任何未立即消耗的金额都存储在银行中，以供后续操作使用。银行余额不得为负！我们必须确保对于所有的n:<span class="math inline">\(\sum_{i=1}^{n} c_{i} \leq \sum_{i=1}^{n} \hat{c}_{i}\)</span>.因此，总摊销成本为总真实成本提供了一个上限。</p>
-<p><strong>例子</strong></p>
-<p>对<span class="math inline">\(\hat c_i=\$3\)</span>，1个用来支付插入操作，2个用来存入银行。当表扩大的时候，1个钱用来移动一个项。</p>
-<p>银行余额永远不会低于0。因此，摊销成本的总和为真实成本的总和提供了一个上限。</p>
-<p><img src="https://i.bmp.ovh/imgs/2021/03/b6357b14e88b4ae0.png" style="zoom:50%;" /></p>
-<h2 id="potential-method">4. Potential method</h2>
-<p><strong>IDEA：</strong> 将银行帐户视为动态集的势能（按物理原理）</p>
-<p><strong>Framework:</strong></p>
-<ol type="1">
-<li><p>从初始数据结构<span class="math inline">\(D_0\)</span>开始</p></li>
-<li><p>操作<code>i</code>将<span class="math inline">\(D_{i-1}\)</span>转化为<span class="math inline">\(D_i\)</span>.</p></li>
-<li><p>操作<code>i</code>的cost为<span class="math inline">\(c_i\)</span>.</p></li>
-<li><p>定义势能函数<span class="math inline">\(\Phi :{D_i}-&gt;R,\Phi(D_0)=0 ,\Phi(D_i)&gt;=0\)</span>,</p></li>
-<li><p>平摊代价 <span class="math inline">\(\hat c_i=c_i+\Phi(D_i)-\Phi(D_{i-1})\)</span></p></li>
-</ol>
-<p><img src="https://i.bmp.ovh/imgs/2021/03/7c5c42c3c849922d.png" style="zoom:67%;" /></p>
-<p>n个操作的总平摊成本：<span class="math inline">\(\sum_{i=1}^{n} \hat{c}_{i}=\sum_{i=1}^{n}\left(c_{i}+\Phi\left(D_{i}\right)-\Phi\left(D_{i-1}\right)\right)=\sum_{i=1}^{n}c_i+\Phi(D_n)-\Phi(D_0)\geq \sum_{i=1}^{n} c_i\)</span></p>
-<p><strong>Potential analysis of table doubling</strong></p>
-<p>第<code>i</code>次插入后的势能，定义<span class="math inline">\(\Phi(D_i)=2i-2^{\lceil \lg i \rceil}\)</span>，假设<span class="math inline">\(2^{\lceil \lg i \rceil}=0\)</span></p>
-<p><img src="https://i.bmp.ovh/imgs/2021/03/0be4cc3450eebf77.png" style="zoom: 67%;" /></p>
-<p><img src="https://i.bmp.ovh/imgs/2021/03/6168d499c3f1b09f.png" /></p>
-<p><img src="https://i.bmp.ovh/imgs/2021/03/1c09e78db4040c56.png" /></p>
-<h2 id="小结">5. 小结</h2>
-<ul>
-<li>摊销成本可以提供数据结构性能的清晰抽象。</li>
-<li>当需要进行摊销分析时，可以使用任何一种分析方法，但是每种方法在某些情况下都可以说是最简单或最精确的。</li>
-<li>在accounting方法中分配摊余成本的方法可能不同，在potential方法中分配潜力的方法也可能不同，有时会产生根本不同的界限。</li>
-</ul>
 
     </div>
 
@@ -388,13 +324,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2021/03/28/Lec14%E7%AB%9E%E4%BA%89%E6%80%A7%E5%88%86%E6%9E%90%EF%BC%8C%E8%87%AA%E7%BB%84%E7%BB%87%E8%A1%A8/" rel="prev" title="Lec14 竞争性分析，自组织表">
-      <i class="fa fa-chevron-left"></i> Lec14 竞争性分析，自组织表
+    <a href="/2021/08/25/REFORMER%20THE%20EFFICIENT%20TRANSFORMER/" rel="prev" title="论文阅读笔记《REFORMER THE EFFICIENT TRANSFORMER》">
+      <i class="fa fa-chevron-left"></i> 论文阅读笔记《REFORMER THE EFFICIENT TRANSFORMER》
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2021/03/28/Lec12%E8%B7%B3%E8%B7%83%E8%A1%A8/" rel="next" title="Lec12跳跃表">
-      Lec12跳跃表 <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -454,7 +387,6 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#dynamic-tables"><span class="nav-number">1.</span> <span class="nav-text">1. Dynamic tables</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#aggregate-method"><span class="nav-number">2.</span> <span class="nav-text">2. Aggregate method</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#accounting-method"><span class="nav-number">3.</span> <span class="nav-text">3. Accounting method</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#potential-method"><span class="nav-number">4.</span> <span class="nav-text">4. Potential method</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93"><span class="nav-number">5.</span> <span class="nav-text">5. 小结</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
