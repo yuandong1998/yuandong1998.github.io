@@ -20,26 +20,22 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="MIT算法导论课程：Lec13 平摊分析，表的扩增，势能方法，对应书上的章节：Chapter 17 平摊分析（Amortized Analysis）">
+  <meta name="description" content="0. Summary 通过additive attention将query和key矩阵汇总为全局向量，采用element-wise进行交互。得到线性复杂度的模型FastFormer。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Lec13 平摊分析，表的扩增，势能方法">
-<meta property="og:url" content="http://example.com/2021/03/28/Lec13%E5%B9%B3%E6%91%8A%E5%88%86%E6%9E%90%E3%80%81%E8%A1%A8%E7%9A%84%E6%89%A9%E5%A2%9E%E3%80%81%E5%8A%BF%E8%83%BD%E6%96%B9%E6%B3%95/index.html">
+<meta property="og:title" content="论文阅读笔记《Fastformer Additive Attention Can Be All You Need》">
+<meta property="og:url" content="http://example.com/2021/08/30/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0%E3%80%8AFastformer-Additive-Attention-Can-Be-All-You-Need%E3%80%8B/index.html">
 <meta property="og:site_name" content="Jinxi Blog">
-<meta property="og:description" content="MIT算法导论课程：Lec13 平摊分析，表的扩增，势能方法，对应书上的章节：Chapter 17 平摊分析（Amortized Analysis）">
+<meta property="og:description" content="0. Summary 通过additive attention将query和key矩阵汇总为全局向量，采用element-wise进行交互。得到线性复杂度的模型FastFormer。">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://i.bmp.ovh/imgs/2021/03/b6357b14e88b4ae0.png">
-<meta property="og:image" content="https://i.bmp.ovh/imgs/2021/03/7c5c42c3c849922d.png">
-<meta property="og:image" content="https://i.bmp.ovh/imgs/2021/03/0be4cc3450eebf77.png">
-<meta property="og:image" content="https://i.bmp.ovh/imgs/2021/03/6168d499c3f1b09f.png">
-<meta property="og:image" content="https://i.bmp.ovh/imgs/2021/03/1c09e78db4040c56.png">
-<meta property="article:published_time" content="2021-03-28T08:14:58.000Z">
-<meta property="article:modified_time" content="2021-03-29T00:33:03.197Z">
+<meta property="og:image" content="https://i.bmp.ovh/imgs/2021/08/2e7abd5a58efeb89.png">
+<meta property="article:published_time" content="2021-08-30T16:00:00.000Z">
+<meta property="article:modified_time" content="2021-09-01T03:38:53.183Z">
 <meta property="article:author" content="Jinxi">
 <meta property="article:tag" content="学习笔记">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://i.bmp.ovh/imgs/2021/03/b6357b14e88b4ae0.png">
+<meta name="twitter:image" content="https://i.bmp.ovh/imgs/2021/08/2e7abd5a58efeb89.png">
 
-<link rel="canonical" href="http://example.com/2021/03/28/Lec13%E5%B9%B3%E6%91%8A%E5%88%86%E6%9E%90%E3%80%81%E8%A1%A8%E7%9A%84%E6%89%A9%E5%A2%9E%E3%80%81%E5%8A%BF%E8%83%BD%E6%96%B9%E6%B3%95/">
+<link rel="canonical" href="http://example.com/2021/08/30/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0%E3%80%8AFastformer-Additive-Attention-Can-Be-All-You-Need%E3%80%8B/">
 
 
 <script id="page-configurations">
@@ -52,7 +48,7 @@
   };
 </script>
 
-  <title>Lec13 平摊分析，表的扩增，势能方法 | Jinxi Blog</title>
+  <title>论文阅读笔记《Fastformer Additive Attention Can Be All You Need》 | Jinxi Blog</title>
   
 
 
@@ -188,7 +184,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/03/28/Lec13%E5%B9%B3%E6%91%8A%E5%88%86%E6%9E%90%E3%80%81%E8%A1%A8%E7%9A%84%E6%89%A9%E5%A2%9E%E3%80%81%E5%8A%BF%E8%83%BD%E6%96%B9%E6%B3%95/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/08/30/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0%E3%80%8AFastformer-Additive-Attention-Can-Be-All-You-Need%E3%80%8B/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.JPG">
@@ -201,7 +197,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Lec13 平摊分析，表的扩增，势能方法
+          论文阅读笔记《Fastformer Additive Attention Can Be All You Need》
         </h1>
 
         <div class="post-meta">
@@ -211,14 +207,14 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2021-03-28 16:14:58" itemprop="dateCreated datePublished" datetime="2021-03-28T16:14:58+08:00">2021-03-28</time>
+              <time title="创建时间：2021-08-31 00:00:00" itemprop="dateCreated datePublished" datetime="2021-08-31T00:00:00+08:00">2021-08-31</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-03-29 08:33:03" itemprop="dateModified" datetime="2021-03-29T08:33:03+08:00">2021-03-29</time>
+                <time title="修改时间：2021-09-01 11:38:53" itemprop="dateModified" datetime="2021-09-01T11:38:53+08:00">2021-09-01</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -226,7 +222,7 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E7%AE%97%E6%B3%95%E5%AF%BC%E8%AE%BAMIT/" itemprop="url" rel="index"><span itemprop="name">算法导论MIT</span></a>
+                  <a href="/categories/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/" itemprop="url" rel="index"><span itemprop="name">论文阅读</span></a>
                 </span>
             </span>
 
@@ -246,8 +242,8 @@
       </span>
       <span class="post-meta-item-text">Valine：</span>
     
-    <a title="valine" href="/2021/03/28/Lec13%E5%B9%B3%E6%91%8A%E5%88%86%E6%9E%90%E3%80%81%E8%A1%A8%E7%9A%84%E6%89%A9%E5%A2%9E%E3%80%81%E5%8A%BF%E8%83%BD%E6%96%B9%E6%B3%95/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2021/03/28/Lec13%E5%B9%B3%E6%91%8A%E5%88%86%E6%9E%90%E3%80%81%E8%A1%A8%E7%9A%84%E6%89%A9%E5%A2%9E%E3%80%81%E5%8A%BF%E8%83%BD%E6%96%B9%E6%B3%95/" itemprop="commentCount"></span>
+    <a title="valine" href="/2021/08/30/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0%E3%80%8AFastformer-Additive-Attention-Can-Be-All-You-Need%E3%80%8B/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2021/08/30/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0%E3%80%8AFastformer-Additive-Attention-Can-Be-All-You-Need%E3%80%8B/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -276,61 +272,44 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>MIT算法导论课程：Lec13 平摊分析，表的扩增，势能方法，对应书上的章节：Chapter 17</p>
-<p>平摊分析（Amortized Analysis）</p>
+        <h2 id="summary">0. Summary</h2>
+<p>通过additive attention将query和key矩阵汇总为全局向量，采用element-wise进行交互。得到线性复杂度的模型FastFormer。</p>
 <span id="more"></span>
-<h2 id="dynamic-tables">1. Dynamic tables</h2>
-<p>一个哈希表多大合适？我们知道越大搜索时间越小，但越大浪费空间越多。比较好的大小为<span class="math inline">\(\Theta(n)\)</span>。但如果n是未知的呢？这时可以用动态表解决，动态表的思想是当表溢出时，增大表的大小，就像malloc或new申请一个新的表，然后将旧表的项移动到新表。</p>
-<p><strong>Worst-case analysis</strong></p>
-<p>考虑一个有n个插入操作的序列，在最坏情况下的时间为<span class="math inline">\(n*\Theta(n)=\Theta(n^2)\)</span>，<strong>WRONG!</strong>，因为不是所有操作都是最坏情况。</p>
-<p>定义一个<span class="math inline">\(c_i\)</span>代表第<code>i</code>次插入的代价，<span class="math inline">\(=\left\{\begin{array}{ll} i &amp; \text { if } i-1 \text { is an exact power of } 2 \\ 1 &amp; \text { otherwise } \end{array}\right.\)</span>，表每次扩2倍大。在2的power时进行扩大，代价为<code>i</code>。其他情况下cost为<code>1</code>。 <span class="math display">\[
-\begin{aligned}
-\text { Cost of } n \text { insertions } &amp;=\sum_{i=1}^{n} c_{i} \\
-&amp; \leq n+\sum_{j=0}^{\lfloor\lg (n-1)\rfloor} 2^{j} \\
-&amp; \leq 3 n \\
-&amp;=\Theta(n)
-\end{aligned}
-\]</span> 因此，dynamic-table操作的平均时间为<span class="math inline">\(\Theta(n)/n=\Theta(1)\)</span>.</p>
-<p><strong>Amortized analysis</strong></p>
-<p>这种分析方法即为平摊分析（Amortized Analysis），用于分析序列操作，然后分摊到每个操作去。没有用的概率，平摊分析可确保在最坏的情况下每个操作的平均性能。</p>
-<p><strong>Types of amortized analyses</strong></p>
-<p>有三种方法：</p>
-<ul>
-<li><p>the aggregate method，</p></li>
-<li>the accounting method,</li>
-<li><p>the potential method</p></li>
-</ul>
-<h2 id="aggregate-method">2. Aggregate method</h2>
-<p>刚刚介绍的是the aggregate method，比较简单。但是其他两种方法允许将特定的摊销成本分配给每个操作。</p>
-<h2 id="accounting-method">3. Accounting method</h2>
-<p>对第<code>i</code>个操作收取一个费用<span class="math inline">\(\hat c_i\)</span>，一个元操作收取一元，执行此操作将消耗此费用。任何未立即消耗的金额都存储在银行中，以供后续操作使用。银行余额不得为负！我们必须确保对于所有的n:<span class="math inline">\(\sum_{i=1}^{n} c_{i} \leq \sum_{i=1}^{n} \hat{c}_{i}\)</span>.因此，总摊销成本为总真实成本提供了一个上限。</p>
-<p><strong>例子</strong></p>
-<p>对<span class="math inline">\(\hat c_i=\$3\)</span>，1个用来支付插入操作，2个用来存入银行。当表扩大的时候，1个钱用来移动一个项。</p>
-<p>银行余额永远不会低于0。因此，摊销成本的总和为真实成本的总和提供了一个上限。</p>
-<p><img src="https://i.bmp.ovh/imgs/2021/03/b6357b14e88b4ae0.png" style="zoom:50%;" /></p>
-<h2 id="potential-method">4. Potential method</h2>
-<p><strong>IDEA：</strong> 将银行帐户视为动态集的势能（按物理原理）</p>
-<p><strong>Framework:</strong></p>
-<ol type="1">
-<li><p>从初始数据结构<span class="math inline">\(D_0\)</span>开始</p></li>
-<li><p>操作<code>i</code>将<span class="math inline">\(D_{i-1}\)</span>转化为<span class="math inline">\(D_i\)</span>.</p></li>
-<li><p>操作<code>i</code>的cost为<span class="math inline">\(c_i\)</span>.</p></li>
-<li><p>定义势能函数<span class="math inline">\(\Phi :{D_i}-&gt;R,\Phi(D_0)=0 ,\Phi(D_i)&gt;=0\)</span>,</p></li>
-<li><p>平摊代价 <span class="math inline">\(\hat c_i=c_i+\Phi(D_i)-\Phi(D_{i-1})\)</span></p></li>
-</ol>
-<p><img src="https://i.bmp.ovh/imgs/2021/03/7c5c42c3c849922d.png" style="zoom:67%;" /></p>
-<p>n个操作的总平摊成本：<span class="math inline">\(\sum_{i=1}^{n} \hat{c}_{i}=\sum_{i=1}^{n}\left(c_{i}+\Phi\left(D_{i}\right)-\Phi\left(D_{i-1}\right)\right)=\sum_{i=1}^{n}c_i+\Phi(D_n)-\Phi(D_0)\geq \sum_{i=1}^{n} c_i\)</span></p>
-<p><strong>Potential analysis of table doubling</strong></p>
-<p>第<code>i</code>次插入后的势能，定义<span class="math inline">\(\Phi(D_i)=2i-2^{\lceil \lg i \rceil}\)</span>，假设<span class="math inline">\(2^{\lceil \lg i \rceil}=0\)</span></p>
-<p><img src="https://i.bmp.ovh/imgs/2021/03/0be4cc3450eebf77.png" style="zoom: 67%;" /></p>
-<p><img src="https://i.bmp.ovh/imgs/2021/03/6168d499c3f1b09f.png" /></p>
-<p><img src="https://i.bmp.ovh/imgs/2021/03/1c09e78db4040c56.png" /></p>
-<h2 id="小结">5. 小结</h2>
-<ul>
-<li>摊销成本可以提供数据结构性能的清晰抽象。</li>
-<li>当需要进行摊销分析时，可以使用任何一种分析方法，但是每种方法在某些情况下都可以说是最简单或最精确的。</li>
-<li>在accounting方法中分配摊余成本的方法可能不同，在potential方法中分配潜力的方法也可能不同，有时会产生根本不同的界限。</li>
-</ul>
+<h2 id="problem-statement">1. Problem Statement</h2>
+<p>对于Transformer的二次方计算复杂度，提出更快的attention方法，同时具有较好的效果。</p>
+<h2 id="methods">2. Method(s)</h2>
+<p>整体的框架如下图所示。首先通过additive（这个该怎么翻译）注意力机制将query序列信息汇总为一个全局的query向量。然后将全局query向量与keys通过元素级相乘再通过additive 注意力汇总为一全局key向量。再将全局key向量与value向量元素相乘并通过线性转化为一个学习全局上下文的注意力values。最后与输入query相加。</p>
+<p>总结下来就是将query序列汇总、再与key交互再汇总，再与value交互。中间用到additive attention和element-wise product。后续实验证明element-wise product的作用很大。</p>
+<p><img src="https://i.bmp.ovh/imgs/2021/08/2e7abd5a58efeb89.png" style="zoom: 80%;" /></p>
+<p>1、首先是输入序列通过三个线性转换层得到Q，K，V。</p>
+<p>2、然后通过additive attention汇总query矩阵为一个全局query向量<span class="math inline">\(q\in \R^{d\times 1}\)</span>（论文中写的<span class="math inline">\(q\in \R^{d\times d}\)</span>应该是有误），计算方式如下。 <span class="math display">\[
+\alpha_{i}=\frac{\exp \left(\mathbf{w}_{q}^{T} \mathbf{q}_{i} / \sqrt{d}\right)}{\sum_{j=1}^{N} \exp \left(\mathbf{w}_{q}^{T} \mathbf{q}_{j} / \sqrt{d}\right)}
+\]</span></p>
+<p><span class="math display">\[
+q=\sum_{i=1}^N \alpha_i q_i
+\]</span></p>
+<p>3、然后通过element-wise product将keys与全局的query向量交互。<span class="math inline">\(p_i=q*k_i\)</span>（<span class="math inline">\(*\)</span>表示element-wise product）。再通过additive attention汇总为一个全局key向量。 <span class="math display">\[
+\beta_{i}=\frac{\exp \left(\mathbf{w}_{k}^{T} \mathbf{p}_{i} / \sqrt{d}\right)}{\sum_{j=1}^{N} \exp \left(\mathbf{w}_{k}^{T} \mathbf{p}_{j} / \sqrt{d}\right)}
+\]</span></p>
+<p><span class="math display">\[
+\mathbf{k}=\sum_{i=1}^{N} \beta_{i} \mathbf{p}_{i}
+\]</span></p>
+<p>4、最后将全局key向量和value进行element-wise product进行交互<span class="math inline">\(u_i=k*v_i\)</span>，再通过线性变换得到输出矩阵<span class="math inline">\(R\)</span>。</p>
+<p>5、最后将输出矩阵<span class="math inline">\(R\)</span>和query矩阵相加为最终的输出。（为什么和query矩阵而不是其他矩阵）。</p>
+<p>参数共享：文章采用了共享query和value的线性变换参数，以及共享不同层之间的参数，以此来减少模型参数。</p>
+<p><strong>复杂度分析：</strong></p>
+<p>additive attention的复杂度为<span class="math inline">\(O(N\cdot d)\)</span>，element-wise product复杂度为<span class="math inline">\(O(N\cdot d)\)</span>，总体复杂度<span class="math inline">\(O(N\cdot d)\)</span>。</p>
+<p>每层参数量为<span class="math inline">\(3hd^2+2hd\)</span>（这是加上了参数共享的），原transformer的参数量为<span class="math inline">\(4hd^2\)</span>。所以说不加上参数共享，参数量并没有减少，但是transformer也可以参数共享的。</p>
+<h2 id="evaluation">3. Evaluation</h2>
+<p>在五个任务上进行了对比实验，对于vanilla Transformer计算成本限制了可以处理的最大序列长度，在截断输入文本序列时丢失了许多有用的上下文，所以效果不如高效的Transformer变种。</p>
+<p>效率对比实验，Fastformer的效率最好。</p>
+<p>交互函数的影响，element-wise product的效果优于concatenate和add。</p>
+<p>参数共享实验，query-value的参数共享和不同层的参数共享不影响效果，但是不同头节点的参数共享影响效果。</p>
+<h2 id="conclusion">4. Conclusion</h2>
+<p>Fastformer，它是一种基于加性注意力的 Transformer 变体，可以有效地以线性复杂度处理长序列。</p>
+<h2 id="notes">5. Notes</h2>
+<h2 id="reference">Reference</h2>
+<p>[1] Wu C, Wu F, Qi T, et al. Fastformer: Additive Attention Can Be All You Need[J]. arXiv preprint arXiv:2108.09084, 2021.</p>
 
     </div>
 
@@ -388,13 +367,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2021/03/28/Lec14%E7%AB%9E%E4%BA%89%E6%80%A7%E5%88%86%E6%9E%90%EF%BC%8C%E8%87%AA%E7%BB%84%E7%BB%87%E8%A1%A8/" rel="prev" title="Lec14 竞争性分析，自组织表">
-      <i class="fa fa-chevron-left"></i> Lec14 竞争性分析，自组织表
+    <a href="/2021/08/26/hexo%E4%BD%BF%E7%94%A8%E7%AC%94%E8%AE%B0/" rel="prev" title="Hexo 使用笔记">
+      <i class="fa fa-chevron-left"></i> Hexo 使用笔记
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2021/03/28/Lec15%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92%EF%BC%8C%E6%9C%80%E9%95%BF%E5%85%AC%E5%85%B1%E5%AD%90%E5%BA%8F%E5%88%97/" rel="next" title="Lec15 动态规划，最长公共子序列">
-      Lec15 动态规划，最长公共子序列 <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -454,7 +430,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#dynamic-tables"><span class="nav-number">1.</span> <span class="nav-text">1. Dynamic tables</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#aggregate-method"><span class="nav-number">2.</span> <span class="nav-text">2. Aggregate method</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#accounting-method"><span class="nav-number">3.</span> <span class="nav-text">3. Accounting method</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#potential-method"><span class="nav-number">4.</span> <span class="nav-text">4. Potential method</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93"><span class="nav-number">5.</span> <span class="nav-text">5. 小结</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#summary"><span class="nav-number">1.</span> <span class="nav-text">0. Summary</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#problem-statement"><span class="nav-number">2.</span> <span class="nav-text">1. Problem Statement</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#methods"><span class="nav-number">3.</span> <span class="nav-text">2. Method(s)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#evaluation"><span class="nav-number">4.</span> <span class="nav-text">3. Evaluation</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#conclusion"><span class="nav-number">5.</span> <span class="nav-text">4. Conclusion</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#notes"><span class="nav-number">6.</span> <span class="nav-text">5. Notes</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">7.</span> <span class="nav-text">Reference</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
