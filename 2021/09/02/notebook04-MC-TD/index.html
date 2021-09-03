@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="1. Introduction 简介 ​ 如何解决一个可以被认为是 MDP、但却不掌握MDP 具体细节的问题，也就是讲述个体如何在没有对环境动力学认识的模型的条件下如何直接通过个体与环境的实际交互来评估一个策略的好坏或者寻找到最优价值函数和最优策略。 本章分为三个部分，将分别从理论上阐述：  基于完整采样的蒙特卡罗强化学习 基于不完整采样的时序差分强化学习 介于两者之间的 λ 时序差分强">
+<meta property="og:type" content="article">
+<meta property="og:title" content="notebook04_MC-TD">
+<meta property="og:url" content="http://example.com/2021/09/02/notebook04-MC-TD/index.html">
+<meta property="og:site_name" content="Jinxi Blog">
+<meta property="og:description" content="1. Introduction 简介 ​ 如何解决一个可以被认为是 MDP、但却不掌握MDP 具体细节的问题，也就是讲述个体如何在没有对环境动力学认识的模型的条件下如何直接通过个体与环境的实际交互来评估一个策略的好坏或者寻找到最优价值函数和最优策略。 本章分为三个部分，将分别从理论上阐述：  基于完整采样的蒙特卡罗强化学习 基于不完整采样的时序差分强化学习 介于两者之间的 λ 时序差分强">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-09-02T20:18:41.000Z">
+<meta property="article:modified_time" content="2021-09-03T12:23:37.821Z">
+<meta property="article:author" content="Jinxi">
+<meta property="article:tag" content="学习笔记">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2021/09/02/notebook04-MC-TD/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>notebook04_MC-TD | Jinxi Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Jinxi Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Jinxi Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-schedule">
+
+    <a href="/schedule/" rel="section"><i class="fa fa-calendar fa-fw"></i>日程表</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>站点地图</a>
+
+  </li>
+        <li class="menu-item menu-item-commonweal">
+
+    <a href="/404/" rel="section"><i class="fa fa-heartbeat fa-fw"></i>公益 404</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/09/02/notebook04-MC-TD/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.JPG">
+      <meta itemprop="name" content="Jinxi">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jinxi Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          notebook04_MC-TD
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-09-03 04:18:41 / 修改时间：20:23:37" itemprop="dateCreated datePublished" datetime="2021-09-03T04:18:41+08:00">2021-09-03</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Reinforcement-Learning/" itemprop="url" rel="index"><span itemprop="name">Reinforcement Learning</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2021/09/02/notebook04-MC-TD/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2021/09/02/notebook04-MC-TD/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>3.8k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>3 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="introduction-简介">1. Introduction 简介</h2>
+<p>​ 如何解决一个可以被认为是 MDP、<strong>但却不掌握MDP 具体细节</strong>的问题，也就是讲述个体如何在没有对环境动力学认识的模型的条件下如何直接通过个体与环境的实际交互来评估一个策略的好坏或者寻找到最优价值函数和最优策略。 本章分为三个部分，将分别从理论上阐述：</p>
+<ul>
+<li><strong>基于完整采样的蒙特卡罗强化学习</strong></li>
+<li><strong>基于不完整采样的时序差分强化学习</strong></li>
+<li><strong>介于两者之间的 λ 时序差分强化学习</strong>。</li>
+</ul>
+<span id="more"></span>
+<h2 id="monte-carlo-learning-蒙特卡罗强化学习">2. Monte-Carlo Learning 蒙特卡罗强化学习</h2>
+<p>​ <strong>蒙特卡罗强化学习</strong> (Monte-Carlo reinforcement learning, MC 学习)： <u>指在不清楚 MDP 状态转移概率的情况下，直接从经历完整的状态序列 (episode) 来估计状态的真实价值，并认为某状态的价值等于在多个状态序列中以该状态算得到的所有收获的平均</u>。</p>
+<p>​ <strong>累进更新平均值（incremental mean)</strong>的计算如下所示： <span class="math display">\[
+\begin{aligned}
+\mu_{k} &amp;=\frac{1}{k} \sum_{j=1}^{k} x_{j} \\
+&amp;=\frac{1}{k}\left(x_{k}+\sum_{j=1}^{k-1} x_{j}\right) \\
+&amp;=\frac{1}{k}\left(x_{k}+(k-1) \mu_{k-1}\right) \\
+&amp;=\mu_{k-1}+\frac{1}{k}\left(x_{k}-\mu_{k-1}\right)
+\end{aligned}
+\]</span></p>
+<p>​ <strong>递增式的蒙特卡罗法更新状态价值公式</strong>：</p>
+<p><span class="math display">\[
+\begin{array}{c}
+N\left(S_{t}\right) \leftarrow N\left(S_{t}\right)+1 \\
+V\left(S_{t}\right) \leftarrow V\left(S_{t}\right)+\frac{1}{N\left(S_{t}\right)}\left(G_{t}-V\left(S_{t}\right)\right)
+\end{array}
+\]</span></p>
+<p>​ 在一些实时或者无法统计准确状态被访问次数时，可以用一个系数 α 来代替状态计数的倒数，此时公式变为：</p>
+<p><span class="math display">\[
+V\left(S_{t}\right) \leftarrow V\left(S_{t}\right)+\alpha\left(G_{t}-V\left(S_{t}\right)\right)
+\]</span></p>
+<h2 id="temporal-difference-learning-时序差分强化学习">3. Temporal-Difference Learning 时序差分强化学习</h2>
+<p>​ <strong>时序差分强化学习</strong> (temporal-difference reinforcement learning, TD 学习)：<u>指从采样得到的不完整的状态序列学习，该方法通过合理的引导（bootstrapping），先估计某状态在该状态序列完整后可能得到的收获，并在此基础上利用前文所属的累进更新平均值的方法得到该状态的价值，再通过不断的采样来持续更新这个价值。</u></p>
+<p>​ 具体地说，在 TD 学习中，算法在估计某一个状态的收获时，用的是离开该状态的即刻奖励<span class="math inline">\(R_{t+1}\)</span> 与下一时刻状态 <span class="math inline">\(S_{t+1}\)</span> 的预估状态价值乘以衰减系数<span class="math inline">\(\gamma\)</span>组成：</p>
+<p><span class="math display">\[
+V\left(S_{t}\right) \leftarrow V\left(S_{t}\right)+\alpha\left(R_{t+1}+\gamma V\left(S_{t+1}\right)-V\left(S_{t}\right)\right)
+\]</span></p>
+<p>​ 其中<span class="math inline">\(R_{t+1}+\gamma V\left(S_{t+1}\right)\)</span>称为 <strong>TD 目标值</strong> ，<span class="math inline">\(R_{t+1}+\gamma V\left(S_{t+1}\right)-V\left(S_{t}\right)\)</span>称为<strong>TD 误差</strong>。</p>
+<p>​ 引导 (bootstrapping)：指的是用 TD 目标值代替收获<span class="math inline">\(G_t\)</span> 的过程。</p>
+<p>​ <strong>MC与TD算法的区别</strong></p>
+<p>​ TD 学习在更新状态价值时使用的是 TD 目标值，即基于即时奖励和下一状态的预估价值来替代当前状态在状态序列结束时可能得到的收获，它是当前状态价值的有偏估计，而 MC 学习则使用实际的收获来更新状态价值，是某一策略下状态价值的无偏估计。</p>
+<p>​ TD 算法使用了MDP 问题的马儿可夫属性，在具有马尔科夫性的环境下更有效；但是 MC 算法并不利用马儿可夫属性，适用范围不限于具有马尔科夫性的环境。</p>
+<blockquote>
+<p><strong>TD 学习能比 MC 学习更快速灵活的更新状态的价值估计</strong>，这在某些情况下有着非常重要的实际意义。回到驾车返家这个例子中来，我们给驾车返家制定一个新的目标，不再以耗时多少来评估状态价值，而是要求安全平稳的返回家中。假如有一次你在驾车回家的路上突然碰到险情：对面开过来一辆车感觉要和你迎面相撞，严重的话甚至会威胁生命，不过由于最后双方驾驶员都采取了紧急措施没有让险情实际发生，最后平安到家。如果是使用蒙特卡罗学习，路上发生的这一险情可能引发的极大负值奖励将不会被考虑，你不会更新在碰到此类险情时的状态的价值；但是在 TD 学习时，碰到这样的险情过后，你会立即大幅调低这个状态的价值，并在今后再次碰到类似情况时采取其它行为，例如降低速度等来让自身处在一个价值较高的状态中，尽可能避免发生意外事件的发生。</p>
+</blockquote>
+<h2 id="tdlambda">4. TD(<span class="math inline">\(\lambda\)</span>)</h2>
+<p>​ <strong>n-步预测</strong> <u>指从状态序列的当前状态 (<span class="math inline">\(S_t\)</span>) 开始往序列终止状态方向观察至状态<span class="math inline">\(S_{t+n-1}\)</span>，使用这 n 个状态产生的即时奖励 <span class="math inline">\((R_{t+1}; R_{t+2};...;R_{t+n})\)</span> 以及状态<span class="math inline">\(S_{t+n}\)</span> 的预估价值来计算当前第状态<span class="math inline">\(S_t\)</span> 的价值。</u></p>
+<p>​ 定义 <strong>n-步收获</strong>为：</p>
+<p><span class="math display">\[
+G_{t}^{(n)}=R_{t+1}+\gamma R_{t+2}+\ldots+\gamma^{n-1} R_{t+n}+\gamma^{n} V\left(S_{t+n}\right)
+\]</span></p>
+<p>​ n-步 TD 学习对应的状态价值函数的<strong>更新公式</strong>为：</p>
+<p><span class="math display">\[
+V\left(S_{t}\right) \leftarrow V\left(S_{t}\right)+\alpha\left(G_{t}^{(n)}-V\left(S_{t}\right)\right)
+\]</span></p>
+<p>​ 为了能在不增加计算复杂度的情况下综合考虑所有步数的预测，我们引入了一个新的参数λ，并定义λ-收获为从 n=1 到无穷的所有步收获的权重之和。<br />
+<span class="math display">\[
+G_{t}^{\lambda}=(1-\lambda) \sum_{n=1}^{\infty} \lambda^{n-1} G_{t}^{(n)}
+\]</span> ​ 对应的 TD(<span class="math inline">\(\lambda\)</span>) 的更新公式为 :</p>
+<p><span class="math display">\[
+V\left(S_{t}\right) \leftarrow V\left(S_{t}\right)+\alpha\left(G_{t}^{(\lambda)}-V\left(S_{t}\right)\right)
+\]</span></p>
+<p>​ 随着n的增大，其 n-收获的权重呈几何级数的衰减。当在 T 时刻到达终止状态时，未分配的权重 (右侧阴影部分) 全部给予终止状态的实际收获值。</p>
+<p>​ <strong>前向认识 TD(<span class="math inline">\(\lambda\)</span>)</strong></p>
+<p>​ 什么是前向认识：<u>更新一个状态的价值需要知道所有后续状态的价值，这和 MC 算法的要求一样，当 λ = 1 时对应的就是 MC 算法，这个实际计算带来了不便。</u></p>
+<p>​ <strong>反向认识 TD(<span class="math inline">\(\lambda\)</span>)</strong></p>
+<p>​ 什么是效用迹：<u>如果把老鼠遭到电击的原因认为是之前接受了较多次数的响铃，则称这种归因为频率启发(frequency heuristic) 式；而把电击归因于最近少数几次状态的影响，则称为就近启发 (recncyheuristic) 式。如果给每一个状态引入一个数值： 效用 (eligibility, E) 来表示该状态对后续状态的影响，就可以同时利用到上述两个启发。而所有状态的效用值总称为效用迹 (eligibility traces,ES)。</u></p>
+<p>​ 效用迹公式：</p>
+<p><span class="math display">\[
+\begin{array}{c}
+E_{0}(s)=0 \\
+E_{t}(s)=\gamma \lambda E_{t-1}(s)+1\left(S_{t}=s\right), \gamma, \lambda \in[0,1]
+\end{array}
+\]</span> ​ 针对每一个状态存在一个 E 值，且 E 值并不需要等到状态序列到达终止状态才能计算出来，它是根据已经经过的状态序列来计算得到，并且在每一个时刻都对每一个状态进行一次更新，E 值存在饱和现象，有一个瞬时最高上限：</p>
+<p><span class="math display">\[
+E_{s a t}=\frac{1}{1-\gamma \lambda}
+\]</span> ​ 在更新状态价值时把该状态的效用同时考虑进来，价值更新可以表示为 ：</p>
+<p><span class="math display">\[
+\begin{aligned}
+\delta_{t}=&amp;\left(R_{t+1}+\gamma V\left(S_{t+1}\right)-V\left(S_{t}\right)\right) \\
+&amp; V(s) \leftarrow V(s)+\alpha \delta_{t} E_{t}(s)
+\end{aligned}
+\]</span></p>
+<ul>
+<li><p>当<span class="math inline">\(\lambda =0\)</span>时，<span class="math inline">\(S_t=s\)</span>一直成立，此时价值更新等同于 TD(0) 算法。</p></li>
+<li><p>当<span class="math inline">\(\lambda =1\)</span>时，可以每经历一个状态就更新状态的价值，这种实时更新的方法并不完全等同于 MC。</p></li>
+<li><p>当<span class="math inline">\(\lambda\in(0,1)\)</span>时，前向认识和反向认识完全等效，但在实时学习时存在差别。</p></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div>如果觉得我的文章对您有用，请随意打赏。您的支持将鼓励我继续创作！</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.png" alt="Jinxi 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/ailpay.jpg" alt="Jinxi 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" rel="tag"># 学习笔记</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/09/02/notebook03-DP/" rel="prev" title="notebook03_DP">
+      <i class="fa fa-chevron-left"></i> notebook03_DP
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/09/02/notebook05-control/" rel="next" title="notebook05_control">
+      notebook05_control <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#introduction-%E7%AE%80%E4%BB%8B"><span class="nav-number">1.</span> <span class="nav-text">1. Introduction 简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#monte-carlo-learning-%E8%92%99%E7%89%B9%E5%8D%A1%E7%BD%97%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0"><span class="nav-number">2.</span> <span class="nav-text">2. Monte-Carlo Learning 蒙特卡罗强化学习</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#temporal-difference-learning-%E6%97%B6%E5%BA%8F%E5%B7%AE%E5%88%86%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0"><span class="nav-number">3.</span> <span class="nav-text">3. Temporal-Difference Learning 时序差分强化学习</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#tdlambda"><span class="nav-number">4.</span> <span class="nav-text">4. TD(\(\lambda\))</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Jinxi"
+      src="/images/avatar.JPG">
+  <p class="site-author-name" itemprop="name">Jinxi</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">28</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/yuandong1998" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;yuandong1998" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/1377526365@qq.com" title="E-Mail → 1377526365@qq.com"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jinxi</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'Itq4lnx4qasas8q1mY3XpizW-gzGzoHsz',
+      appKey     : 'iVzadklVByQVhP8VBTe76nVz',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

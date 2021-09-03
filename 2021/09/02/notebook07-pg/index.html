@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="1. Introduction 在这一章节我们学习直接参数化策略（policy），如下公式。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="notebook07_pg">
+<meta property="og:url" content="http://example.com/2021/09/02/notebook07-pg/index.html">
+<meta property="og:site_name" content="Jinxi Blog">
+<meta property="og:description" content="1. Introduction 在这一章节我们学习直接参数化策略（policy），如下公式。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.mathpix.com/snip/images/0FfJ8juRIklj-NoCIdzG8mJXY8EAv-Ma9MPFVogtlqs.original.fullsize.png">
+<meta property="og:image" content="https://cdn.mathpix.com/snip/images/aqC54CyoGbckr5RZ1X7853uRQ7ZMtt00g6x_OanWVTM.original.fullsize.png">
+<meta property="og:image" content="https://cdn.mathpix.com/snip/images/-6gfKOsHU-Ys3Ksea1vz5wqLcGcCWY-RbaGCmEmxu_M.original.fullsize.png">
+<meta property="og:image" content="https://cdn.mathpix.com/snip/images/E5XRR7ui4761T_J35jRnXcQZgirxTdUn29xB5EAky5w.original.fullsize.png">
+<meta property="og:image" content="https://cdn.mathpix.com/snip/images/WvvGSnOpYIeCrTKXV2x-Y_NyA8Zgz13Mf9l1uw2wvUA.original.fullsize.png">
+<meta property="article:published_time" content="2021-09-02T20:19:15.000Z">
+<meta property="article:modified_time" content="2021-09-03T12:25:06.918Z">
+<meta property="article:author" content="Jinxi">
+<meta property="article:tag" content="学习笔记">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.mathpix.com/snip/images/0FfJ8juRIklj-NoCIdzG8mJXY8EAv-Ma9MPFVogtlqs.original.fullsize.png">
+
+<link rel="canonical" href="http://example.com/2021/09/02/notebook07-pg/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>notebook07_pg | Jinxi Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Jinxi Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Jinxi Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-schedule">
+
+    <a href="/schedule/" rel="section"><i class="fa fa-calendar fa-fw"></i>日程表</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>站点地图</a>
+
+  </li>
+        <li class="menu-item menu-item-commonweal">
+
+    <a href="/404/" rel="section"><i class="fa fa-heartbeat fa-fw"></i>公益 404</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/09/02/notebook07-pg/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.JPG">
+      <meta itemprop="name" content="Jinxi">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jinxi Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          notebook07_pg
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-09-03 04:19:15 / 修改时间：20:25:06" itemprop="dateCreated datePublished" datetime="2021-09-03T04:19:15+08:00">2021-09-03</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Reinforcement-Learning/" itemprop="url" rel="index"><span itemprop="name">Reinforcement Learning</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2021/09/02/notebook07-pg/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2021/09/02/notebook07-pg/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>7.3k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>7 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="introduction">1. Introduction</h2>
+<p>在这一章节我们学习直接参数化策略（policy），如下公式。</p>
+<span id="more"></span>
+<p><span class="math display">\[
+\pi_{\theta}(s, a)=\mathbb{P}[a \mid s, \theta]
+\]</span></p>
+<h3 id="value-based-policy-based-actor-critic的关系">1.1 Value-Based 、Policy-Based 、Actor-Critic的关系：</h3>
+<p><img src="https://cdn.mathpix.com/snip/images/0FfJ8juRIklj-NoCIdzG8mJXY8EAv-Ma9MPFVogtlqs.original.fullsize.png" /></p>
+<h3 id="value-based-policy-based的优缺点">1.2 Value-Based 、Policy-Based的优缺点</h3>
+<p><strong>Policy-Based Advantages：</strong></p>
+<ul>
+<li>具有更好的收敛性能</li>
+<li>对高维或连续的行为空间也有效。（单纯基于价值函数近似的方法无法解决<strong>连续行为空间</strong>的问题）</li>
+<li>可以学习随机策略（剪刀石头布）</li>
+</ul>
+<p><strong>Policy-Based Disadvantages:</strong></p>
+<ul>
+<li>通常收敛到局部最优，而不是全局最优</li>
+<li>评估一个政策通常是低效的和高方差的</li>
+</ul>
+<p>​ 基于价值的学习对应的最优策略通常是确定性策略，因为其是从众多行为价值中选择一个最大价值的行为，而有些问题的最优策略却是随机策略，这种情况下同样是无法通过基于价值的学习来求解的。可以看出，基于价值的强化学习虽然能出色地解决很多问题，但面对行为<strong>空间连续、观测受限、随机策略</strong>的学习等问题时仍然显得力不从心。此时基于策略的学习是解决这类问题的一个新的途径。</p>
+<h3 id="目标函数">1.3 目标函数</h3>
+<p>1、初始状态价值（start value），<span class="math inline">\(G_1\)</span>表示第一步s1的收获。 <span class="math display">\[
+J_{1}(\theta)=V_{\pi_{\theta}}\left(s_{1}\right)=\mathbb{E}_{\pi_{\theta}}\left[G_{1}\right]
+\]</span></p>
+<p>2、平均价值（average value） <span class="math display">\[
+J_{\text {av } V}(\theta)=\sum_{s} d^{\pi_{\theta}}(s) V^{\pi_{\theta}}(s)
+\]</span></p>
+<p>3、每一时间步的平均奖励（average reward per time-step） <span class="math display">\[
+J_{a v R}(\theta)=\sum_{s} d^{\pi_{\theta}}(s) \sum_{a} \pi_{\theta}(s, a) \mathcal{R}_{s}^{a}
+\]</span></p>
+<p>​ <span class="math inline">\(d^{\pi_{\theta}}(s)\)</span>是基于策略<span class="math inline">\(\pi_\theta\)</span>生成的马尔科夫链关于状态的静态分布，并不是指起始状态的分布，而是整体看来基于该策略状态出现概率的分布。对于目标函数的优化有不基于梯度和基于梯度的优化方法，本章关注于基于梯度的优化方法，并且会探索序列的结构。</p>
+<h2 id="finite-difference-policy-gradient-有限差分策略梯度">2. Finite Difference Policy Gradient 有限差分策略梯度</h2>
+<h3 id="梯度下降求解">2.1 梯度下降求解</h3>
+<p>​ 采用梯度下降方法求解，则：</p>
+<p><span class="math display">\[
+\nabla_{\theta} J(\theta)=\left(\begin{array}{c}
+\frac{\partial J(\theta)}{\partial \theta_{1}} \\
+\vdots \\
+\frac{\partial J(\theta)}{\partial \theta_{n}}
+\end{array}\right)
+\]</span></p>
+<p><span class="math display">\[
+\Delta \theta=\alpha \nabla_{\theta} J(\theta)
+\]</span></p>
+<p>​ 其中<span class="math inline">\(\nabla_{\theta} J(\theta)\)</span>为策略梯度，<span class="math inline">\(\alpha\)</span>是步长。我们需要评估<span class="math inline">\(\pi_\theta(s,a)\)</span>的策略梯度。对于每一个维度<span class="math inline">\(k\in[1,n]\)</span>，评估方式如下，这种方法简单，有噪音，但有时有效。 <span class="math display">\[
+\frac{\partial J(\theta)}{\partial \theta_{k}} \approx \frac{J\left(\theta+\epsilon u_{k}\right)-J(\theta)}{\epsilon}
+\]</span></p>
+<h3 id="score-function">2.2 Score Function</h3>
+<p>​ 现在我们来计算策略梯度，首先我们假设<span class="math inline">\(\pi_\theta\)</span>当非零时是可导的，并且我们知道$<em>{} </em>{}(s, a) $。</p>
+<p><span class="math display">\[
+\begin{aligned}
+\nabla_{\theta} \pi_{\theta}(s, a) &amp;=\pi_{\theta}(s, a) \frac{\nabla_{\theta} \pi_{\theta}(s, a)}{\pi_{\theta}(s, a)} \\
+&amp;=\pi_{\theta}(s, a) \nabla_{\theta} \log \pi_{\theta}(s, a)
+\end{aligned}
+\]</span></p>
+<p>​ 其中<span class="math inline">\(\nabla_{\theta} \log \pi_{\theta}(s, a)\)</span>为<strong>score function</strong>。</p>
+<h4 id="softmax-策略">2.2.1 Softmax 策略</h4>
+<p>​ Softmax 策略是应用于<strong>离散行为空间</strong>的一种常用策略。该策略使用描述状态和行为的特征<span class="math inline">\(\phi(s, a)\)</span>与参数<span class="math inline">\(\theta\)</span>的线性组合来权衡一个行为发生的几率：</p>
+<p><span class="math display">\[
+\pi_{\theta} \propto e^{\phi(s, a)^{T} \theta}
+\]</span> ​ 对应的分值函数为：</p>
+<p><span class="math display">\[
+\nabla_{\theta} \log \pi_{\theta}(s, a)=\phi(s, a)-\mathbb{E}_{\pi_{\theta}}[\phi(s, \cdot)]
+\]</span></p>
+<h4 id="高斯策略">2.2.2 高斯策略</h4>
+<p>​ 高斯策略是应用于<strong>连续行为空间</strong>的一种常用策略。该策略对应的行为从高斯分布<span class="math inline">\(\mathbb{N}\left(\mu(s), \sigma^{2}\right)\)</span>中产生。其均值 <span class="math inline">\(\mu(s)=\phi(s)^{T} \theta\)</span>。高斯策略对应的分值函数为:</p>
+<p><span class="math display">\[
+\nabla_{\theta} \log \pi_{\theta}(s, a)=\frac{(a-\mu(s)) \phi(s)}{\sigma^{2}}
+\]</span></p>
+<p>###　2.3 One-Step MDPs</p>
+<p>​ 假设现在有一个单步马尔科夫决策过程，对应的强化学习问题是个体与环境每产生一个行为交互一次即得到一个即时奖励<span class="math inline">\(r=R_{s,a}\)</span>，并形成一个完整的状态序列。目标函数为： <span class="math display">\[
+\begin{aligned}
+J(\theta) &amp;=\mathbb{E}_{\pi_{\theta}}[r] \\
+&amp;=\sum_{s \in S} d(s) \sum_{a \in A} \pi_{\theta}(s, a) R_{s, a}
+\end{aligned}
+\]</span> ​</p>
+<p>​ 目标函数的梯度为： <span class="math display">\[
+\begin{aligned}
+\nabla_{\theta} J(\theta) &amp;=\sum_{s \in S} d(s) \sum_{a \in A} \nabla_{\theta} \pi_{\theta}(s, a) R_{s, a} \\
+&amp;=\sum_{s \in S} d(s) \sum_{a \in A} \pi_{\theta}(s, a) \nabla_{\theta} \log \pi_{\theta}(s, a) R_{s, a} \\
+&amp;=\mathbb{E}_{\pi_{\theta}}\left[\nabla_{\theta} \log \pi_{\theta}(s, a) r\right]
+\end{aligned}
+\]</span></p>
+<h3 id="policy-gradient-theorem-策略梯度定理">2.4 Policy Gradient Theorem 策略梯度定理</h3>
+<p>​ 策略梯度定理扩展到多步的MDP，将即时奖励r替换为长期价值<span class="math inline">\(Q^\pi(s,a)\)</span>。</p>
+<p>​ 存在如下的策略梯度定理：对于任何可微的策略函数<span class="math inline">\(\pi_\theta(s,a)\)</span> 以及三种策略目标函数<span class="math inline">\(J_1,J_{avV},\frac{1}{1-\gamma}J_{avR}\)</span>中的任意一种来说，策略目标函数的梯度 (策略梯度) 都可以写成用分值函数表示的形式： <span class="math display">\[
+\nabla_{\theta} J(\theta)=\mathbb{E}_{\pi_{\theta}}\left[\nabla_{\theta} \log \pi_{\theta}(s, a) Q_{\pi_{\theta}}(s, a)\right]
+\]</span></p>
+<h2 id="monte-carlo-policy-gradient-蒙特卡洛策略梯度">3. Monte-Carlo Policy Gradient 蒙特卡洛策略梯度</h2>
+<p>​ 该算法实际应用不多，主要是由于其需要完整的状态序列来计算收获，同时用收获来代替行为价值也存在较高的变异性，导致许多次的参数更新的方向有可能不是真正策略梯度的方向。其中的<span class="math inline">\(v_t\)</span>为累积回报，即为之前的<span class="math inline">\(G_t\)</span>。</p>
+<p><img src="https://cdn.mathpix.com/snip/images/aqC54CyoGbckr5RZ1X7853uRQ7ZMtt00g6x_OanWVTM.original.fullsize.png" style="zoom:67%;" /></p>
+<h2 id="actor-critic-policy-gradient">4. Actor-Critic Policy Gradient</h2>
+<h3 id="qac算法">4.1 QAC算法</h3>
+<pre><code>    蒙特卡洛算法有很高的方差，所以提出了Actor-Critic算法。Actor-Critic 算法包含一个策略函数和行为价值函数。其中策略函数充当演员 (Actor), 生成行为与环境交互；行为价值函数充当(Critic)，负责评价演员的表现，并指导演员的后续行为动作。Critic 的行为价值函数是基于策略$\pi_\theta$的一个近似：</code></pre>
+<p><span class="math display">\[
+Q_{w}(s, a) \approx Q_{\pi_{\theta}}(s, a)
+\]</span></p>
+<p>​ critic是要解决策略评估问题，这个问题在前几周讨论过，有（1）Monte-Carlo，（2）Temporal-Difference，（3）TD（<span class="math inline">\(\lambda\)</span>）</p>
+<p>​ 假设：用线性价值函数来近似，critic根据TD(0)更新参数，Actor根据策略梯度更新参数，如下为QAC算法：</p>
+<p><img src="https://cdn.mathpix.com/snip/images/-6gfKOsHU-Ys3Ksea1vz5wqLcGcCWY-RbaGCmEmxu_M.original.fullsize.png" /></p>
+<h3 id="compatible-function-approximation-相容函数逼近定理">4.2 Compatible Function Approximation 相容函数逼近定理</h3>
+<p>​ 简单的 QAC 算法虽然不需要完整的状态序列，但是由于引入的 Critic 仍然是一个近似价值函数，存在着引入偏差的可能性，不过当价值函数接受的输入的特征和函数近似方式足够幸运时，可以避免这种偏差而完全遵循策略梯度的方向。</p>
+<p>​ <strong>定理</strong>：如果下面两个条件满足：</p>
+<ol type="1">
+<li><p>近似价值函数的梯度与分值函数的梯度相同，即： <span class="math display">\[
+\nabla_{w} Q_{w}(s, a)=\nabla_{\theta} \log \pi_{\theta}(s, a)
+\]</span></p></li>
+<li><p>近似价值函数的参数 w 能够最小化 <span class="math display">\[
+\epsilon=\mathbb{E}_{\pi_{\theta}}\left[\left(Q_{\pi_{\theta}}(s, a)-Q_{w}(s, a)\right)^{2}\right]
+\]</span></p></li>
+</ol>
+<p>​ 如果满足上面的两个条件，那么策略梯度 ∇ θ J(θ) 是准确的，即: <span class="math display">\[
+\nabla_{\theta} J(\theta)=\mathbb{E}_{\pi_{\theta}}\left[\nabla_{\theta} \log \pi_{\theta}(s, a) Q_{w}(s, a)\right]
+\]</span></p>
+<p><strong>证明：</strong></p>
+<p><img src="https://cdn.mathpix.com/snip/images/E5XRR7ui4761T_J35jRnXcQZgirxTdUn29xB5EAky5w.original.fullsize.png" /></p>
+<h3 id="reducing-variance-using-a-baseline">4.3 Reducing Variance Using a Baseline</h3>
+<p>​ 我们从策略梯度中减去一个基线函数B(s)，可以在不改变期望的情况下减少方差，因为如下的公式为0 。 <span class="math display">\[
+\begin{aligned}
+\mathbb{E}_{\pi_{\theta}}\left[\nabla_{\theta} \log \pi_{\theta}(s, a) B(s)\right] &amp;=\sum_{s \in \mathcal{S}} d^{\pi_{\theta}}(s) \sum_{a} \nabla_{\theta} \pi_{\theta}(s, a) B(s) \\
+&amp;=\sum_{s \in \mathcal{S}} d^{\pi_{\theta}} B(s) \nabla_{\theta} \sum_{a \in \mathcal{A}} \pi_{\theta}(s, a) \\
+&amp;=0
+\end{aligned}
+\]</span> ​</p>
+<p>​ 一个好的基线是状态值函数<span class="math inline">\(B(s)=V^{\pi_{\theta}}(s)\)</span>，则策略梯度改写为如下的，使得方差减小。 <span class="math display">\[
+\begin{aligned}
+A^{\pi \theta}(s, a) &amp;=Q^{\pi_{\theta}}(s, a)-V^{\pi_{\theta}(s)} \\
+\nabla_{\theta} J(\theta) &amp;=\mathbb{E}_{\pi_{\theta}}\left[\nabla_{\theta} \log \pi_{\theta}(s, a) A^{\pi_{\theta}}(s, a)\right]
+\end{aligned}
+\]</span></p>
+<p>​ 对于<span class="math inline">\(V^{\pi_\theta}(s)\)</span>的TD error，是对优势函数的无偏估计。 <span class="math display">\[
+\delta^{\pi_{\theta}}=r+\gamma V^{\pi_{\theta}}\left(s^{\prime}\right)-V^{\pi_{\theta}}(s)
+\]</span></p>
+<p><span class="math display">\[
+\begin{aligned}
+\mathbb{E}_{\pi_{\theta}}\left[\delta^{\pi_{\theta}} \mid s, a\right] &amp;=\mathbb{E}_{\pi_{\theta}}\left[r+\gamma V^{\pi_{\theta}}\left(s^{\prime}\right) \mid s, a\right]-V^{\pi_{\theta}}(s) \\
+&amp;=Q^{\pi_{\theta}}(s, a)-V^{\pi_{\theta}}(s) \\
+&amp;=A^{\pi_{\theta}}(s, a)
+\end{aligned}
+\]</span></p>
+<p>​ 所以可以计算如下策略梯度： <span class="math display">\[
+\nabla_{\theta} J(\theta)=\mathbb{E}_{\pi_{\theta}}\left[\nabla_{\theta} \log \pi_{\theta}(s, a) \delta^{\pi_{\theta}}\right]
+\]</span> ​ 可以用参数来估计TD error，只需要一组参数v 。 <span class="math display">\[
+\delta_{v}=r+\gamma V_{v}\left(s^{\prime}\right)-V_{v}(s)
+\]</span></p>
+<h3 id="policy-gradient-with-eligibility-traces">4.4 Policy Gradient with Eligibility Traces</h3>
+<p>​ 可以像后向<span class="math inline">\(TD(\lambda)\)</span>一样引入eligibility traces 。 <span class="math display">\[
+\begin{aligned}
+\delta &amp;=r_{t+1}+\gamma V_{v}\left(s_{t+1}\right)-V_{v}\left(s_{t}\right) \\
+e_{t+1} &amp;=\lambda e_{t}+\nabla_{\theta} \log \pi_{\theta}(s, a) \\
+\Delta \theta &amp;=\alpha \delta e_{t}
+\end{aligned}
+\]</span></p>
+<h3 id="natural-policy-gradient">4.5 Natural Policy Gradient</h3>
+<p><span class="math display">\[
+\nabla_{\theta}^{n a t} \pi_{\theta}(s, a)=G_{\theta}^{-1} \nabla_{\theta} \pi_{\theta}(s, a)
+\]</span></p>
+<p>​ Gθ is the Fisher information matrix ： <span class="math display">\[
+G_{\theta}=\mathbb{E}_{\pi_{\theta}}\left[\nabla_{\theta} \log \pi_{\theta}(s, a) \nabla_{\theta} \log \pi_{\theta}(s, a)^{T}\right]
+\]</span></p>
+<h3 id="natural-actor-critic">4.6 Natural Actor-Critic</h3>
+<p>​ Using compatible function approximation ， <span class="math display">\[
+\nabla_{w} A_{w}(s, a)=\nabla_{\theta} \log \pi_{\theta}(s, a)
+\]</span> ​ So the natural policy gradient simplifies , <span class="math display">\[
+\begin{aligned}
+\nabla_{\theta} J(\theta) &amp;=\mathbb{E}_{\pi_{\theta}}\left[\nabla_{\theta} \log \pi_{\theta}(s, a) A^{\pi_{\theta}}(s, a)\right] \\
+&amp;=\mathbb{E}_{\pi_{\theta}}\left[\nabla_{\theta} \log \pi_{\theta}(s, a) \nabla_{\theta} \log \pi_{\theta}(s, a)^{T} w\right] \\
+&amp;=G_{\theta} w \\
+\nabla_{\theta}^{n a t} f(\theta) &amp;=w
+\end{aligned}
+\]</span></p>
+<h2 id="深度确定性策略梯度-ddpg-算法">5. 深度确定性策略梯度 (DDPG) 算法</h2>
+<p>​ 深度确定性策略梯度算法是使用深度学习技术、同时基于 Actor-Critic 算法的确定性策略算法。该算法中的 Actor 和 Critic 都使用深度神经网络来建立近似函数。由于该算法可以直接从Actor 的策略生成确定的行为而不需要依据行为的概率分布进行采样而被称为确定性策略。该算法在学习阶段通过在确定性的行为基础上增加一个噪声函数而实现在确定性行为周围的小范围内探索。此外，该算法还为 Actor 和 Critic 网络各备份了一套参数用来计算行为价值的期待值以更稳定地提升 Critic 的策略指导水平。使用备份参数的网络称为目标网络，其对应的参数每次更新的幅度很小。另一套参数对应的 Actor 和 Critic 则用来生成实际交互的行为以及计算相应的策略梯度，这一套参数每学习一次就更新一次。这种双参数设置的目的是为了减少因近似数据的引导而发生不收敛的情形。这四个网络具体使用的情景为：</p>
+<ol type="1">
+<li>Actor 网络：根据当前状态 s0 生成的探索或不探索的具体行为 a0；</li>
+<li>Target Actor 网络：根据环境给出的后续状态 s1 生成预估价值用到的 a1；</li>
+<li>Critic 网络：计算状态 s0 和生成的行为 a0 对应的行为价值；</li>
+<li>Target Critic 网络：根据后续状态 s1,a1 生成用来计算目标价值 y = Q(s0; a0) 的 Q′(s1; a1)；</li>
+</ol>
+<p>​ DDPG 算法表现出色，能较为稳定地解决连续行为空间下强化学习问题，其具体流程如下所示。</p>
+<p><img src="https://cdn.mathpix.com/snip/images/WvvGSnOpYIeCrTKXV2x-Y_NyA8Zgz13Mf9l1uw2wvUA.original.fullsize.png" /></p>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div>如果觉得我的文章对您有用，请随意打赏。您的支持将鼓励我继续创作！</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.png" alt="Jinxi 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/ailpay.jpg" alt="Jinxi 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" rel="tag"># 学习笔记</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/09/02/notebook06-FA/" rel="prev" title="notebook06_FA">
+      <i class="fa fa-chevron-left"></i> notebook06_FA
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/09/02/notebook08-dyna/" rel="next" title="notebook08_dyna">
+      notebook08_dyna <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#introduction"><span class="nav-number">1.</span> <span class="nav-text">1. Introduction</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#value-based-policy-based-actor-critic%E7%9A%84%E5%85%B3%E7%B3%BB"><span class="nav-number">1.1.</span> <span class="nav-text">1.1 Value-Based 、Policy-Based 、Actor-Critic的关系：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#value-based-policy-based%E7%9A%84%E4%BC%98%E7%BC%BA%E7%82%B9"><span class="nav-number">1.2.</span> <span class="nav-text">1.2 Value-Based 、Policy-Based的优缺点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9B%AE%E6%A0%87%E5%87%BD%E6%95%B0"><span class="nav-number">1.3.</span> <span class="nav-text">1.3 目标函数</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#finite-difference-policy-gradient-%E6%9C%89%E9%99%90%E5%B7%AE%E5%88%86%E7%AD%96%E7%95%A5%E6%A2%AF%E5%BA%A6"><span class="nav-number">2.</span> <span class="nav-text">2. Finite Difference Policy Gradient 有限差分策略梯度</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A2%AF%E5%BA%A6%E4%B8%8B%E9%99%8D%E6%B1%82%E8%A7%A3"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 梯度下降求解</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#score-function"><span class="nav-number">2.2.</span> <span class="nav-text">2.2 Score Function</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#softmax-%E7%AD%96%E7%95%A5"><span class="nav-number">2.2.1.</span> <span class="nav-text">2.2.1 Softmax 策略</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%AB%98%E6%96%AF%E7%AD%96%E7%95%A5"><span class="nav-number">2.2.2.</span> <span class="nav-text">2.2.2 高斯策略</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#policy-gradient-theorem-%E7%AD%96%E7%95%A5%E6%A2%AF%E5%BA%A6%E5%AE%9A%E7%90%86"><span class="nav-number">2.3.</span> <span class="nav-text">2.4 Policy Gradient Theorem 策略梯度定理</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#monte-carlo-policy-gradient-%E8%92%99%E7%89%B9%E5%8D%A1%E6%B4%9B%E7%AD%96%E7%95%A5%E6%A2%AF%E5%BA%A6"><span class="nav-number">3.</span> <span class="nav-text">3. Monte-Carlo Policy Gradient 蒙特卡洛策略梯度</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#actor-critic-policy-gradient"><span class="nav-number">4.</span> <span class="nav-text">4. Actor-Critic Policy Gradient</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#qac%E7%AE%97%E6%B3%95"><span class="nav-number">4.1.</span> <span class="nav-text">4.1 QAC算法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#compatible-function-approximation-%E7%9B%B8%E5%AE%B9%E5%87%BD%E6%95%B0%E9%80%BC%E8%BF%91%E5%AE%9A%E7%90%86"><span class="nav-number">4.2.</span> <span class="nav-text">4.2 Compatible Function Approximation 相容函数逼近定理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#reducing-variance-using-a-baseline"><span class="nav-number">4.3.</span> <span class="nav-text">4.3 Reducing Variance Using a Baseline</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#policy-gradient-with-eligibility-traces"><span class="nav-number">4.4.</span> <span class="nav-text">4.4 Policy Gradient with Eligibility Traces</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#natural-policy-gradient"><span class="nav-number">4.5.</span> <span class="nav-text">4.5 Natural Policy Gradient</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#natural-actor-critic"><span class="nav-number">4.6.</span> <span class="nav-text">4.6 Natural Actor-Critic</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B7%B1%E5%BA%A6%E7%A1%AE%E5%AE%9A%E6%80%A7%E7%AD%96%E7%95%A5%E6%A2%AF%E5%BA%A6-ddpg-%E7%AE%97%E6%B3%95"><span class="nav-number">5.</span> <span class="nav-text">5. 深度确定性策略梯度 (DDPG) 算法</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Jinxi"
+      src="/images/avatar.JPG">
+  <p class="site-author-name" itemprop="name">Jinxi</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">28</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/yuandong1998" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;yuandong1998" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/1377526365@qq.com" title="E-Mail → 1377526365@qq.com"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jinxi</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'Itq4lnx4qasas8q1mY3XpizW-gzGzoHsz',
+      appKey     : 'iVzadklVByQVhP8VBTe76nVz',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

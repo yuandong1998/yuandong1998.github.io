@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="1. Introduction 强化学习在不同领域有不同的表现形式：神经科学、心理学、计算机科学、工程领域、数学、经济学等有不同的称呼。 强化学习是机器学习的一个分支：监督学习、无监督学习、强化学习 强化学习的特点：  非监督、只有一个奖励信号。 奖励信号不是实时的，而是延迟的。 时序是很关键的。所以数据不再是独立同分布的数据。 当前agent的action影响后续的数据。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="notebook01_intro_RL">
+<meta property="og:url" content="http://example.com/2021/09/02/notebook01-intro-RL/index.html">
+<meta property="og:site_name" content="Jinxi Blog">
+<meta property="og:description" content="1. Introduction 强化学习在不同领域有不同的表现形式：神经科学、心理学、计算机科学、工程领域、数学、经济学等有不同的称呼。 强化学习是机器学习的一个分支：监督学习、无监督学习、强化学习 强化学习的特点：  非监督、只有一个奖励信号。 奖励信号不是实时的，而是延迟的。 时序是很关键的。所以数据不再是独立同分布的数据。 当前agent的action影响后续的数据。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.mathpix.com/snip/images/r4RoAYgmz3l3-jv-Tn7nSHpSM1yomiF_tWUd40Dd5gI.original.fullsize.png">
+<meta property="article:published_time" content="2021-09-02T20:15:36.000Z">
+<meta property="article:modified_time" content="2021-09-03T12:17:54.133Z">
+<meta property="article:author" content="Jinxi">
+<meta property="article:tag" content="学习笔记">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.mathpix.com/snip/images/r4RoAYgmz3l3-jv-Tn7nSHpSM1yomiF_tWUd40Dd5gI.original.fullsize.png">
+
+<link rel="canonical" href="http://example.com/2021/09/02/notebook01-intro-RL/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>notebook01_intro_RL | Jinxi Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Jinxi Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Jinxi Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-schedule">
+
+    <a href="/schedule/" rel="section"><i class="fa fa-calendar fa-fw"></i>日程表</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>站点地图</a>
+
+  </li>
+        <li class="menu-item menu-item-commonweal">
+
+    <a href="/404/" rel="section"><i class="fa fa-heartbeat fa-fw"></i>公益 404</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/09/02/notebook01-intro-RL/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.JPG">
+      <meta itemprop="name" content="Jinxi">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jinxi Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          notebook01_intro_RL
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-09-03 04:15:36 / 修改时间：20:17:54" itemprop="dateCreated datePublished" datetime="2021-09-03T04:15:36+08:00">2021-09-03</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Reinforcement-Learning/" itemprop="url" rel="index"><span itemprop="name">Reinforcement Learning</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2021/09/02/notebook01-intro-RL/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2021/09/02/notebook01-intro-RL/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>3.2k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>3 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="introduction">1. Introduction</h2>
+<p>强化学习在不同领域有不同的表现形式：神经科学、心理学、计算机科学、工程领域、数学、经济学等有不同的称呼。</p>
+<p>强化学习是机器学习的一个分支：监督学习、无监督学习、强化学习</p>
+<p>强化学习的特点：</p>
+<ol type="1">
+<li>非监督、只有一个奖励信号。</li>
+<li>奖励信号不是实时的，而是延迟的。</li>
+<li>时序是很关键的。所以数据不再是独立同分布的数据。</li>
+<li>当前agent的action影响后续的数据。</li>
+</ol>
+<p>强化学习应用广泛：直升机特技飞行、经典游戏、投资管理、发电站控制、让机器人模仿人类行走等</p>
+<span id="more"></span>
+<h2 id="强化学习问题的提出">2. 强化学习问题的提出</h2>
+<p><strong>奖励 Reward：</strong></p>
+<p>​ reward <span class="math inline">\(R_t\)</span>是一个信号标量，表示agent在t步骤时做的如何，agent的任务就是最大化累积的reward。</p>
+<p>​ 强化学习基于<strong>奖励假设（reward hypothesis）</strong>：所有的目标都可以用期望累积回报的最大化来描述。</p>
+<p><strong>序列决策 Sequential Decision Making ：</strong></p>
+<p>​ 目标：选择actions来最大化未来总体的奖励。</p>
+<p>​ actions是长期的序列，奖励通常是延迟的，有时为了获得更多的长期回报，最好牺牲眼前的回报。</p>
+<p><strong>个体和环境 Agent &amp; Environment</strong></p>
+<p>在t时刻：</p>
+<p>​ agent： 执行<span class="math inline">\(A_t\)</span>，接收<span class="math inline">\(O_t\)</span>，获得<span class="math inline">\(R_t\)</span>。</p>
+<p>​ environment：接收<span class="math inline">\(A_t\)</span>，发出<span class="math inline">\(O_{t+1}\)</span>，发出<span class="math inline">\(R_{t+1}\)</span>。</p>
+<p><img src="https://cdn.mathpix.com/snip/images/r4RoAYgmz3l3-jv-Tn7nSHpSM1yomiF_tWUd40Dd5gI.original.fullsize.png" /></p>
+<p><strong>历史和状态 History &amp; State</strong></p>
+<p>​ 历史是observations、actions、rewards组成的序列，之后的决策应该由历史决定。</p>
+<p><span class="math display">\[
+H_t=O_1,R_1,A_1,...,A_{t-1},O_t,R_t
+\]</span> ​ 状态是决定未来发生什么的信息，是历史的一个函数。历史的数据很大且多数对当前决策无用，所以通过历史得出的状态，改状态拥有决定下一步决策的信息。</p>
+<p><span class="math display">\[
+S_t=f(H_t)
+\]</span></p>
+<ul>
+<li><p>环境状态 Environment State</p>
+<p>环境状态通常对Agent并不完全可见，也就是Agent有时候并不知道环境状态的所有细节。即使有时候环境状态对Agent可以是完全可见的，这些信息也可能包含着一些无关信息。</p></li>
+<li><p>个体状态 Agent State</p>
+<p>是Agent的内部呈现，包括Agent可以使用的、决定未来动作的所有信息。Agent状态是强化学习算法可以利用的信息，它可以是历史的一个函数：<span class="math inline">\(S_t^a=f(H_t)\)</span>。</p></li>
+<li><p>信息状态 Information State</p>
+<p>包括历史上所有有用的信息，又称Markov状态。状态<span class="math inline">\(S_t\)</span>是马尔可夫的，历史<span class="math inline">\(H_t\)</span>也是马尔可夫的。</p></li>
+</ul>
+<p><strong>完全可观测环境 Fully Observable Environments </strong></p>
+<p>​ 个体能够直接观测到环境状态。在这种条件下：个体对环境的观测 = 个体状态 = 环境状态。正式地说，这种问题是一个马尔科夫决策过程（Markov Decision Process， MDP）</p>
+<p><strong>部分可观测的环境 Partially Observable Environments </strong></p>
+<p>​ 环境是局部可观测的，Agent需要间接观测环境。所以agent state不等于environment state。这种情况被称为：partially observable Markov decision process (POMDP) 。</p>
+<p>​ Agent必须构建自己的state。</p>
+<ul>
+<li>直接采用历史 ：<span class="math inline">\(S_t^a=H_t\)</span></li>
+<li>Beliefs of environment state，采用已知状态的概率分布作为个体的状态：<span class="math inline">\(S_t^a=(P[S_t^e=s^1],...,P[S_t^e=s^n])\)</span></li>
+<li>RNN，根据前一时刻agent的状态和当前的观测得到当前agent的状态：<span class="math inline">\(S_t^a=\sigma(S_{t-1}^aW_s+O_t W_o)\)</span></li>
+</ul>
+<h2 id="inside-an-rl-agent">3. Inside An RL Agent</h2>
+<h3 id="agent的组成部分-major-components-of-an-rl-agent">3.1 Agent的组成部分 Major Components of an RL Agent</h3>
+<p>​ Agent由一下三个的一个或者多个组成。</p>
+<p><strong>（1）策略 Policy</strong></p>
+<p>​ 策略是将state映射为action，分为<strong>确定的策略</strong>（Deterministic policy ）：<span class="math inline">\(a=\pi(s)\)</span>和<strong>随机型策略</strong>（Stochastic policy ）：<span class="math inline">\(\pi(a|s)=P[A_t=1|S_t=S]\)</span></p>
+<p><strong>（2）价值函数 Value Function</strong></p>
+<p>​ 价值函数是对未来回报的预测（期望）。表示通过action进入某一状态评价其好坏程度。</p>
+<p><span class="math display">\[
+v_{\pi}(s)=\mathbb E_\pi[R_{t+1}+\gamma R_{t+2}+\gamma^2 R_{t+3}+...|S_t=s]
+\]</span> <strong>（3）模型 Model</strong></p>
+<p>​ 是Agent对环境变化预测的模型，因为Agent希望模拟环境与Agent的交互机制。</p>
+<ul>
+<li>预测下一个可能状态发生的概率 <span class="math inline">\(P_{ss&#39;}^a=\mathbb P[S_{t+1}=s&#39;|S_t=s,A_t=a]\)</span></li>
+<li>预测可能获得的即时奖励：<span class="math inline">\(R_s^a=E[R_{t+1}|S_t=s,A_t=a]\)</span></li>
+</ul>
+<p>​ 模型并不是构建一个个体所必需的，很多强化学习算法中个体并不试图（依赖）构建一个模型。</p>
+<p>注：模型仅针对个体而言，环境实际运行机制不称为模型，而称为<strong>环境动力学</strong>(dynamics of environment)，它能够明确确定个体下一个状态和所得的即时奖励。</p>
+<h3 id="强化学习个体的分类">3.2 强化学习个体的分类</h3>
+<p>可以把个体分为如下三类：</p>
+<ol type="1">
+<li>仅基于价值函数的 Value Based：在这样的个体中，有对状态的价值估计函数，但是没有直接的策略函数，策略函数由价值函数间接得到。</li>
+<li>仅直接基于策略的 Policy Based：这样的个体中行为直接由策略函数产生，个体并不维护一个对各状态价值的估计函数。</li>
+<li>演员-评判家形式 Actor-Critic：个体既有价值函数、也有策略函数。两者相互结合解决问题。</li>
+</ol>
+<p>此外，根据个体在解决强化学习问题时是否建立一个对环境动力学的模型，将其分为两大类：</p>
+<ol type="1">
+<li>不基于模型的个体: 这类个体并不视图了解环境如何工作，而仅聚焦于价值和/或策略函数。</li>
+<li>基于模型的个体：个体尝试建立一个描述环境运作过程的模型，以此来指导价值或策略函数的更新。</li>
+</ol>
+<h3 id="学习和规划-learning-planning">3.3 学习和规划 Learning &amp; Planning</h3>
+<ul>
+<li>学习：环境初始时是未知的，个体不知道环境如何工作，个体通过与环境进行交互，逐渐改善其行为策略。</li>
+<li>规划: 环境如何工作对于个体是已知或近似已知的，个体并不与环境发生实际的交互，而是利用其构建的模型进行计算，在此基础上改善其行为策略。</li>
+</ul>
+<p>​ 一个常用的强化学习问题解决思路是，先学习环境如何工作，也就是了解环境工作的方式，即学习得到一个模型，然后利用这个模型进行规划。</p>
+<h3 id="探索和利用-exploration-exploitation">3.4 探索和利用 Exploration &amp; Exploitation</h3>
+<p>​ 强化学习类似于一个试错的学习，个体需要从其与环境的交互中发现一个好的策略，同时又不至于在试错的过程中丢失太多的奖励。探索和利用是个体进行决策时需要平衡的两个方面。</p>
+<h3 id="预测和控制-prediction-control">3.5 预测和控制 Prediction &amp; Control</h3>
+<ul>
+<li>预测：给定一个策略，评价未来。可以看成是求解在给定策略下的价值函数（value function）的过程。How well will I(an agent) do if I(the agent) follow a specific policy?</li>
+<li>控制：找到一个好的策略来最大化未来的奖励。</li>
+</ul>
+<h2 id="课程提纲">4. 课程提纲</h2>
+<h3 id="第一部分强化学习基础理论">第一部分：强化学习基础理论</h3>
+<ol type="1">
+<li><p>强化学习简介： 本讲</p></li>
+<li><p>马儿可夫决策过程： 理论基础，对于描述强化学习问题很重要</p></li>
+<li><p>动态规划 小规模强化学习问题的一种解决方案</p></li>
+<li><p>不基于模型的预测 理论核心</p></li>
+<li><p>不基于模型的控制 全课重点及核心</p></li>
+</ol>
+<h3 id="第二部分实践中的强化学习">第二部分：实践中的强化学习</h3>
+<ol start="6" type="1">
+<li><p>价值函数的近似表示 基于价值函数解决大规模问题的常用技巧</p></li>
+<li><p>策略梯度方法 基于策略本身解决大规模问题时的常用技巧</p></li>
+<li><p>整合学习与规划 联合模型解决大规模问题</p></li>
+<li><p>探索和利用 理论介绍如何平衡探索和利用</p></li>
+<li><p>案例学习（选） 强化学习在游戏（博弈）中的应用</p></li>
+</ol>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div>如果觉得我的文章对您有用，请随意打赏。您的支持将鼓励我继续创作！</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.png" alt="Jinxi 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/ailpay.jpg" alt="Jinxi 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" rel="tag"># 学习笔记</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/08/30/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0%E3%80%8AFastformer-Additive-Attention-Can-Be-All-You-Need%E3%80%8B/" rel="prev" title="论文阅读笔记《Fastformer Additive Attention Can Be All You Need》">
+      <i class="fa fa-chevron-left"></i> 论文阅读笔记《Fastformer Additive Attention Can Be All You Need》
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/09/02/notebook02-MDP/" rel="next" title="notebook02_MDP">
+      notebook02_MDP <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#introduction"><span class="nav-number">1.</span> <span class="nav-text">1. Introduction</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E9%97%AE%E9%A2%98%E7%9A%84%E6%8F%90%E5%87%BA"><span class="nav-number">2.</span> <span class="nav-text">2. 强化学习问题的提出</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#inside-an-rl-agent"><span class="nav-number">3.</span> <span class="nav-text">3. Inside An RL Agent</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#agent%E7%9A%84%E7%BB%84%E6%88%90%E9%83%A8%E5%88%86-major-components-of-an-rl-agent"><span class="nav-number">3.1.</span> <span class="nav-text">3.1 Agent的组成部分 Major Components of an RL Agent</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E4%B8%AA%E4%BD%93%E7%9A%84%E5%88%86%E7%B1%BB"><span class="nav-number">3.2.</span> <span class="nav-text">3.2 强化学习个体的分类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%A6%E4%B9%A0%E5%92%8C%E8%A7%84%E5%88%92-learning-planning"><span class="nav-number">3.3.</span> <span class="nav-text">3.3 学习和规划 Learning &amp; Planning</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8E%A2%E7%B4%A2%E5%92%8C%E5%88%A9%E7%94%A8-exploration-exploitation"><span class="nav-number">3.4.</span> <span class="nav-text">3.4 探索和利用 Exploration &amp; Exploitation</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A2%84%E6%B5%8B%E5%92%8C%E6%8E%A7%E5%88%B6-prediction-control"><span class="nav-number">3.5.</span> <span class="nav-text">3.5 预测和控制 Prediction &amp; Control</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%BE%E7%A8%8B%E6%8F%90%E7%BA%B2"><span class="nav-number">4.</span> <span class="nav-text">4. 课程提纲</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%B8%80%E9%83%A8%E5%88%86%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80%E7%90%86%E8%AE%BA"><span class="nav-number">4.1.</span> <span class="nav-text">第一部分：强化学习基础理论</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%BA%8C%E9%83%A8%E5%88%86%E5%AE%9E%E8%B7%B5%E4%B8%AD%E7%9A%84%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0"><span class="nav-number">4.2.</span> <span class="nav-text">第二部分：实践中的强化学习</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Jinxi"
+      src="/images/avatar.JPG">
+  <p class="site-author-name" itemprop="name">Jinxi</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">28</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/yuandong1998" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;yuandong1998" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/1377526365@qq.com" title="E-Mail → 1377526365@qq.com"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jinxi</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'Itq4lnx4qasas8q1mY3XpizW-gzGzoHsz',
+      appKey     : 'iVzadklVByQVhP8VBTe76nVz',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

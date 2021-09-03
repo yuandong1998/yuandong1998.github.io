@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="1. Introduction  行为策略：指导个体产生与环境进行实际交互行为的策略。 目标策略：评价状态或行为价值的策略或者待优化的策略。 现时策略学习：个体在学习过程中优化的策略与自己的行为策略是同一个策略。 借鉴策略学习：个体在学习过程中优化的策略与自己的行为策略是不同的策略。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="notebook05_control">
+<meta property="og:url" content="http://example.com/2021/09/02/notebook05-control/index.html">
+<meta property="og:site_name" content="Jinxi Blog">
+<meta property="og:description" content="1. Introduction  行为策略：指导个体产生与环境进行实际交互行为的策略。 目标策略：评价状态或行为价值的策略或者待优化的策略。 现时策略学习：个体在学习过程中优化的策略与自己的行为策略是同一个策略。 借鉴策略学习：个体在学习过程中优化的策略与自己的行为策略是不同的策略。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.mathpix.com/snip/images/AaX0bwTi_Dkiw2nOl-75XSfR_wpnTDNldwjBoguHKfc.original.fullsize.png">
+<meta property="og:image" content="https://cdn.mathpix.com/snip/images/uDQmE7QZKegTDuVdF-rTTxggQp_AJdQLdvEA8Kh0fpg.original.fullsize.png">
+<meta property="og:image" content="https://cdn.mathpix.com/snip/images/nwg4xl66zibLgArXECOcfFoZ_a_7GiaTHGZPN0oevrQ.original.fullsize.png">
+<meta property="article:published_time" content="2021-09-02T20:18:52.000Z">
+<meta property="article:modified_time" content="2021-09-03T12:24:01.153Z">
+<meta property="article:author" content="Jinxi">
+<meta property="article:tag" content="学习笔记">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.mathpix.com/snip/images/AaX0bwTi_Dkiw2nOl-75XSfR_wpnTDNldwjBoguHKfc.original.fullsize.png">
+
+<link rel="canonical" href="http://example.com/2021/09/02/notebook05-control/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>notebook05_control | Jinxi Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Jinxi Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Jinxi Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-schedule">
+
+    <a href="/schedule/" rel="section"><i class="fa fa-calendar fa-fw"></i>日程表</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>站点地图</a>
+
+  </li>
+        <li class="menu-item menu-item-commonweal">
+
+    <a href="/404/" rel="section"><i class="fa fa-heartbeat fa-fw"></i>公益 404</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/09/02/notebook05-control/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.JPG">
+      <meta itemprop="name" content="Jinxi">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jinxi Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          notebook05_control
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-09-03 04:18:52 / 修改时间：20:24:01" itemprop="dateCreated datePublished" datetime="2021-09-03T04:18:52+08:00">2021-09-03</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Reinforcement-Learning/" itemprop="url" rel="index"><span itemprop="name">Reinforcement Learning</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2021/09/02/notebook05-control/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2021/09/02/notebook05-control/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>3.8k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>3 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="introduction">1. Introduction</h2>
+<ul>
+<li><p>行为策略：指导个体产生与环境进行实际交互行为的策略。</p></li>
+<li><p>目标策略：评价状态或行为价值的策略或者待优化的策略。</p></li>
+<li><p>现时策略学习：个体在学习过程中优化的策略与自己的行为策略是同一个策略。</p></li>
+<li><p>借鉴策略学习：个体在学习过程中优化的策略与自己的行为策略是不同的策略。</p></li>
+</ul>
+<span id="more"></span>
+<h2 id="on-policy-monte-carlo-control">2. On-Policy Monte-Carlo Control</h2>
+<p>​ 在不基于模型的控制时，我们将无法通过分析、比较基于状态的价值来改善贪婪策略，这是因为基于状态价值的贪婪策略的改善需要知晓状态间转移概率。我们无法事先知道这些状态之间在不同行为下的转移概率，因而无法基于状态价值来改善我们的贪婪策略。</p>
+<h3 id="ϵ-greedy-exploration-ϵ--贪婪策略">2.1 ϵ-Greedy Exploration ϵ- 贪婪策略</h3>
+<p><span class="math display">\[
+\pi(a | s)=\left\{\begin{array}{ll}
+\epsilon / m+1-\epsilon &amp; \text { 如果 } a^{*}=\underset{a \in A}{\operatorname{argmax}} Q(s, a) \\
+\epsilon / m &amp; \text { 其它情况 }
+\end{array}\right.
+\]</span></p>
+<h3 id="monte-carlo-control-现时策略蒙特卡罗控制">2.2 Monte-Carlo Control 现时策略蒙特卡罗控制</h3>
+<p>​ <strong>现时策略蒙特卡罗控制</strong>：<u>通过 ϵ-贪婪策略采样一个或多个完整的状态序列后，平均得出某一状态行为对的价值，并持续进行策略的评估和改善。通常可以在仅得到一个完整状态序列后就进行一次策略迭代以加速迭代过程。</u></p>
+<p>​ <strong>理论基础</strong>：</p>
+<p>​ <strong>GLIE</strong>(greedy in the Limit with Infnite Exploration) ：它包含两层意思，一是所有的状态行为对会被无限次探索 ；二是另外随着采样趋向无穷多，策略收敛至一个贪婪策略 。存在如下的定理：<strong>GLIE 蒙特卡洛控制能收敛至最优的状态行为价值函数。</strong>如果在使用 ϵ-贪婪策略时，能令 ϵ 随采样次数的无限增加而趋向于 0 就符合 GLIE。</p>
+<p>​ <strong>流程</strong>：</p>
+<ol type="1">
+<li><p>基于给定策略 π，采样第 k 个完整的状态序列 。</p></li>
+<li><p>对于该状态序列里出现的每一状态行为对 <span class="math inline">\((S_t,A_t)\)</span>，更新其计数 N 和行为价值函数 Q</p>
+<p><span class="math display">\[
+\begin{array}{c}
+N\left(S_{t}, A_{t}\right) \leftarrow N\left(S_{t}, A_{t}\right)+1 \\
+Q\left(S_{t}, A_{t}\right) \leftarrow Q\left(S_{t}, A_{t}\right)+\frac{1}{N\left(S_{t}, A_{t}\right)}\left(G_{t}-Q\left(S_{t}, A_{t}\right)\right)
+\end{array}
+\]</span></p></li>
+<li><p>基于新的行为价值函数 Q 以如下方式改善策略</p>
+<p><span class="math display">\[
+\begin{array}{c}
+\epsilon \leftarrow 1 / k \\
+\pi \leftarrow \epsilon-g \operatorname{reed} y(Q)
+\end{array}
+\]</span></p></li>
+</ol>
+<h2 id="on-policy-temporal-difference-learning-现时策略时序差分控制">3. On-Policy Temporal-Difference Learning 现时策略时序差分控制</h2>
+<h3 id="sarsa-算法">3.1 Sarsa 算法</h3>
+<p>​ <strong>Sarsa算法</strong>：<u>针对一个状态 S，个体通过行为策略产生一个行为 A，执行该行为进而产生一个状态行为对 (S,A)，环境收到个体的行为后会告诉个体即时奖励R 以及后续进入的状态 S’；个体在状态 S’ 时遵循当前的行为策略产生一个新行为 A’，个体此时并不执行该行为，而是通过行为价值函数得到后一个状态行为对 (S’,A’) 的价值，利用这个新的价值和即时奖励 R 来更新前一个状态行为对 (S,A) 的价值。</u></p>
+<p>​ <strong>迭代公式</strong>：</p>
+<p><span class="math display">\[
+Q(S, A) \leftarrow Q(S, A)+\alpha\left(R+\gamma Q\left(S^{\prime}, A^{\prime}\right)-Q(S, A)\right)
+\]</span> ​ <u>Sarsa算法流程</u>：参数 α 是学习速率参数， γ 是衰减因子。</p>
+<p><img src="https://cdn.mathpix.com/snip/images/AaX0bwTi_Dkiw2nOl-75XSfR_wpnTDNldwjBoguHKfc.original.fullsize.png" /></p>
+<p>​ 当行为策略满足前文所述的GLIE 特性同时学习速率参数 α 满足如下时，Sarsa 算法将收敛至最优策略和最优价值函数。</p>
+<p><span class="math display">\[
+\sum_{t=1}^{\infty} \alpha_{t}=\infty, \text { 且 } \sum_{t=1}^{\infty} \alpha_{t}^{2}&lt;\infty
+\]</span></p>
+<h3 id="sarsaλ-算法">3.2 Sarsa(λ) 算法</h3>
+<p>​ 定义 <strong>n-步 Q 收获 (Q-return)</strong> 为：</p>
+<p><span class="math display">\[
+q_{t}^{(n)}=R_{t+1}+\gamma R_{t+2}+\vdots+\gamma^{n-1} R_{t+n}+\gamma^{n} Q\left(S_{t+n}, A_{t+n}\right)
+\]</span> ​ <strong>更新公式</strong>如下：</p>
+<p><span class="math display">\[
+Q\left(S_{t}, A_{t}\right) \leftarrow Q\left(S_{t}, A_{t}\right)+\alpha\left(q_{t}^{(n)}-Q\left(S_{t}, A_{t}\right)\right)
+\]</span> ​ 类似于 TD(λ), 可以给 n-步 Q 收获中的每一步收获分配一个权重，并按权重对每一步 Q 收获求和：</p>
+<p><span class="math display">\[
+q_{t}^{\lambda}=(1-\lambda) \sum_{n=1}^{\infty} \lambda^{n-1} q_{t}^{(n)}
+\]</span> ​ 则：</p>
+<p><span class="math display">\[
+Q\left(S_{t}, A_{t}\right) \leftarrow Q\left(S_{t}, A_{t}\right)+\alpha\left(q_{t}^{(\lambda)}-Q\left(S_{t}, A_{t}\right)\right)
+\]</span> ​ 反向认识：</p>
+<p><span class="math display">\[
+\begin{array}{c}
+E_{0}(s, a)=0 \\
+E_{t}(s, a)=\gamma \lambda E_{t-1}(s, a)+1\left(S_{t}=s, A_{t}=a\right), \gamma, \lambda \in[0,1]
+\end{array}
+\]</span></p>
+<p><span class="math display">\[
+\begin{array}{c}
+\left.\delta_{t}=R_{t+1}+\gamma Q\left(S_{t+1}, A_{t+1}\right)-Q\left(S_{t}, A_{t}\right)\right) \\
+Q(s, a) \leftarrow Q(s, a)+\alpha \delta_{t} E_{t}(s, a)
+\end{array}
+\]</span></p>
+<p>​ <strong><span class="math inline">\(Sarsa(\lambda)\)</span>算法流程</strong>：<img src="https://cdn.mathpix.com/snip/images/uDQmE7QZKegTDuVdF-rTTxggQp_AJdQLdvEA8Kh0fpg.original.fullsize.png" /></p>
+<h2 id="off-policy-learning">4. Off-Policy Learning</h2>
+<h3 id="借鉴策略-q-学习算法">4.1 借鉴策略 Q 学习算法</h3>
+<p>​ <strong>借鉴策略学习</strong> (off-policy learning) 中产生指导自身行为的策略<span class="math inline">\(\mu(a|s)\)</span>与评价策略<span class="math inline">\(\pi(a|s)\)</span>是不同的策略。具体地说，个体通过策略 <span class="math inline">\(\mu(a|s)\)</span>生成行为与环境发生实际交互，但是在更新这个状态行为对的价值时使用的是目标策略 <span class="math inline">\(\pi(a|s)\)</span>。目标策略<span class="math inline">\(\pi(a|s)\)</span>多数是已经具备一定能力的策略，例如人类已有的经验或其他个体学习到的经验。借鉴策略学习相当于站在目标策略 <span class="math inline">\(\pi(a|s)\)</span>的“肩膀”上学习。</p>
+<p>​ 基于蒙特卡洛的借鉴策略学习目前认为仅有理论上的研究价值，在实际中用处不大。这里主要讲解常用借鉴策略 TD 学习。</p>
+<p><span class="math display">\[
+V\left(S_{t}\right) \leftarrow V\left(S_{t}\right)+\alpha\left(\frac{\pi\left(A_{t} | S_{t}\right)}{\mu\left(A_{t} | S_{t}\right)}\left(R_{t+1}+\gamma V\left(S_{t+1}\right)\right)-V\left(S_{t}\right)\right)
+\]</span> ​ 对于上式，我们可以这样理解：个体处在状态 <span class="math inline">\(S_t\)</span> 中，基于行为策略 µ 产生了一个行为 <span class="math inline">\(A_t\)</span>，执行该行为后进入新的状态 <span class="math inline">\(S_{t+1}\)</span>，借鉴策略学习要做的事情就是，比较借鉴策略和行为策略在状态 <span class="math inline">\(S_t\)</span> 下产生同样的行为 <span class="math inline">\(A_t\)</span> 的概率的比值，如果这个比值接近 1，说明两个策略在状态 <span class="math inline">\(S_t\)</span> 下采取的行为 <span class="math inline">\(A_t\)</span> 的概率差不多，此次对于状态 <span class="math inline">\(S_t\)</span> 价值的更新同时得到两个策略的支持。如果这一概率比值很小，则表明借鉴策略 π 在状态 <span class="math inline">\(S_t\)</span> 下选择 <span class="math inline">\(A_t\)</span> 的机会要小一些，此时为了从借鉴策略学习，我们认为这一步状态价值的更新不是很符合借鉴策略，因而在更新时打些折扣。类似的，如果这个概率比值大于 1，说明按照借鉴策略，选择行为 <span class="math inline">\(A_t\)</span> 的几率要大于当前行为策略产生 <span class="math inline">\(A_t\)</span> 的概率，此时应该对该状态的价值更新就可以大胆些。</p>
+<p>​ 借鉴策略 TD 学习中一个典型的行为策略 µ 是基于行为价值函数 Q(s,a)，ϵ-贪婪策略，借鉴策略 π 则是基于 Q(s，a) 的完全贪婪策略，这种学习方法称为 <strong>Q 学习 (Q learning)</strong>。</p>
+<p>​ Q 学习具体的行为<strong>价值更新公式</strong>：</p>
+<p><span class="math display">\[
+Q\left(S_{t}, A_{t}\right) \leftarrow Q\left(S_{t}, A_{t}\right)+\alpha\left(R+\gamma \max _{a^{\prime}} Q\left(S_{t+1}, a^{\prime}\right)-Q\left(S_{t}, A_{t}\right)\right)
+\]</span> ​ Q 学习的算法流程 ：</p>
+<p><img src="https://cdn.mathpix.com/snip/images/nwg4xl66zibLgArXECOcfFoZ_a_7GiaTHGZPN0oevrQ.original.fullsize.png" /></p>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div>如果觉得我的文章对您有用，请随意打赏。您的支持将鼓励我继续创作！</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.png" alt="Jinxi 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/ailpay.jpg" alt="Jinxi 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" rel="tag"># 学习笔记</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/09/02/notebook04-MC-TD/" rel="prev" title="notebook04_MC-TD">
+      <i class="fa fa-chevron-left"></i> notebook04_MC-TD
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/09/02/notebook06-FA/" rel="next" title="notebook06_FA">
+      notebook06_FA <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#introduction"><span class="nav-number">1.</span> <span class="nav-text">1. Introduction</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#on-policy-monte-carlo-control"><span class="nav-number">2.</span> <span class="nav-text">2. On-Policy Monte-Carlo Control</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%CF%B5-greedy-exploration-%CF%B5--%E8%B4%AA%E5%A9%AA%E7%AD%96%E7%95%A5"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 ϵ-Greedy Exploration ϵ- 贪婪策略</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#monte-carlo-control-%E7%8E%B0%E6%97%B6%E7%AD%96%E7%95%A5%E8%92%99%E7%89%B9%E5%8D%A1%E7%BD%97%E6%8E%A7%E5%88%B6"><span class="nav-number">2.2.</span> <span class="nav-text">2.2 Monte-Carlo Control 现时策略蒙特卡罗控制</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#on-policy-temporal-difference-learning-%E7%8E%B0%E6%97%B6%E7%AD%96%E7%95%A5%E6%97%B6%E5%BA%8F%E5%B7%AE%E5%88%86%E6%8E%A7%E5%88%B6"><span class="nav-number">3.</span> <span class="nav-text">3. On-Policy Temporal-Difference Learning 现时策略时序差分控制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#sarsa-%E7%AE%97%E6%B3%95"><span class="nav-number">3.1.</span> <span class="nav-text">3.1 Sarsa 算法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#sarsa%CE%BB-%E7%AE%97%E6%B3%95"><span class="nav-number">3.2.</span> <span class="nav-text">3.2 Sarsa(λ) 算法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#off-policy-learning"><span class="nav-number">4.</span> <span class="nav-text">4. Off-Policy Learning</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%80%9F%E9%89%B4%E7%AD%96%E7%95%A5-q-%E5%AD%A6%E4%B9%A0%E7%AE%97%E6%B3%95"><span class="nav-number">4.1.</span> <span class="nav-text">4.1 借鉴策略 Q 学习算法</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Jinxi"
+      src="/images/avatar.JPG">
+  <p class="site-author-name" itemprop="name">Jinxi</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">28</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/yuandong1998" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;yuandong1998" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/1377526365@qq.com" title="E-Mail → 1377526365@qq.com"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jinxi</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'Itq4lnx4qasas8q1mY3XpizW-gzGzoHsz',
+      appKey     : 'iVzadklVByQVhP8VBTe76nVz',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

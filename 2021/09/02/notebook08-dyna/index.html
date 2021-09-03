@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="一、Introduction ​ 多数强化学习问题可以通过表格式或基于近似函数来直接学习状态价值或策略函数，在这些学习方法中，个体并不试图去理解环境动力学。如果能建立一个较为准确地模拟环境动力学特征的模型或者问题的模型本身就类似于一些棋类游戏是明确或者简单的，个体就可以通过构建这样的模型来模拟其与环境的交互，这种依靠模型模拟而不实际与环境交互的过程类似于“思考”过程。通过思考，个体可以对问题进行">
+<meta property="og:type" content="article">
+<meta property="og:title" content="notebook08_dyna">
+<meta property="og:url" content="http://example.com/2021/09/02/notebook08-dyna/index.html">
+<meta property="og:site_name" content="Jinxi Blog">
+<meta property="og:description" content="一、Introduction ​ 多数强化学习问题可以通过表格式或基于近似函数来直接学习状态价值或策略函数，在这些学习方法中，个体并不试图去理解环境动力学。如果能建立一个较为准确地模拟环境动力学特征的模型或者问题的模型本身就类似于一些棋类游戏是明确或者简单的，个体就可以通过构建这样的模型来模拟其与环境的交互，这种依靠模型模拟而不实际与环境交互的过程类似于“思考”过程。通过思考，个体可以对问题进行">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.mathpix.com/snip/images/iv_y1opApBnKJ6pH9GNUZDte62ot_eriAGD21lcd38g.original.fullsize.png">
+<meta property="og:image" content="https://cdn.mathpix.com/snip/images/kefHr2Oa71WxZx11KNQB0vLeAlan3QVU9Gc8LyEtMKA.original.fullsize.png">
+<meta property="og:image" content="https://cdn.mathpix.com/snip/images/RmPTn14Mco6tQCKJTBHU0fVLzbX-1y6h4h4_nbL_1TA.original.fullsize.png">
+<meta property="article:published_time" content="2021-09-02T20:19:27.000Z">
+<meta property="article:modified_time" content="2021-09-03T12:25:34.371Z">
+<meta property="article:author" content="Jinxi">
+<meta property="article:tag" content="学习笔记">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.mathpix.com/snip/images/iv_y1opApBnKJ6pH9GNUZDte62ot_eriAGD21lcd38g.original.fullsize.png">
+
+<link rel="canonical" href="http://example.com/2021/09/02/notebook08-dyna/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>notebook08_dyna | Jinxi Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Jinxi Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Jinxi Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-schedule">
+
+    <a href="/schedule/" rel="section"><i class="fa fa-calendar fa-fw"></i>日程表</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>站点地图</a>
+
+  </li>
+        <li class="menu-item menu-item-commonweal">
+
+    <a href="/404/" rel="section"><i class="fa fa-heartbeat fa-fw"></i>公益 404</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/09/02/notebook08-dyna/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.JPG">
+      <meta itemprop="name" content="Jinxi">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jinxi Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          notebook08_dyna
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-09-03 04:19:27 / 修改时间：20:25:34" itemprop="dateCreated datePublished" datetime="2021-09-03T04:19:27+08:00">2021-09-03</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Reinforcement-Learning/" itemprop="url" rel="index"><span itemprop="name">Reinforcement Learning</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2021/09/02/notebook08-dyna/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2021/09/02/notebook08-dyna/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>3.5k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>3 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="一introduction">一、Introduction</h2>
+<p>​ 多数强化学习问题可以通过表格式或基于近似函数来直接学习状态价值或策略函数，在这些学习方法中，个体并不试图去理解环境动力学。如果能建立一个较为准确地模拟环境动力学特征的模型或者问题的模型本身就类似于一些棋类游戏是明确或者简单的，个体就可以通过构建这样的模型来模拟其与环境的交互，这种依靠模型模拟而不实际与环境交互的过程类似于“<strong>思考</strong>”过程。通过思考，个体可以对问题进行规划、在与环境实际交互时搜索交互可能产生的各种后果并从中选择对个体有利的结果。<strong>这种思想可以广泛应用于规则简单、状态或结果复杂的强化学习问题中。</strong></p>
+<span id="more"></span>
+<p><img src="https://cdn.mathpix.com/snip/images/iv_y1opApBnKJ6pH9GNUZDte62ot_eriAGD21lcd38g.original.fullsize.png" /></p>
+<p>​ 模型M是一个马尔科夫决策过程MDP<span class="math inline">\(&lt;S,A,P,R&gt;\)</span>的参数化形式，来描述状态转换和奖励函数。 <span class="math display">\[
+\begin{array}{l}
+S_{t+1} \sim P_{\eta}\left(S_{t+1} \mid S_{t}, A_{t}\right) \\
+R_{t+1}=R_{\eta}\left(R_{t+1} \mid S_{t}, A_{t}\right)
+\end{array}
+\]</span> ​ 通常<strong>假设状态转换和奖励之间条件独立</strong>： <span class="math display">\[
+\mathbb{P}\left[S_{t+1}, R_{t+1} \mid S_{t}, A_{t}\right]=\mathbb{P}\left[S_{t+1} \mid S_{t}, A_{t}\right] \mathbb{P}\left[R_{t+1} \mid S_{t}, A_{t}\right]
+\]</span></p>
+<h2 id="二model-based-reinforcement-learning">二、Model-Based Reinforcement Learning</h2>
+<h3 id="优缺点">2.1 优缺点</h3>
+<p>优点：</p>
+<ul>
+<li>可以通过监督学习方法有效地学习模型</li>
+<li>可以推理出模型不确定性</li>
+</ul>
+<p>缺点：</p>
+<ul>
+<li>首先学习一个模型，然后构造一个值函数，会有更大的误差。</li>
+</ul>
+<p>​ 模型学习是一个根据experience的监督学习问题，其中状态转换是概率分布问题，奖励是回归问题。</p>
+<h3 id="查表法">2.2 查表法</h3>
+<p>​ 计算公式如下： <span class="math display">\[
+\begin{aligned}
+\hat{\mathcal{P}}_{s, s^{\prime}}^{a} &amp;=\frac{1}{N(s, a)} \sum_{t=1}^{T} \mathbf{1}\left(S_{t}, A_{t}, S_{t+1}=s, a, s^{\prime}\right) \\
+\hat{\mathcal{R}}_{s}^{a} &amp;=\frac{1}{N(s, a)} \sum_{t=1}^{T} \mathbf{1}\left(S_{t}, A_{t}=s, a\right) R_{t}
+\end{aligned}
+\]</span></p>
+<h3 id="planning-with-a-model">2.3 Planning with a Model</h3>
+<p>方法：</p>
+<ul>
+<li>Value iteration</li>
+<li>Policy iteration</li>
+<li>Tree search</li>
+</ul>
+<h3 id="sample-based-planning">2.4 Sample-Based Planning</h3>
+<p>​ 一个简单但是有效的planning方法，从model中采样experience，然后用Model-free的RL方法求解。</p>
+<ul>
+<li>Monte-Carlo control</li>
+<li>Sarsa</li>
+<li>Q-learning</li>
+</ul>
+<h2 id="三integrated-architectures">三、Integrated Architectures</h2>
+<h3 id="dyna算法">3.1 Dyna算法</h3>
+<p>Dyna算法思想</p>
+<ul>
+<li>Learn a model from real experience</li>
+<li>Learn and plan value function (and/or policy) from real and simulated experience</li>
+</ul>
+<p><img src="https://cdn.mathpix.com/snip/images/kefHr2Oa71WxZx11KNQB0vLeAlan3QVU9Gc8LyEtMKA.original.fullsize.png" /></p>
+<p>Dyna-Q算法流程：</p>
+<p><img src="https://cdn.mathpix.com/snip/images/RmPTn14Mco6tQCKJTBHU0fVLzbX-1y6h4h4_nbL_1TA.original.fullsize.png" /></p>
+<h2 id="四simulation-based-search">四、Simulation-Based Search</h2>
+<h3 id="forward-search">4.1 Forward Search</h3>
+<p>​ 不用求解全部的MDP，只需关注从此处开始的MDP分支。在强化学习中，基于模拟的搜索 (simulation-based search) 是一种前向搜索形式，它从当前时刻的状态开始，利用模型来模拟采样，构建一个关注短期未来的前向搜索树，将构建得到的搜 索树作为一个学习资源，使用不基于模型的强化学习方法来寻找当前状态下的最优策略 (图 8.3)。如果使用蒙特卡罗学习方法则称为蒙特卡罗搜索，如果使用 Sarsa 学习方法，则称为 TD 搜索。其中蒙特卡罗搜索又分为简单蒙特卡罗搜索和蒙特卡罗树搜索。</p>
+<p>​ 对于一个模型 <span class="math inline">\(M_v\)</span> 和一个一致的模拟过程中使用的策略 <span class="math inline">\(\pi\)</span>，简单蒙特卡罗搜索在当前实际状态 <span class="math inline">\(s_t\)</span> 时会针对行为空间中的每一个行为 <span class="math inline">\(a\in A\)</span> 进行 <span class="math inline">\(K\)</span> 次的模拟采样： <span class="math display">\[
+\left\{s_{t}, a, R_{t+1}^{k}, S_{t+1}^{k}, A_{t+1}^{k}, \ldots, S_{T}^{k}\right\}_{k=1}^{K} \sim M_{v}, \pi
+\]</span> ​ 通过计算模拟采样得到的 k 个状态 st 时采取行为 s 的收获的平均值来估算该状态行为对的价值： <span class="math display">\[
+Q\left(s_{t}, a\right)=\frac{1}{K} \sum_{k=1}^{K} G_{t}
+\]</span></p>
+<pre><code>    比较行为空间中所有行为 a 的价值，确定当前状态 $s_t$ 下与环境发生实际交互的行为$a_t$：  </code></pre>
+<p><span class="math display">\[
+a_{t}=\underset{a \in \mathrm{A}}{\operatorname{argmax}} Q\left(s_{t}, a\right)
+\]</span></p>
+<p>​ 简单蒙特卡罗搜索可以使用基于模拟的采样对当前模拟采样的策略进行评估，得到基于模拟采样的某状态行为对的价值，这个价值的估计同时还与每次采样的 K 值大小有关。在估算行为价值时，关注点在于从当前状态和行为对应的收获，并不关注模拟采样得到的一些中间状态和对应行为的价值。如果同时考虑模拟得到的中间状态和行为的价值，则可以考虑蒙特卡罗树搜索。</p>
+<h3 id="蒙特卡罗树搜索">4.2 蒙特卡罗树搜索</h3>
+<p>​ 蒙特卡罗树搜索 (Monte-Carlo tree search, MCTS) 在构建当前状态 <span class="math inline">\(s_t\)</span> 的基于模拟的前向搜索时，关注模拟采样中所经历的所有状态及对应的行为，以此构建一个搜索树。利用这颗搜索树不仅可以对当前模拟策略进行评估，还可以改善模拟策略。在使用蒙特卡罗树搜索进行模拟策略评估时，对于个体构建的模型 <span class="math inline">\(M_v\)</span> 和当前的模拟策略<span class="math inline">\(\pi\)</span>，在实际当前状态 <span class="math inline">\(s_t\)</span> 时模拟采样出 K 个完整状态序列：<br />
+<span class="math display">\[
+\left\{s_{t}, A_{t}^{k}, R_{t+1}^{k}, S_{t+1}^{k}, \ldots, S_{T}^{k}\right\}_{k=1}^{K} \sim M_{v}, \pi
+\]</span> ​ 构建一颗以状态 <span class="math inline">\(s_t\)</span> 为根节点包括所有已访问的状态和行为的搜索树，对树内的每一个状态行为对 <span class="math inline">\((s; a)\)</span> 使用该状态行为对的平均收获来估算其价值：<br />
+<span class="math display">\[
+Q(s, a)=\frac{1}{N(s, a)} \sum_{k=1}^{K} \sum_{u=t}^{T} 1\left(S_{u}, A_{u}=s, a\right) G_{u}
+\]</span> ​ 当搜索结束时，比较当前状态 <span class="math inline">\(s_t\)</span> 下行为空间 A 内的每一个行为的价值，从中选择最大价值对应的行为 <span class="math inline">\(a_t\)</span> 作为当前状态 <span class="math inline">\(s_t\)</span> 时个体与环境实际交互的行为。</p>
+<p>​ 比较简单蒙特卡罗搜索和蒙特卡罗树搜索，可以看出两者之间的区别在于前者针对当前状态 <span class="math inline">\(s_t\)</span> 时每一个可能的行为都进行相同数量的采样，而后者则是根据模拟策略进行一定次数的采样。此外，蒙特卡罗树搜索会对模拟采样产生的状态行为对进行计数，并计算其收获，根据这两个数据来计算模拟采样对应的状态行为对价值。比较两者之间的差别可以看出，如果问题的行为空间规模很大，那么使用蒙特卡罗树搜索比简单蒙特卡罗搜索要更实际可行。在蒙特卡罗树搜索中，搜索树的广度和深度是伴随着模拟采样的增多而逐渐增多的。在构建这个搜索树的过程中，搜索树内状态行为对的价值也在不停的更新，利用这些更新的价值信息可以使得在每模拟采样得到一个完整的状态序列后都可以一定程度地改进模拟策略。通常蒙特卡罗树搜索的策略分为两个阶段：</p>
+<ol type="1">
+<li>树内策略 (tree policy)：为当模拟采样得到的状态存在于当前的搜索树中时适用的策略，该策略。树内策略可以使 ϵ-贪婪策略，随着模拟的进行可以得到持续改善；</li>
+<li>默认策略 (default policy)：当前状态不在搜索树内时，使用默认策略来完成整个状态序列的采样，并把当前状态纳入到搜索树中。默认策略可以使随机策略或基于某目标价值函数的策略。</li>
+</ol>
+<p>​ 随着不断地重复模拟，状态行为对的价值将得到持续地得到评估。同时搜索树的深度和广度将得到扩展，策略也不断得到改善。蒙特卡罗树搜索较为抽象，本章暂时介绍到这里，在第十章介绍 AlphaZero 算法时会利用五子棋实例详细讲解蒙特卡罗树搜索的过程细节。</p>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div>如果觉得我的文章对您有用，请随意打赏。您的支持将鼓励我继续创作！</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.png" alt="Jinxi 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/ailpay.jpg" alt="Jinxi 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" rel="tag"># 学习笔记</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/09/02/notebook07-pg/" rel="prev" title="notebook07_pg">
+      <i class="fa fa-chevron-left"></i> notebook07_pg
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80introduction"><span class="nav-number">1.</span> <span class="nav-text">一、Introduction</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8Cmodel-based-reinforcement-learning"><span class="nav-number">2.</span> <span class="nav-text">二、Model-Based Reinforcement Learning</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BC%98%E7%BC%BA%E7%82%B9"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 优缺点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E8%A1%A8%E6%B3%95"><span class="nav-number">2.2.</span> <span class="nav-text">2.2 查表法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#planning-with-a-model"><span class="nav-number">2.3.</span> <span class="nav-text">2.3 Planning with a Model</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#sample-based-planning"><span class="nav-number">2.4.</span> <span class="nav-text">2.4 Sample-Based Planning</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89integrated-architectures"><span class="nav-number">3.</span> <span class="nav-text">三、Integrated Architectures</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#dyna%E7%AE%97%E6%B3%95"><span class="nav-number">3.1.</span> <span class="nav-text">3.1 Dyna算法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9Bsimulation-based-search"><span class="nav-number">4.</span> <span class="nav-text">四、Simulation-Based Search</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#forward-search"><span class="nav-number">4.1.</span> <span class="nav-text">4.1 Forward Search</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%92%99%E7%89%B9%E5%8D%A1%E7%BD%97%E6%A0%91%E6%90%9C%E7%B4%A2"><span class="nav-number">4.2.</span> <span class="nav-text">4.2 蒙特卡罗树搜索</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Jinxi"
+      src="/images/avatar.JPG">
+  <p class="site-author-name" itemprop="name">Jinxi</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">28</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/yuandong1998" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;yuandong1998" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/1377526365@qq.com" title="E-Mail → 1377526365@qq.com"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jinxi</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'Itq4lnx4qasas8q1mY3XpizW-gzGzoHsz',
+      appKey     : 'iVzadklVByQVhP8VBTe76nVz',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

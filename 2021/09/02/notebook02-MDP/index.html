@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="1.Markov Process 马尔科夫过程 1.1 Introduction to MDPs ​ 马尔科夫决策过程：可以对完全可观测环境进行描述，几乎所有的强化学习问题都可以转为MDP。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="notebook02_MDP">
+<meta property="og:url" content="http://example.com/2021/09/02/notebook02-MDP/index.html">
+<meta property="og:site_name" content="Jinxi Blog">
+<meta property="og:description" content="1.Markov Process 马尔科夫过程 1.1 Introduction to MDPs ​ 马尔科夫决策过程：可以对完全可观测环境进行描述，几乎所有的强化学习问题都可以转为MDP。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.mathpix.com/snip/images/Mm0cozScUaYy9QVQI6P_bku4Oenl6SgQ0_bSjbOM6EQ.original.fullsize.png">
+<meta property="article:published_time" content="2021-09-02T20:18:15.000Z">
+<meta property="article:modified_time" content="2021-09-03T12:22:44.529Z">
+<meta property="article:author" content="Jinxi">
+<meta property="article:tag" content="学习笔记">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.mathpix.com/snip/images/Mm0cozScUaYy9QVQI6P_bku4Oenl6SgQ0_bSjbOM6EQ.original.fullsize.png">
+
+<link rel="canonical" href="http://example.com/2021/09/02/notebook02-MDP/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>notebook02_MDP | Jinxi Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Jinxi Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Jinxi Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-schedule">
+
+    <a href="/schedule/" rel="section"><i class="fa fa-calendar fa-fw"></i>日程表</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>站点地图</a>
+
+  </li>
+        <li class="menu-item menu-item-commonweal">
+
+    <a href="/404/" rel="section"><i class="fa fa-heartbeat fa-fw"></i>公益 404</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/09/02/notebook02-MDP/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.JPG">
+      <meta itemprop="name" content="Jinxi">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jinxi Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          notebook02_MDP
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-09-03 04:18:15 / 修改时间：20:22:44" itemprop="dateCreated datePublished" datetime="2021-09-03T04:18:15+08:00">2021-09-03</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Reinforcement-Learning/" itemprop="url" rel="index"><span itemprop="name">Reinforcement Learning</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2021/09/02/notebook02-MDP/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2021/09/02/notebook02-MDP/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>5.9k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>5 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="markov-process-马尔科夫过程">1.Markov Process 马尔科夫过程</h2>
+<h3 id="introduction-to-mdps">1.1 Introduction to MDPs</h3>
+<p>​ <strong>马尔科夫决策过程</strong>：可以对<strong>完全可观测环境</strong>进行描述，几乎所有的强化学习问题都可以转为MDP。</p>
+<span id="more"></span>
+<h3 id="markov-property-马尔科夫特性">1.2 Markov Property 马尔科夫特性</h3>
+<p>​ 马尔科夫特性：The future is independent of the past given the present 。定义：<span class="math inline">\(\mathbb P[S_{t+1}|S_t]=P[S_{t+1}|S_1,...,S_t]\)</span></p>
+<h3 id="state-transition-matrix-状态转移矩阵">1.3 State Transition Matrix 状态转移矩阵</h3>
+<p><span class="math display">\[
+P_{ss&#39;}=\mathbb P[S_{t+1}=s&#39;|S_t=s]
+\]</span></p>
+<h3 id="markov-process-马尔科夫过程-1">1.4 Markov Process 马尔科夫过程</h3>
+<p>​ <strong>定义</strong>：马尔可夫过程是一个无记忆的随机过程，即一个随机状态序列具有马尔可夫性。可以用一个元组&lt;S,P&gt;表示，其中S是有限数量的状态集，P是状态转移概率矩阵。</p>
+<p>​ <strong>Sample Episodes：</strong>从起始态C1到结束态Sleep的所有可能的过程。</p>
+<p><img src="https://cdn.mathpix.com/snip/images/Mm0cozScUaYy9QVQI6P_bku4Oenl6SgQ0_bSjbOM6EQ.original.fullsize.png" /></p>
+<h2 id="markov-reward-process-马尔科夫奖励过程">2.Markov Reward Process 马尔科夫奖励过程</h2>
+<h3 id="define-定义">2.1 Define 定义</h3>
+<p>​ A Markov reward process is a Markov chain with values 。定义：马尔科夫奖励过程可以表示为元组<span class="math inline">\(&lt;S,P,R,\gamma&gt;\)</span></p>
+<ul>
+<li><p>S是一个有限状态集合</p></li>
+<li><p>P是状态转移矩阵</p></li>
+<li><p>R是一个奖励函数（reward function），表示在t时状态为s的奖励<span class="math inline">\(R_{t+1}\)</span>。<span class="math inline">\(\mathbb R_s=E[R_{t+1}|S_t=s]\)</span></p>
+<blockquote>
+<p>很多听众纠结为什么奖励是t+1时刻的。照此理解起来相当于离开这个状态才能获得奖励而不是进入这个状态即获得奖励。David指出这仅是一个约定，为了在描述RL问题中涉及到的观测O、行为A、和奖励R时比较方便。他同时指出如果把奖励改为 <span class="math inline">\(R_t\)</span>而不是 <span class="math inline">\(R_{t+1}\)</span>，只要规定好，本质上意义是相同的，在表述上可以把奖励描述为“当进入某个状态会获得相应的奖励”。</p>
+</blockquote></li>
+<li><p><span class="math inline">\(\gamma\)</span>是一个衰减系数（Discount Factor），用来反应更注重现在的reward还是未来的reward。</p></li>
+</ul>
+<h3 id="return-收获">2.2 Return 收获</h3>
+<p>​ <strong>收获<span class="math inline">\(G_t\)</span></strong>：<u>为在一个马尔科夫奖励链上从t时刻开始往后所有的奖励的有衰减的总和，收获是相对于一个样本来说的。</u></p>
+<p><span class="math display">\[
+G_t=R_{t+1}+\gamma R_{t+2}+...=\sum_{k=0}^{\infty}\gamma^k R_{t+k+1}
+\]</span></p>
+<p>问：为什么需要衰减因子？</p>
+<ul>
+<li>在数学上是方便的</li>
+<li>防止无限的reward（循环）</li>
+<li>在金融上即时奖励可能比延迟奖励获得更多的利息</li>
+<li>动物/人类的行为表现出对即时回报的偏好</li>
+</ul>
+<h3 id="value-function-价值函数">2.3 Value Function 价值函数</h3>
+<p>​ <strong>价值函数</strong>：<u>在马尔科夫决策过程下基于策略 π 的状态价值函数，表示从状态 s开始，遵循当前策略<span class="math inline">\(\pi\)</span> 时所获得的收获的期望。价值函数是对于一个策略而言的。</u></p>
+<p><span class="math display">\[
+v(s)=\mathbb E[G_t|S_t=s]
+\]</span></p>
+<h3 id="bellman-equation-for-mrps-贝尔曼方程">2.4 Bellman Equation for MRPs 贝尔曼方程</h3>
+<p>​ 如下公式，价值函数可以被分解为两个部分：</p>
+<p><span class="math display">\[
+\begin{aligned}
+v(s) &amp;=\mathbb{E}\left[G_{t} | S_{t}=s\right] \\
+&amp;=\mathbb{E}\left[R_{t+1}+\gamma R_{t+2}+\gamma^{2} R_{t+3}+\ldots | S_{t}=s\right] \\
+&amp;=\mathbb{E}\left[R_{t+1}+\gamma\left(R_{t+2}+\gamma R_{t+3}+\ldots\right) | S_{t}=s\right] \\
+&amp;=\mathbb{E}\left[R_{t+1}+\gamma G_{t+1} | S_{t}=s\right] \\
+&amp;=\mathbb{E}\left[R_{t+1}+\gamma v\left(S_{t+1}\right) | S_{t}=s\right]
+\end{aligned}
+\]</span></p>
+<p>​ 一个是该状态的即时奖励期望，也就是即时奖励；另一个是下一时刻状态的价值期望，可以根据下一时刻状态的概率分布得到其期望。如果用<span class="math inline">\(s&#39;\)</span>表示s状态下一时刻任一可能状态，那么贝尔曼方程可写为：</p>
+<p><span class="math display">\[
+v(s)=R_s+\gamma \sum_{s&#39;\in S}P_{s s&#39;}v(s&#39;)
+\]</span></p>
+<p>​ 用矩阵可以表示为：<span class="math inline">\(v=R+\gamma P v\)</span>，其中：</p>
+<p><span class="math display">\[
+\left[\begin{array}{c}
+v(1) \\
+\vdots \\
+v(n)
+\end{array}\right]=\left[\begin{array}{c}
+\mathcal{R}_{1} \\
+\vdots \\
+\mathcal{R}_{n}
+\end{array}\right]+\gamma\left[\begin{array}{ccc}
+\mathcal{P}_{11} &amp; \dots &amp; \mathcal{P}_{1 n} \\
+\vdots &amp; &amp; \\
+\mathcal{P}_{n1} &amp; \dots &amp; \mathcal{P}_{n n}
+\end{array}\right]\left[\begin{array}{c}
+v(1) \\
+\vdots \\
+v(n)
+\end{array}\right]
+\]</span></p>
+<pre><code>    求解贝尔曼方程：</code></pre>
+<p><span class="math display">\[
+\begin{aligned}
+v &amp;=\mathcal{R}+\gamma \mathcal{P} v \\
+(I-\gamma \mathcal{P}) v &amp;=\mathcal{R} \\
+v &amp;=(I-\gamma \mathcal{P})^{-1} \mathcal{R}
+\end{aligned}
+\]</span></p>
+<p>对于n个states，该方式复杂度为<span class="math inline">\(O(n^3)\)</span>，只可以对小MRPs方法，对于大规模MRPs问题可以采用：</p>
+<ul>
+<li>Dynamic programming 动态规划</li>
+<li>Monte-Carlo evaluation 蒙特卡洛评价</li>
+<li>Temporal-Difference learning</li>
+</ul>
+<h2 id="markov-decision-process-马尔科夫决策过程">3.Markov Decision Process 马尔科夫决策过程</h2>
+<h3 id="mdp-定义">3.1 MDP 定义</h3>
+<p>​ A Markov decision process (MDP) is a Markov reward process with decisions. It is an environment in which all states are Markov，定义：马尔科夫决策过程可以表示为元组<span class="math inline">\(&lt;S,A,P,R,\gamma&gt;\)</span></p>
+<ul>
+<li>S是一个有限状态集合</li>
+<li>A是一个有限决策集合</li>
+<li>P是状态转移矩阵，<span class="math inline">\(P_{s s&#39;}^a=P[S_{t+1}=s&#39;|S_t=s,A_t=a]\)</span></li>
+<li>R是一个奖励函数（reward function），表示在t时状态为s的奖励<span class="math inline">\(R_{t+1}\)</span>。<span class="math inline">\(\mathbb R_s^a=E[R_{t+1}|S_t=s,A_t=a]\)</span></li>
+<li><span class="math inline">\(\gamma\)</span>是一个衰减系数（Discount Factor），用来反应更注重现在的reward还是未来的reward。</li>
+</ul>
+<h3 id="policies-策略">3.2 Policies 策略</h3>
+<p>​ 策略<span class="math inline">\(\pi\)</span>：<u>是给定一个states，actions的分布。只依赖于当前状态，不依赖于历史。现在只考虑静态的policies，与时间无关。</u></p>
+<p><span class="math display">\[
+\pi(a|s)=\mathbb P[A_t=a|S_t=s]
+\]</span></p>
+<p>​ 给定一个MDP <span class="math inline">\(M=&lt;S,A,P,R,\gamma&gt;\)</span>和策略<span class="math inline">\(\pi\)</span>，则状态序列是一个马尔科夫过程<span class="math inline">\(&lt;S,P^\pi&gt;\)</span>，状态和奖励序列是一个马尔科夫奖励过程<span class="math inline">\(&lt;S,P^\pi,R^\pi,\gamma&gt;\)</span> 其中：</p>
+<p><span class="math display">\[
+\begin{aligned}
+\mathcal{P}_{s, s^{\prime}}^{\pi} &amp;=\sum_{a \in \mathcal{A}} \pi(a | s) \mathcal{P}_{s s^{\prime}}^{a} \\
+\mathcal{R}_{s}^{\pi} &amp;=\sum_{a \in \mathcal{A}} \pi(a | s) \mathcal{R}_{s}^{a}
+\end{aligned}
+\]</span></p>
+<h3 id="value-function-价值函数-1">3.3 Value Function 价值函数</h3>
+<p>​ <strong>state-value function 状态价值函数</strong><span class="math inline">\(v_\pi(s)\)</span>：<u>表示从状态s开始，<strong>遵循当前策略</strong>时所获得的收获的期望；或者说在执行当前策略π时，衡量个体处在状态s时的价值大小。</u></p>
+<p><span class="math display">\[
+v_\pi(s)=\mathbb E_\pi[G_t|S_t=s]
+\]</span></p>
+<p><strong>action-value function 行为价值函数</strong><span class="math inline">\(q_\pi(s,a)\)</span>：<u><strong>表示</strong>在执行策略π时，对当前状态s执行某一具体行为a所能的到的收获的期望；或者说在遵循当前策略π时，衡量对当前状态执行行为a的价值大小。</u> <span class="math display">\[
+q_\pi(s,a)=\mathbb E_\pi[G_t|S_t=s,A_t=a]
+\]</span></p>
+<h3 id="bellman-expectation-equation-贝尔曼期望方程">3.4 Bellman Expectation Equation 贝尔曼期望方程</h3>
+<p>可以得出一下两个方程：</p>
+<p><span class="math display">\[
+v_{\pi}(s)=\mathbb{E}_{\pi}\left[R_{t+1}+\gamma v_{\pi}\left(S_{t+1}\right) | S_{t}=s\right]
+\]</span></p>
+<p><span class="math display">\[
+q_{\pi}(s, a)=\mathbb{E}_{\pi}\left[R_{t+1}+\gamma q_{\pi}\left(S_{t+1}, A_{t+1}\right) | S_{t}=s, A_{t}=a\right]
+\]</span></p>
+<p>推导：</p>
+<p><span class="math display">\[
+v_{\pi}(s)=\sum_{a \in \mathcal{A}} \pi(a | s) q_{\pi}(s, a)
+\]</span></p>
+<p><span class="math display">\[
+q_{\pi}(s, a)=\mathcal{R}_{s}^{a}+\gamma \sum_{s^{\prime} \in \mathcal{S}} \mathcal{P}_{s s^{\prime}}^{a} v_{\pi}\left(s^{\prime}\right)
+\]</span></p>
+<p><span class="math display">\[
+v_{\pi}(s)=\sum_{a \in \mathcal{A}} \pi(a | s)\left(\mathcal{R}_{s}^{a}+\gamma \sum_{s^{\prime} \in \mathcal{S}} \mathcal{P}_{s s^{\prime}}^{a} v_{\pi}\left(s^{\prime}\right)\right)
+\]</span></p>
+<p><span class="math display">\[
+q_{\pi}(s, a)=\mathcal{R}_{s}^{a}+\gamma \sum_{s^{\prime} \in \mathcal{S}} \mathcal{P}_{s s^{\prime}}^{a} \sum_{a^{\prime} \in \mathcal{A}} \pi\left(a^{\prime} | s^{\prime}\right) q_{\pi}\left(s^{\prime}, a^{\prime}\right)
+\]</span></p>
+<p>可得矩阵表达式：<span class="math inline">\(v_{\pi}=\mathcal{R}^{\pi}+\gamma \mathcal{P}^{\pi} v_{\pi}\)</span>，直接解为：<span class="math inline">\(v_{\pi}=\left(I-\gamma \mathcal{P}^{\pi}\right)^{-1} \mathcal{R}^{\pi}\)</span></p>
+<h3 id="optimal-value-function-最优值函数">3.5 Optimal Value Function 最优值函数</h3>
+<p>​ <strong>最优状态值函数<span class="math inline">\(v_∗(s)\)</span></strong>：<u>是所有策略下产生的众多状态价值函数中的最大者：</u></p>
+<p><span class="math display">\[
+v_{*}(s)=\max _{\pi} v_{\pi}(s)
+\]</span></p>
+<p>​ <strong>最优行动价值函数<span class="math inline">\(q_*(s,a)\)</span></strong>：<u>是所有策略下产生的众多行为价值函数中的最大者：</u></p>
+<p><span class="math display">\[
+q_{*}(s,a)=\max _{\pi} q_{\pi}(s,a)
+\]</span></p>
+<h3 id="optimal-policy-最优策略">3.6 Optimal Policy 最优策略</h3>
+<p>定义一个偏序：<span class="math inline">\(\pi \geq \pi^{\prime}\)</span> if <span class="math inline">\(v_{\pi}(s) \geq v_{\pi^{\prime}}(s), \forall s\)</span> 。<strong>定理</strong> 对于任何MDP，下面几点成立：</p>
+<ol type="1">
+<li><p>存在一个最优策略，比任何其他策略更好或至少相等；</p></li>
+<li><p>所有的最优策略有相同的最优价值函数；</p></li>
+<li><p>所有的最优策略具有相同的行为价值函数。</p></li>
+</ol>
+<p>可以通过最大化最优行为价值函数来找到最优策略： <span class="math display">\[
+\pi_{*}(a | s)=\left\{\begin{array}{ll}
+1 &amp; \text { if } a=\underset{a \in \mathcal{A}}{\operatorname{argmax}} q_{*}(s, a) \\
+0 &amp; \text { otherwise }
+\end{array}\right.
+\]</span></p>
+<p>对于任何MDP问题，总存在一个确定性的最优策略；同时如果我们知道最优行为价值函数，则表明我们找到了最优策略。</p>
+<p>推理： <span class="math display">\[
+v_{*}(s)=\max _{a} q_{*}(s, a)\\
+q_{*}(s, a)=\mathcal{R}_{s}^{a}+\gamma \sum_{s^{\prime} \in \mathcal{S}} \mathcal{P}_{s s^{\prime}}^{a} v_{*}\left(s^{\prime}\right)\\
+v_{*}(s)=\max _{a} \mathcal{R}_{s}^{a}+\gamma \sum_{s^{\prime} \in \mathcal{S}} \mathcal{P}_{s s^{\prime}}^{a} v_{*}\left(s^{\prime}\right)\\
+q_{*}(s, a)=\mathcal{R}_{s}^{a}+\gamma \sum_{s^{\prime} \in \mathcal{S}} \mathcal{P}_{s s^{\prime}}^{a} \max _{a^{\prime}} q_{*}\left(s^{\prime}, a^{\prime}\right)
+\]</span> Bellman最优方程是非线性的，没有固定的解决方案，通过一些迭代方法来解决：价值迭代、策略迭代、Q学习、Sarsa等。</p>
+<h2 id="extensions-to-mdps">4.Extensions to MDPs</h2>
+<h3 id="infinite-and-continuous-mdps-无限状态或连续mdp">4.1 Infinite and continuous MDPs 无限状态或连续MDP</h3>
+<h3 id="partially-observable-mdps-部分可观测mdp">4.2 Partially observable MDPs 部分可观测MDP</h3>
+<h3 id="undiscounted-average-reward-mdps-非衰减平均奖励mdp">4.3 Undiscounted, average reward MDPs 非衰减、平均奖励MDP</h3>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div>如果觉得我的文章对您有用，请随意打赏。您的支持将鼓励我继续创作！</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.png" alt="Jinxi 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/ailpay.jpg" alt="Jinxi 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" rel="tag"># 学习笔记</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/09/02/notebook01-intro-RL/" rel="prev" title="notebook01_intro_RL">
+      <i class="fa fa-chevron-left"></i> notebook01_intro_RL
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/09/02/notebook03-DP/" rel="next" title="notebook03_DP">
+      notebook03_DP <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#markov-process-%E9%A9%AC%E5%B0%94%E7%A7%91%E5%A4%AB%E8%BF%87%E7%A8%8B"><span class="nav-number">1.</span> <span class="nav-text">1.Markov Process 马尔科夫过程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#introduction-to-mdps"><span class="nav-number">1.1.</span> <span class="nav-text">1.1 Introduction to MDPs</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#markov-property-%E9%A9%AC%E5%B0%94%E7%A7%91%E5%A4%AB%E7%89%B9%E6%80%A7"><span class="nav-number">1.2.</span> <span class="nav-text">1.2 Markov Property 马尔科夫特性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#state-transition-matrix-%E7%8A%B6%E6%80%81%E8%BD%AC%E7%A7%BB%E7%9F%A9%E9%98%B5"><span class="nav-number">1.3.</span> <span class="nav-text">1.3 State Transition Matrix 状态转移矩阵</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#markov-process-%E9%A9%AC%E5%B0%94%E7%A7%91%E5%A4%AB%E8%BF%87%E7%A8%8B-1"><span class="nav-number">1.4.</span> <span class="nav-text">1.4 Markov Process 马尔科夫过程</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#markov-reward-process-%E9%A9%AC%E5%B0%94%E7%A7%91%E5%A4%AB%E5%A5%96%E5%8A%B1%E8%BF%87%E7%A8%8B"><span class="nav-number">2.</span> <span class="nav-text">2.Markov Reward Process 马尔科夫奖励过程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#define-%E5%AE%9A%E4%B9%89"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 Define 定义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#return-%E6%94%B6%E8%8E%B7"><span class="nav-number">2.2.</span> <span class="nav-text">2.2 Return 收获</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#value-function-%E4%BB%B7%E5%80%BC%E5%87%BD%E6%95%B0"><span class="nav-number">2.3.</span> <span class="nav-text">2.3 Value Function 价值函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#bellman-equation-for-mrps-%E8%B4%9D%E5%B0%94%E6%9B%BC%E6%96%B9%E7%A8%8B"><span class="nav-number">2.4.</span> <span class="nav-text">2.4 Bellman Equation for MRPs 贝尔曼方程</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#markov-decision-process-%E9%A9%AC%E5%B0%94%E7%A7%91%E5%A4%AB%E5%86%B3%E7%AD%96%E8%BF%87%E7%A8%8B"><span class="nav-number">3.</span> <span class="nav-text">3.Markov Decision Process 马尔科夫决策过程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#mdp-%E5%AE%9A%E4%B9%89"><span class="nav-number">3.1.</span> <span class="nav-text">3.1 MDP 定义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#policies-%E7%AD%96%E7%95%A5"><span class="nav-number">3.2.</span> <span class="nav-text">3.2 Policies 策略</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#value-function-%E4%BB%B7%E5%80%BC%E5%87%BD%E6%95%B0-1"><span class="nav-number">3.3.</span> <span class="nav-text">3.3 Value Function 价值函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#bellman-expectation-equation-%E8%B4%9D%E5%B0%94%E6%9B%BC%E6%9C%9F%E6%9C%9B%E6%96%B9%E7%A8%8B"><span class="nav-number">3.4.</span> <span class="nav-text">3.4 Bellman Expectation Equation 贝尔曼期望方程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#optimal-value-function-%E6%9C%80%E4%BC%98%E5%80%BC%E5%87%BD%E6%95%B0"><span class="nav-number">3.5.</span> <span class="nav-text">3.5 Optimal Value Function 最优值函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#optimal-policy-%E6%9C%80%E4%BC%98%E7%AD%96%E7%95%A5"><span class="nav-number">3.6.</span> <span class="nav-text">3.6 Optimal Policy 最优策略</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#extensions-to-mdps"><span class="nav-number">4.</span> <span class="nav-text">4.Extensions to MDPs</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#infinite-and-continuous-mdps-%E6%97%A0%E9%99%90%E7%8A%B6%E6%80%81%E6%88%96%E8%BF%9E%E7%BB%ADmdp"><span class="nav-number">4.1.</span> <span class="nav-text">4.1 Infinite and continuous MDPs 无限状态或连续MDP</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#partially-observable-mdps-%E9%83%A8%E5%88%86%E5%8F%AF%E8%A7%82%E6%B5%8Bmdp"><span class="nav-number">4.2.</span> <span class="nav-text">4.2 Partially observable MDPs 部分可观测MDP</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#undiscounted-average-reward-mdps-%E9%9D%9E%E8%A1%B0%E5%87%8F%E5%B9%B3%E5%9D%87%E5%A5%96%E5%8A%B1mdp"><span class="nav-number">4.3.</span> <span class="nav-text">4.3 Undiscounted, average reward MDPs 非衰减、平均奖励MDP</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Jinxi"
+      src="/images/avatar.JPG">
+  <p class="site-author-name" itemprop="name">Jinxi</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">28</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/yuandong1998" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;yuandong1998" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/1377526365@qq.com" title="E-Mail → 1377526365@qq.com"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jinxi</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'Itq4lnx4qasas8q1mY3XpizW-gzGzoHsz',
+      appKey     : 'iVzadklVByQVhP8VBTe76nVz',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>
