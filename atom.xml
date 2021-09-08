@@ -6,7 +6,7 @@
   <link href="http://example.com/atom.xml" rel="self"/>
   
   <link href="http://example.com/"/>
-  <updated>2021-09-03T17:36:09.630Z</updated>
+  <updated>2021-09-08T05:24:06.768Z</updated>
   <id>http://example.com/</id>
   
   <author>
@@ -15,6 +15,27 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>信息、熵、KL散度、交叉熵</title>
+    <link href="http://example.com/2021/09/07/%E4%BF%A1%E6%81%AF%E3%80%81%E7%86%B5%E3%80%81KL%E6%95%A3%E5%BA%A6%E3%80%81%E4%BA%A4%E5%8F%89%E7%86%B5/"/>
+    <id>http://example.com/2021/09/07/%E4%BF%A1%E6%81%AF%E3%80%81%E7%86%B5%E3%80%81KL%E6%95%A3%E5%BA%A6%E3%80%81%E4%BA%A4%E5%8F%89%E7%86%B5/</id>
+    <published>2021-09-07T13:22:56.000Z</published>
+    <updated>2021-09-08T05:24:06.768Z</updated>
+    
+    <content type="html"><![CDATA[<p>本文介绍了什么是信息和熵，以及如何去计算信息量和熵的大小，KL散度的理解、交叉熵和KL散的关系。</p><span id="more"></span><h2 id="信息信息量熵">1. 信息、信息量、熵</h2><h3 id="什么是信息熵">1.1 什么是信息、熵</h3><p><strong>定义：</strong>当一件事情（宏观态）有多种可能情况（微观态）时，这件事情对观察者而言具体是那种情况的不确定性叫做<strong>熵</strong>。而能够消除该人对这件事情的不确定事物叫做<strong>信息</strong>。信息是从多个可能状态中确定实际状态所需的物理量，所以获取信息意味着消除熵。</p><p><strong>信息的本质</strong>是调整观察者对于一件事情（宏观态）的微观态判断的概率。</p><p>不能够消除某人对于某件事情不确定性的事物被称为<strong>噪音</strong>，<strong>数据=噪音+信息</strong>。</p><p><strong>信息、熵的性质</strong></p><ol type="1"><li>信息与传递它的媒介无关。</li><li>信息是相对于观察者已经对该件事情的实际了解程度而言的，是需要能调整观察者自己对于微观态判断的概率。</li><li>信息是客观的物理量，不随观察者的主观意识改变，只有确定了真正的实际情况时才是信息，虚假的不叫信息。</li><li>信息（熵）还是相对于某件事情而言的</li></ol><p><strong>概率和熵的区别</strong>：概率是某件事情（宏观态）某个可能情况（微观态）的确定性，而熵是某件事情（宏观态）到底是哪个情况（微观态）的不确定性。</p><h3 id="信息量的计算">1.2 信息量的计算</h3><p>信息是客观物理量，所以是可以被度量的，但是信息应该怎么度量呢？比如质量，我们找到一个参照物为1kg，其他物品和该参照物比较，有几个参照物的大小就是几千克。</p><p>测量信息也是一样，信息是消除不确定性，那么就选择一个事情的不确定性作为参照物。当参照事件是像抛硬币一样有两种等概率事件，这时测量单位就叫<strong>比特（bit）</strong>，然而信息不像是质量是线性增加的，而是指数增加。抛三次硬币的可能情况是<span class="math inline">\(2^3\)</span>而不是<span class="math inline">\(2\times3\)</span>，所以假设<span class="math inline">\(m\)</span>是被测事件等概率的情况个数，<span class="math inline">\(k\)</span>是参照事件的等概率情况个数，则需要的信息为<span class="math inline">\(\log_k m\)</span>。</p><p><strong>如果被测事件不是等概率的该如何计算信息呢？</strong></p><p>概率是<span class="math inline">\(\frac{1}{100}\)</span>，相当于从100个等概率情况中确定实际情况，概率的倒数等于等概率情况的个数，由此</p><p>可以得到<span class="math inline">\(I(x)=\log\frac{1}{P(x)}=-\log P(x)\)</span></p><h3 id="熵的计算">1.3 熵的计算</h3><p>用熵描述系统的不确定性，熵越大，信息量越大，不确定性越大。熵可以表示为期望信息总量，也可以理解为编码方案完美时，最短平均编码长度，计算公式：<span class="math inline">\(H(\mathrm{x})=\mathbb{E}_{\mathrm{x} \sim P}[I(x)]=-\mathbb{E}_{\mathrm{x} \sim P}[\log P(x)]=\sum_{x} P(x) \log P(x)\)</span></p><h2 id="kl-散度相对熵">2. KL 散度（相对熵）</h2><p><strong>定义：</strong>KL散度又称为相对熵，是两个几率分布P和Q差别的非对称性的度量。KL散度是用来度量使用基于Q的分布来编码服从P的分布的样本所需的额外的平均比特数。典型情况下，P表示数据的真实分布，Q表示数据的理论分布、估计的模型分布、或P的近似分布。</p><p>当我们知道真实的概率分布之后，可以给出最有效的编码。如果我们使用了不同于真实分布的概率分布，那么我们一定会损失编码效率，并且在传输时增加的平均额外信息量至少等于两个分布之间的KL散度。如果使用以2为底的对数计算，则KL散度表示信息损失的二进制位数。</p><p>KL散度表示用一个分布近似另一个分布时信息的损失量。</p><p>对于连续随机变量，分布P和Q的KL散度为：<span class="math inline">\(D_{\mathrm{KL}}(P \| Q)=\int_{-\infty}^{\infty} p(x) \ln \frac{p(x)}{q(x)} \mathrm{d} x\)</span></p><p>对于离散随机变量，分布P和Q的KL散度为：<span class="math inline">\(D_{\mathrm{KL}}(P \| Q)=-\sum_{i} P(i) \ln \frac{Q(i)}{P(i)}\)</span></p><p><strong>性质：</strong></p><p><strong>1、相对熵的值为非负值</strong></p><p><span class="math inline">\(KL(p||Q)\geq 0\)</span>，并且当且仅当<span class="math inline">\(p(x)=q(x)\)</span>时等号成立。证明略。</p><p><strong>2、KL散度不具有对称性</strong></p><p>因为<span class="math inline">\(D_{\mathrm{KL}}(P \| Q) \neq D_{\mathrm{KL}}(Q \| P)\)</span> ，所以KL散度并不是一个真正的度量或者距离函数。</p><p><strong>3、最小化KL散度等价于最大化似然函数</strong></p><p>假设我们用参数分布<span class="math inline">\(q(x|\theta)\)</span>来近似<span class="math inline">\(p(x)\)</span>，因为不知大概率分布<span class="math inline">\(p(x)\)</span>，我们观察服从<span class="math inline">\(p(x)\)</span>分布的有限数量的训练集合<span class="math inline">\({x_n}\)</span>。KL散度可以近似为 <span class="math inline">\(KL(p||q)\approx \frac{1}{N}\sum_{n=1}^N(-\ln q(x_n|\theta)+\ln p(x_n))\)</span>，最小化KL散度与<span class="math inline">\(\ln p(x_n)\)</span>无关，而<span class="math inline">\(\frac{1}{N}\sum_{n=1}^N(-\ln q(x_n|\theta)\)</span>是分布<span class="math inline">\(q(x|\theta )\)</span>的负对数似然函数。所以最小化KL散度等价于最大化似然函数。</p><p>KL散度可以理解为编码方案不一定完美时，平均编码长度相对于最小值的增加值。<span class="math inline">\(KL(p||q)=H(p,q)-H(p)\)</span></p><h2 id="交叉熵">3. 交叉熵</h2><p>在信息论中，基于相同事件测度的两个概率分布<span class="math inline">\(p\)</span>和<span class="math inline">\(q\)</span>的交叉熵是指，当基于一个“非自然”（相对于“真实”分布<span class="math inline">\(p\)</span>而言）的概率分布<span class="math inline">\(q\)</span>进行编码时，在事件集合中唯一标识一个事件所需要的平均比特数（bit）。交叉熵可以理解为编码方案不一定完美时（由于对概率分布的估计不一定正确），平均编码长度。所以交叉熵的计算公式为：<span class="math inline">\(H(p,q)=-\sum_i p_i\)</span></p><h2 id="reference">Reference</h2><p>[1] <a href="https://zh.wikipedia.org/wiki/相对熵">相对熵 - 维基百科，自由的百科全书 (wikipedia.org)</a></p><p>[2] <a href="https://zhuanlan.zhihu.com/p/39682125">KL散度理解 - 知乎 (zhihu.com)</a></p><p>[3] <a href="https://zh.wikipedia.org/wiki/交叉熵">交叉熵 - 维基百科，自由的百科全书 (wikipedia.org)</a></p><p>[4] <a href="https://zhuanlan.zhihu.com/p/55599202">信息为什么还有单位，熵为什么用 log 来计算？ - 知乎 (zhihu.com)</a></p><p>[5] <a href="https://zhuanlan.zhihu.com/p/55459472">学习观10：老师，我没有传纸条作弊，我在学习信息论 - 知乎 (zhihu.com)</a></p><p>[6] <a href="https://www.jianshu.com/p/43318a3dc715">如何理解K-L散度（相对熵） - 简书 (jianshu.com)</a></p>]]></content>
+    
+    
+    <summary type="html">&lt;p&gt;本文介绍了什么是信息和熵，以及如何去计算信息量和熵的大小，KL散度的理解、交叉熵和KL散的关系。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="机器学习" scheme="http://example.com/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/"/>
+    
+    
+    <category term="学习笔记" scheme="http://example.com/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
+    
+  </entry>
   
   <entry>
     <title>markdown转为知乎文章</title>
@@ -406,27 +427,6 @@
     
     
     <summary type="html">&lt;p&gt;MIT算法导论课程：Lec14 竞争性分析，自组织表，对应Sleator, Daniel D., and Robert E. Tarjan. &amp;quot;Amortized efficiency of list update and paging rules.&amp;quot; Communications of the ACM 28, no. 2 (February 1985): 202-208.&lt;/p&gt;</summary>
-    
-    
-    
-    <category term="算法导论MIT" scheme="http://example.com/categories/%E7%AE%97%E6%B3%95%E5%AF%BC%E8%AE%BAMIT/"/>
-    
-    
-    <category term="学习笔记" scheme="http://example.com/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Lec15 动态规划，最长公共子序列</title>
-    <link href="http://example.com/2021/03/28/Lec15%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92%EF%BC%8C%E6%9C%80%E9%95%BF%E5%85%AC%E5%85%B1%E5%AD%90%E5%BA%8F%E5%88%97/"/>
-    <id>http://example.com/2021/03/28/Lec15%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92%EF%BC%8C%E6%9C%80%E9%95%BF%E5%85%AC%E5%85%B1%E5%AD%90%E5%BA%8F%E5%88%97/</id>
-    <published>2021-03-28T08:14:58.000Z</published>
-    <updated>2021-03-29T00:35:15.630Z</updated>
-    
-    <content type="html"><![CDATA[<p>MIT算法导论课程：Lec15 动态规划，最长公共子序列，对应书上的章节：Chapter 15</p><span id="more"></span><h2 id="longest-common-subsequence">1.Longest common subsequence</h2><p><strong>最长公共子序列</strong>：给两个序列<code>x[1..m]</code>和<code>y[1..n]</code>，找到两者之间最长的公共子序列。</p><p>x: ABCBDAB；y:BDCABA。可以看出BCBA|BDAB|BCAB=LCS(x,y)。</p><p><strong>Brute-force LCS algorithm</strong></p><p>检查x中所有的子序列在y中是否存在。一个子序列检查需要<span class="math inline">\(O(n)\)</span>的时间，x中有<span class="math inline">\(2^m\)</span>的子序列，最坏运行时间为：<span class="math inline">\(O(n2^m)\)</span>.</p><p><strong>Towards a better algorithm</strong></p><p>考虑x,y的前缀。定义<span class="math inline">\(C[i,j]=|LCS(x[1..i]),y[1..j]|\)</span>。然后<span class="math inline">\(c[m,n]=|LCS(x,y)|\)</span>。</p><p>转换公式：<span class="math inline">\(c[i, j]=\left\{\begin{array}{ll} c[i-1, j-1]+1 &amp; \text { if } x[i]=y[j], \\ \max \{c[i-1, j], c[i, j-1]\} &amp; \text { otherwise. } \end{array}\right.\)</span></p><p>证明：略。</p><h2 id="optimal-substructure">2. Optimal substructure</h2><p>最优子结构：问题（实例）的最佳解决方案包含子问题的最佳解决方案。</p><p>例子：如果<span class="math inline">\(z=LCS(x,y)\)</span>，那么任何z的前缀是一个x前缀与y前罪的LCS。</p><p><strong>Recursive algorithm for LCS</strong></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">LCS(x,y,i,j)</span><br><span class="line">if x[i]&#x3D;y[j] then</span><br><span class="line">c[i,j]&#x3D;LCSV(x,y,i-1,j-1)+1</span><br><span class="line">else</span><br><span class="line">c[i,j]&#x3D;max&#123;LCS(x,y,i-1,j),LCS(x,y,i,j-1)&#125;</span><br></pre></td></tr></table></figure><h2 id="overlapping-subproblems">3. Overlapping subproblems</h2><p>重叠子问题：递归解决方案包含多次重复的“少量”独特子问题。两个长度为m和n的字符串的不同LCS子问题的数量仅为<span class="math inline">\(mn\)</span></p><p>Memoization : 计算完一个子问题的解决方案后，将其存储在表中。后续调用检查表以避免重做工作。</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">LCS(x,y,i,j)</span><br><span class="line">if c[i,j]&#x3D;NIL</span><br><span class="line">if x[i]&#x3D;y[j] then</span><br><span class="line">c[i,j]&#x3D;LCSV(x,y,i-1,j-1)+1</span><br><span class="line">else</span><br><span class="line">c[i,j]&#x3D;max&#123;LCS(x,y,i-1,j),LCS(x,y,i,j-1)&#125;</span><br></pre></td></tr></table></figure><p>IDEA：自下而上计算表格。</p><p><img src="https://i.bmp.ovh/imgs/2021/03/ad176424e959bae4.png" style="zoom:67%;" /></p><ul><li>Time=<span class="math inline">\(\Theta(mn)\)</span></li><li>Space=<span class="math inline">\(\Theta(mn)\)</span></li></ul><p>可以优化到<span class="math inline">\(O(min\{m,n\})\)</span></p>]]></content>
-    
-    
-    <summary type="html">&lt;p&gt;MIT算法导论课程：Lec15 动态规划，最长公共子序列，对应书上的章节：Chapter 15&lt;/p&gt;</summary>
     
     
     

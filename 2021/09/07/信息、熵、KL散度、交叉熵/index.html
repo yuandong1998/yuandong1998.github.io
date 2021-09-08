@@ -20,25 +20,20 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="MIT算法导论课程：Lec03分治法，对应书上的章节：Sections 4.2 and 30.1">
+  <meta name="description" content="本文介绍了什么是信息和熵，以及如何去计算信息量和熵的大小，KL散度的理解、交叉熵和KL散的关系。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Lec03分治法">
-<meta property="og:url" content="http://example.com/2021/03/28/Lec03%E5%88%86%E6%B2%BB%E6%B3%95/index.html">
+<meta property="og:title" content="信息、熵、KL散度、交叉熵">
+<meta property="og:url" content="http://example.com/2021/09/07/%E4%BF%A1%E6%81%AF%E3%80%81%E7%86%B5%E3%80%81KL%E6%95%A3%E5%BA%A6%E3%80%81%E4%BA%A4%E5%8F%89%E7%86%B5/index.html">
 <meta property="og:site_name" content="Jinxi Blog">
-<meta property="og:description" content="MIT算法导论课程：Lec03分治法，对应书上的章节：Sections 4.2 and 30.1">
+<meta property="og:description" content="本文介绍了什么是信息和熵，以及如何去计算信息量和熵的大小，KL散度的理解、交叉熵和KL散的关系。">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://i.bmp.ovh/imgs/2021/01/bdd497742fae9942.png">
-<meta property="og:image" content="https://i.bmp.ovh/imgs/2021/01/58564478786e721a.png">
-<meta property="og:image" content="https://i.bmp.ovh/imgs/2021/01/985a319949fe5f07.png">
-<meta property="og:image" content="https://ftp.bmp.ovh/imgs/2021/03/25b53265a95180f2.png">
-<meta property="article:published_time" content="2021-03-28T08:14:57.000Z">
-<meta property="article:modified_time" content="2021-03-29T00:24:13.698Z">
+<meta property="article:published_time" content="2021-09-07T13:22:56.000Z">
+<meta property="article:modified_time" content="2021-09-08T05:24:06.768Z">
 <meta property="article:author" content="Jinxi">
 <meta property="article:tag" content="学习笔记">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://i.bmp.ovh/imgs/2021/01/bdd497742fae9942.png">
 
-<link rel="canonical" href="http://example.com/2021/03/28/Lec03%E5%88%86%E6%B2%BB%E6%B3%95/">
+<link rel="canonical" href="http://example.com/2021/09/07/%E4%BF%A1%E6%81%AF%E3%80%81%E7%86%B5%E3%80%81KL%E6%95%A3%E5%BA%A6%E3%80%81%E4%BA%A4%E5%8F%89%E7%86%B5/">
 
 
 <script id="page-configurations">
@@ -51,7 +46,7 @@
   };
 </script>
 
-  <title>Lec03分治法 | Jinxi Blog</title>
+  <title>信息、熵、KL散度、交叉熵 | Jinxi Blog</title>
   
 
 
@@ -187,7 +182,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/03/28/Lec03%E5%88%86%E6%B2%BB%E6%B3%95/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/09/07/%E4%BF%A1%E6%81%AF%E3%80%81%E7%86%B5%E3%80%81KL%E6%95%A3%E5%BA%A6%E3%80%81%E4%BA%A4%E5%8F%89%E7%86%B5/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.JPG">
@@ -200,7 +195,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Lec03分治法
+          信息、熵、KL散度、交叉熵
         </h1>
 
         <div class="post-meta">
@@ -210,14 +205,14 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2021-03-28 16:14:57" itemprop="dateCreated datePublished" datetime="2021-03-28T16:14:57+08:00">2021-03-28</time>
+              <time title="创建时间：2021-09-07 21:22:56" itemprop="dateCreated datePublished" datetime="2021-09-07T21:22:56+08:00">2021-09-07</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-03-29 08:24:13" itemprop="dateModified" datetime="2021-03-29T08:24:13+08:00">2021-03-29</time>
+                <time title="修改时间：2021-09-08 13:24:06" itemprop="dateModified" datetime="2021-09-08T13:24:06+08:00">2021-09-08</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -225,7 +220,7 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E7%AE%97%E6%B3%95%E5%AF%BC%E8%AE%BAMIT/" itemprop="url" rel="index"><span itemprop="name">算法导论MIT</span></a>
+                  <a href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">机器学习</span></a>
                 </span>
             </span>
 
@@ -245,8 +240,8 @@
       </span>
       <span class="post-meta-item-text">Valine：</span>
     
-    <a title="valine" href="/2021/03/28/Lec03%E5%88%86%E6%B2%BB%E6%B3%95/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2021/03/28/Lec03%E5%88%86%E6%B2%BB%E6%B3%95/" itemprop="commentCount"></span>
+    <a title="valine" href="/2021/09/07/%E4%BF%A1%E6%81%AF%E3%80%81%E7%86%B5%E3%80%81KL%E6%95%A3%E5%BA%A6%E3%80%81%E4%BA%A4%E5%8F%89%E7%86%B5/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2021/09/07/%E4%BF%A1%E6%81%AF%E3%80%81%E7%86%B5%E3%80%81KL%E6%95%A3%E5%BA%A6%E3%80%81%E4%BA%A4%E5%8F%89%E7%86%B5/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -256,14 +251,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>1.6k</span>
+              <span>2.4k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
+              <span>2 分钟</span>
             </span>
 
         </div>
@@ -275,63 +270,52 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>MIT算法导论课程：Lec03分治法，对应书上的章节：Sections 4.2 and 30.1</p>
+        <p>本文介绍了什么是信息和熵，以及如何去计算信息量和熵的大小，KL散度的理解、交叉熵和KL散的关系。</p>
 <span id="more"></span>
-<h2 id="分治法">1. 分治法</h2>
+<h2 id="信息信息量熵">1. 信息、信息量、熵</h2>
+<h3 id="什么是信息熵">1.1 什么是信息、熵</h3>
+<p><strong>定义：</strong>当一件事情（宏观态）有多种可能情况（微观态）时，这件事情对观察者而言具体是那种情况的不确定性叫做<strong>熵</strong>。而能够消除该人对这件事情的不确定事物叫做<strong>信息</strong>。信息是从多个可能状态中确定实际状态所需的物理量，所以获取信息意味着消除熵。</p>
+<p><strong>信息的本质</strong>是调整观察者对于一件事情（宏观态）的微观态判断的概率。</p>
+<p>不能够消除某人对于某件事情不确定性的事物被称为<strong>噪音</strong>，<strong>数据=噪音+信息</strong>。</p>
+<p><strong>信息、熵的性质</strong></p>
 <ol type="1">
-<li>Divide：将问题划分为多个子问题</li>
-<li>Conquer：通过递归解决子问题</li>
-<li>Combine：将子问题的解合并为大问题的解</li>
+<li>信息与传递它的媒介无关。</li>
+<li>信息是相对于观察者已经对该件事情的实际了解程度而言的，是需要能调整观察者自己对于微观态判断的概率。</li>
+<li>信息是客观的物理量，不随观察者的主观意识改变，只有确定了真正的实际情况时才是信息，虚假的不叫信息。</li>
+<li>信息（熵）还是相对于某件事情而言的</li>
 </ol>
-<h2 id="merge-sort">2. Merge sort</h2>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">algorithm：</span><br><span class="line">1. Divide：划分为2个数组</span><br><span class="line">2. Conquer：递归的排序两个数组</span><br><span class="line">3. Combine：将两个有序数组合并，需要线性时间</span><br></pre></td></tr></table></figure>
-<p><span class="math inline">\(T(n)=2T(n/2)+\Theta(n)\)</span> 根据主方法，<span class="math inline">\(T(n)=\Theta(n\lg n)\)</span></p>
-<h2 id="binary-search">3. Binary search</h2>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">algorithm:</span><br><span class="line">1. Divide：找到中间元素</span><br><span class="line">2. Conquer：递归查找其中一个子数组</span><br><span class="line">3. Combine：合并</span><br></pre></td></tr></table></figure>
-<p><span class="math inline">\(T(n)=T(n/2)+\Theta(1)\)</span> 根据主方法，<span class="math inline">\(T(n)=\Theta(\lg n)\)</span></p>
-<h2 id="powering-a-number">4. Powering a number</h2>
-<p>algorithm:</p>
-<p><img src="https://i.bmp.ovh/imgs/2021/01/bdd497742fae9942.png" style="zoom:50%;" /></p>
-<p><span class="math inline">\(T(n)=T(n/2)+\Theta(1)\)</span> 根据主方法，<span class="math inline">\(T(n)=\Theta(\lg n)\)</span></p>
-<h2 id="fibonacci-numbers">5. Fibonacci numbers</h2>
-<p><strong>朴素的递归算法（Naive recursive algorithm）</strong> <span class="math inline">\(T(n)=\Omega(\phi^n),\phi=(1+\sqrt 5)/2\)</span> golden ratio。</p>
-<p><strong>自底向上（Bottom-up）：</strong>从下往上计算。<span class="math inline">\(T(n)=\Theta(n)\)</span></p>
-<p><strong>朴素的递归平方（Naive recursive squaring）：</strong> 通过公式计算，<span class="math inline">\(F_n=\phi^n/\sqrt 5\)</span>最近的整数。但是这个方法不安全，浮点运算容易产生舍入误差。</p>
-<p><strong>递归平方（Recursive squaring）：</strong> 通过如下的公式计算，通过乘法通过二分法优化 <span class="math inline">\(T(n)=\Theta(\lg n)\)</span>，可以通过归纳法证明。 <span class="math display">\[
-\left[\begin{array}{cc}
-F_{n+1} &amp; F_{n} \\
-F_{n} &amp; F_{n-1}
-\end{array}\right]=\left[\begin{array}{cc}
-1 &amp; 1 \\
-1 &amp; 0
-\end{array}\right]^{n}
-\]</span></p>
-<h2 id="matrix-multiplication">6. Matrix multiplication</h2>
-<p><strong>标准算法（Standard algorithm）</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">for i in [1,n]:</span><br><span class="line">	do for j in [1,n]:</span><br><span class="line">		do cij&#x3D;0</span><br><span class="line">			for k in [1,n]:</span><br><span class="line">				do cij&#x3D;cij+aik*akj</span><br></pre></td></tr></table></figure>
-<p><span class="math inline">\(T(n)=\Theta(n^3)\)</span></p>
-<p><strong>分治法（Divide-and-conquer algorithm）</strong></p>
-<p>将nxn的矩阵分为4个<span class="math inline">\((n/2)*(n/2)\)</span>的子矩阵，如下图所示：</p>
-<p><img src="https://i.bmp.ovh/imgs/2021/01/58564478786e721a.png" style="zoom: 50%;" /></p>
-<p><span class="math inline">\(T(n)=8T(n/2)+\Theta(n^2)\)</span>，主方法得<span class="math inline">\(T(n)=\Theta(n^3)\)</span>，没有改进。</p>
-<p><strong>Strassen’s algorithm：</strong>将上面提到的方法乘法次数从8降到7。 <span class="math display">\[
-\begin{array}{ll}
-P_{1}=a \cdot(f-h) &amp; r=P_{5}+P_{4}-P_{2}+P_{6} \\
-P_{2}=(a+b) \cdot h &amp; s=P_{1}+P_{2} \\
-P_{3}=(c+d) \cdot e &amp; t=P_{3}+P_{4} \\
-P_{4}=d \cdot(g-e) &amp; u=P_{5}+P_{1}-P_{3}-P_{7} \\
-P_{5}=(a+d) \cdot(e+h) \\
-P_{6}=(b-d) \cdot(g+h) \\
-P_{7}=(a-c) \cdot(e+f)
-\end{array}
-\]</span> 进行7次乘法，18次加法。<span class="math inline">\(T(n)=8T(n/2)+\Theta(n^2)\)</span>，由主方法计算得<span class="math inline">\(T(n)=\Theta(n^{lg 7})\)</span>。</p>
-<h2 id="vlsi-tree-layout">7. VLSI tree layout</h2>
-<p>problem：使用最小的面积将具有n个叶子的完整二叉树嵌入网格中。</p>
-<p>以下介绍两种方法：</p>
-<p>方法一：</p>
-<p><img src="https://i.bmp.ovh/imgs/2021/01/985a319949fe5f07.png" style="zoom:50%;" /></p>
-<p>方法二：</p>
-<p><img src="https://ftp.bmp.ovh/imgs/2021/03/25b53265a95180f2.png" style="zoom:50%;" /></p>
+<p><strong>概率和熵的区别</strong>：概率是某件事情（宏观态）某个可能情况（微观态）的确定性，而熵是某件事情（宏观态）到底是哪个情况（微观态）的不确定性。</p>
+<h3 id="信息量的计算">1.2 信息量的计算</h3>
+<p>信息是客观物理量，所以是可以被度量的，但是信息应该怎么度量呢？比如质量，我们找到一个参照物为1kg，其他物品和该参照物比较，有几个参照物的大小就是几千克。</p>
+<p>测量信息也是一样，信息是消除不确定性，那么就选择一个事情的不确定性作为参照物。当参照事件是像抛硬币一样有两种等概率事件，这时测量单位就叫<strong>比特（bit）</strong>，然而信息不像是质量是线性增加的，而是指数增加。抛三次硬币的可能情况是<span class="math inline">\(2^3\)</span>而不是<span class="math inline">\(2\times3\)</span>，所以假设<span class="math inline">\(m\)</span>是被测事件等概率的情况个数，<span class="math inline">\(k\)</span>是参照事件的等概率情况个数，则需要的信息为<span class="math inline">\(\log_k m\)</span>。</p>
+<p><strong>如果被测事件不是等概率的该如何计算信息呢？</strong></p>
+<p>概率是<span class="math inline">\(\frac{1}{100}\)</span>，相当于从100个等概率情况中确定实际情况，概率的倒数等于等概率情况的个数，由此</p>
+<p>可以得到<span class="math inline">\(I(x)=\log\frac{1}{P(x)}=-\log P(x)\)</span></p>
+<h3 id="熵的计算">1.3 熵的计算</h3>
+<p>用熵描述系统的不确定性，熵越大，信息量越大，不确定性越大。熵可以表示为期望信息总量，也可以理解为编码方案完美时，最短平均编码长度，计算公式：<span class="math inline">\(H(\mathrm{x})=\mathbb{E}_{\mathrm{x} \sim P}[I(x)]=-\mathbb{E}_{\mathrm{x} \sim P}[\log P(x)]=\sum_{x} P(x) \log P(x)\)</span></p>
+<h2 id="kl-散度相对熵">2. KL 散度（相对熵）</h2>
+<p><strong>定义：</strong>KL散度又称为相对熵，是两个几率分布P和Q差别的非对称性的度量。KL散度是用来度量使用基于Q的分布来编码服从P的分布的样本所需的额外的平均比特数。典型情况下，P表示数据的真实分布，Q表示数据的理论分布、估计的模型分布、或P的近似分布。</p>
+<p>当我们知道真实的概率分布之后，可以给出最有效的编码。如果我们使用了不同于真实分布的概率分布，那么我们一定会损失编码效率，并且在传输时增加的平均额外信息量至少等于两个分布之间的KL散度。如果使用以2为底的对数计算，则KL散度表示信息损失的二进制位数。</p>
+<p>KL散度表示用一个分布近似另一个分布时信息的损失量。</p>
+<p>对于连续随机变量，分布P和Q的KL散度为：<span class="math inline">\(D_{\mathrm{KL}}(P \| Q)=\int_{-\infty}^{\infty} p(x) \ln \frac{p(x)}{q(x)} \mathrm{d} x\)</span></p>
+<p>对于离散随机变量，分布P和Q的KL散度为：<span class="math inline">\(D_{\mathrm{KL}}(P \| Q)=-\sum_{i} P(i) \ln \frac{Q(i)}{P(i)}\)</span></p>
+<p><strong>性质：</strong></p>
+<p><strong>1、相对熵的值为非负值</strong></p>
+<p><span class="math inline">\(KL(p||Q)\geq 0\)</span>，并且当且仅当<span class="math inline">\(p(x)=q(x)\)</span>时等号成立。证明略。</p>
+<p><strong>2、KL散度不具有对称性</strong></p>
+<p>因为<span class="math inline">\(D_{\mathrm{KL}}(P \| Q) \neq D_{\mathrm{KL}}(Q \| P)\)</span> ，所以KL散度并不是一个真正的度量或者距离函数。</p>
+<p><strong>3、最小化KL散度等价于最大化似然函数</strong></p>
+<p>假设我们用参数分布<span class="math inline">\(q(x|\theta)\)</span>来近似<span class="math inline">\(p(x)\)</span>，因为不知大概率分布<span class="math inline">\(p(x)\)</span>，我们观察服从<span class="math inline">\(p(x)\)</span>分布的有限数量的训练集合<span class="math inline">\({x_n}\)</span>。KL散度可以近似为 <span class="math inline">\(KL(p||q)\approx \frac{1}{N}\sum_{n=1}^N(-\ln q(x_n|\theta)+\ln p(x_n))\)</span>，最小化KL散度与<span class="math inline">\(\ln p(x_n)\)</span>无关，而<span class="math inline">\(\frac{1}{N}\sum_{n=1}^N(-\ln q(x_n|\theta)\)</span>是分布<span class="math inline">\(q(x|\theta )\)</span>的负对数似然函数。所以最小化KL散度等价于最大化似然函数。</p>
+<p>KL散度可以理解为编码方案不一定完美时，平均编码长度相对于最小值的增加值。<span class="math inline">\(KL(p||q)=H(p,q)-H(p)\)</span></p>
+<h2 id="交叉熵">3. 交叉熵</h2>
+<p>在信息论中，基于相同事件测度的两个概率分布<span class="math inline">\(p\)</span>和<span class="math inline">\(q\)</span>的交叉熵是指，当基于一个“非自然”（相对于“真实”分布<span class="math inline">\(p\)</span>而言）的概率分布<span class="math inline">\(q\)</span>进行编码时，在事件集合中唯一标识一个事件所需要的平均比特数（bit）。交叉熵可以理解为编码方案不一定完美时（由于对概率分布的估计不一定正确），平均编码长度。所以交叉熵的计算公式为：<span class="math inline">\(H(p,q)=-\sum_i p_i\)</span></p>
+<h2 id="reference">Reference</h2>
+<p>[1] <a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/相对熵">相对熵 - 维基百科，自由的百科全书 (wikipedia.org)</a></p>
+<p>[2] <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/39682125">KL散度理解 - 知乎 (zhihu.com)</a></p>
+<p>[3] <a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/交叉熵">交叉熵 - 维基百科，自由的百科全书 (wikipedia.org)</a></p>
+<p>[4] <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/55599202">信息为什么还有单位，熵为什么用 log 来计算？ - 知乎 (zhihu.com)</a></p>
+<p>[5] <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/55459472">学习观10：老师，我没有传纸条作弊，我在学习信息论 - 知乎 (zhihu.com)</a></p>
+<p>[6] <a target="_blank" rel="noopener" href="https://www.jianshu.com/p/43318a3dc715">如何理解K-L散度（相对熵） - 简书 (jianshu.com)</a></p>
 
     </div>
 
@@ -389,13 +373,10 @@ P_{7}=(a-c) \cdot(e+f)
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2021/03/28/Lec04%E5%BF%AB%E6%8E%92%E5%8F%8A%E9%9A%8F%E6%9C%BA%E5%8C%96%E7%AE%97%E6%B3%95/" rel="prev" title="Lec04快速排序及随机化算法">
-      <i class="fa fa-chevron-left"></i> Lec04快速排序及随机化算法
+    <a href="/2021/09/02/markdown%E8%BD%AC%E4%B8%BA%E7%9F%A5%E4%B9%8E%E6%96%87%E7%AB%A0/" rel="prev" title="markdown转为知乎文章">
+      <i class="fa fa-chevron-left"></i> markdown转为知乎文章
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2021/03/28/Lec15%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92%EF%BC%8C%E6%9C%80%E9%95%BF%E5%85%AC%E5%85%B1%E5%AD%90%E5%BA%8F%E5%88%97/" rel="next" title="Lec15 动态规划，最长公共子序列">
-      Lec15 动态规划，最长公共子序列 <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -455,7 +436,7 @@ P_{7}=(a-c) \cdot(e+f)
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E6%B2%BB%E6%B3%95"><span class="nav-number">1.</span> <span class="nav-text">1. 分治法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#merge-sort"><span class="nav-number">2.</span> <span class="nav-text">2. Merge sort</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#binary-search"><span class="nav-number">3.</span> <span class="nav-text">3. Binary search</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#powering-a-number"><span class="nav-number">4.</span> <span class="nav-text">4. Powering a number</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#fibonacci-numbers"><span class="nav-number">5.</span> <span class="nav-text">5. Fibonacci numbers</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#matrix-multiplication"><span class="nav-number">6.</span> <span class="nav-text">6. Matrix multiplication</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#vlsi-tree-layout"><span class="nav-number">7.</span> <span class="nav-text">7. VLSI tree layout</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BF%A1%E6%81%AF%E4%BF%A1%E6%81%AF%E9%87%8F%E7%86%B5"><span class="nav-number">1.</span> <span class="nav-text">1. 信息、信息量、熵</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E4%BF%A1%E6%81%AF%E7%86%B5"><span class="nav-number">1.1.</span> <span class="nav-text">1.1 什么是信息、熵</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BF%A1%E6%81%AF%E9%87%8F%E7%9A%84%E8%AE%A1%E7%AE%97"><span class="nav-number">1.2.</span> <span class="nav-text">1.2 信息量的计算</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%86%B5%E7%9A%84%E8%AE%A1%E7%AE%97"><span class="nav-number">1.3.</span> <span class="nav-text">1.3 熵的计算</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#kl-%E6%95%A3%E5%BA%A6%E7%9B%B8%E5%AF%B9%E7%86%B5"><span class="nav-number">2.</span> <span class="nav-text">2. KL 散度（相对熵）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%A4%E5%8F%89%E7%86%B5"><span class="nav-number">3.</span> <span class="nav-text">3. 交叉熵</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">4.</span> <span class="nav-text">Reference</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
